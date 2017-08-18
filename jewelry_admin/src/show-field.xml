@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- type: 1:原名 2:别名 -->
+<showfields>
+	<!-- 获取汽车参数值显示字段 -->
+	<model id="car_para_val_list">
+		<field name="car_var_id" />
+		<field name="para_value" />
+	</model>
+</showfields>

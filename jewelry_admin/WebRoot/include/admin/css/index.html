@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Document</title>
+<script
+	src="http://cdn.static.runoob.com/libs/jquery/1.10.2/jquery.min.js"></script>
+<link rel="stylesheet" href="index.css">
+<style type="text/css">
+.patternName {
+	margin-right: 30px;
+}
+
+.pre_sale {
+	width: 800px;
+	height: 220px;
+	background-color: #eee;
+	margin-left: 200px;
+	padding: 20px 30px;
+}
+
+#all_sale_container {
+	height: 160px;
+}
+
+.pre_sale .title {
+	display: inline-block;
+	width: 120px;
+	text-align: right;
+}
+
+.pre_sale .prePrice, .preTime {
+	width: 320px;
+	height: 30px;
+	border-radius: 5px;
+	border: 1px solid #ccc;
+}
+
+.pre_sale .selectTime {
+	/*width: 93px;*/
+	height: 28px;
+	margin-right: 20px;
+}
+
+.pre_sale .afterTime {
+	width: 93px;
+	height: 20px;
+}
+
+.pre_sale .count {
+	width: 110px;
+	height: 25px;
+	border-radius: 5px;
+	border: 1px solid #ccc;
+}
+
+#all_sale_container input {
+	margin-bottom: 10px;
+}
+
+#presale_container .pre_sale_chose {
+	width: 556px;
+	margin-left: 150px;
+	margin-bottom: 20px;
+	text-align: center;
+}
+
+#some_sale_container .some_sale_price {
+	width: 100%;
+	height: 60px;
+	padding: 10px 0px;
+}
+
+#some_sale_container .some_sale_prices {
+	display: inline-block;
+	vertical-align: bottom;
+}
+
+#some_sale_container .some_sale_one {
+	margin-right: 30px;
+}
+
+#some_sale_container .some_sale_two {
+	padding-top: 10px;
+}
+
+#some_sale_container .some_sale_time {
+	width: 100px;
+	height: 20px;
+}
+
+#some_sale_container .stepNum {
+	display: inline-block;
+	width: 20px;
+	height: 20px;
+	border-radius: 10px;
+	background-color: rgb(0, 110, 177);
+	color: #fff;
+	line-height: 20px;
+	text-align: center;
+}
+
+#some_sale_container .stepStrip {
+	display: inline-block;
+	width: 230px;
+	height: 3px;
+	background-color: rgb(0, 110, 177);
+	vertical-align: middle;
+}
+
+#some_sale_container .stepStrip2 {
+	display: inline-block;
+	width: 365px;
+	height: 3px;
+	background-color: rgb(0, 110, 177);
+	vertical-align: middle;
+}
+
+#some_sale_container .selectProportion {
+	width: 60px;
+}
+
+#some_sale_container .proportion {
+	margin-top: 15px;
+	margin-bottom: 20px;
+	position: relative;
+}
+
+#some_sale_container .weiProportion {
+	margin-left: 125px;
+}
+
+#some_sale_container .fahuo {
+	position: absolute;
+	right: 145px;
+}
+</style>
+</head>
+<body>
+	<div class="table_div">
+		<table>
+			<tr>
+				<td class="td_left">售卖方式:</td>
+				<td colspan="2" class="td_right_two"><input type="radio"
+					name="pattern" value="0" checked onchange="changePattern()"><span
+					class="patternName">一口价模式</span> <input type="radio" name="pattern"
+					value="1" onchange="changePattern()"><span
+					class="patternName">预售模式</span></td>
+			</tr>
+			<tr id="onesale_container" style="display: block;">
+				<td class="td_left">*商品金额:</td>
+				<td class="td_right_two"><input type="text"></td>
+			</tr>
+			<tr id="presale_container" style="display: none;">
+
+				<td colspan="2">
+					<div class="pre_sale_chose">
+						<input type="radio" name="pre_sale_pattern" value="2" checked
+							onchange="changePsPattern()"> <span class="presaleName">全额预售</span>
+						<input type="radio" name="pre_sale_pattern" value="3"
+							onchange="changePsPattern()"> <span class="presaleName">定金预售</span>
+					</div>
+					<div class="pre_sale" id="all_sale_container">
+						<span class="title"><span style="color:#FF0000;">*</span>预售金额：</span>
+						<input type="text" placeholder="请输入" name="" class="prePrice"><br>
+						<span class="title"><span style="color:#FF0000;">*</span>预售结束时间：</span>
+						<input type="text" placeholder="请输入" name="" class="preTime"><br>
+						<span class="title"><span style="color:#FF0000;">*</span>发货时间：</span>
+						<select class="selectTime">
+							<option value="" selected="selected">预售时间结束</option>
+							<option value="">支付成功后</option>
+						</select> <input type="text" placeholder="请输入" name="" class="afterTime">
+						天内<br> <span class="title"><span
+							style="color:#FF0000;">*</span>每人限购数量：</span> <input type="text"
+							placeholder="请输入" name="" class="count"> 件
+					</div>
+					<div class="pre_sale" id="some_sale_container">
+						<span class="title"><span style="color:#FF0000;">*</span>预售金额：</span>
+						<input type="text" placeholder="请输入" name="" class="prePrice"><br>
+
+						<div class="some_sale_price">
+							<div class="some_sale_prices some_sale_one">
+								<span class="text">预售持续至尾款支付前一自然日(含)</span>
+							</div>
+							<div class="some_sale_prices some_sale_two">
+								<span>尾款支付开始时间</span> <input type="text" name=""
+									class="some_sale_time">
+								<div class="text">持续七日</div>
+							</div>
+							<div class="some_sale_prices some_sale_three">
+								<span class="text">尾款支付七日内可发货</span>
+							</div>
+						</div>
+						<div>
+							<span class="stepNum">1</span><span class="stepStrip"></span><span
+								class="stepNum">2</span><span class="stepStrip2"></span><span
+								class="stepNum">3</span>
+						</div>
+						<div class="proportion">
+							<span>预付款：</span> <select class="selectProportion">
+								<option value="10" selected="selected">10%</option>
+								<option value="20" selected="selected">20%</option>
+							</select> <span class="weiProportion">尾款：</span><span>90%</span> <span
+								class="fahuo">发货</span>
+						</div>
+
+						<span class="title"><span style="color:#FF0000;">*</span>每人限购数量：</span>
+						<input type="text" placeholder="请输入" name="" class="count">
+						件
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<script type="text/javascript" src="../js/goods.js"></script>
+</body>
+</html>

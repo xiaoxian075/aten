@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.ShakeDao">
+
+	<!-- 数据库映射模型区域 -->
+	<resultMap id="resultShake" type="com.aten.model.orm.Shake" >
+		<result property="shake_id" column="shake_id" />
+		<result property="shake_name" column="shake_name" />
+		<result property="start_time" column="start_time" />
+		<result property="end_time" column="end_time" />
+		<result property="activity_rule" column="activity_rule" />
+		<result property="everyone_draw_num" column="everyone_draw_num" />
+		<result property="draw_num_day" column="draw_num_day" />
+		<result property="lottery_activity_num" column="lottery_activity_num" />
+		<result property="draw_out_time" column="draw_out_time" />
+		<result property="state" column="state" />
+		<result property="probability_winning" column="probability_winning" />
+	</resultMap>
+
+	<!-- 新增数据区域 -->
+	<sql id="insertCommon">
+		INSERT INTO t_shake
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="shake_id != null"> shake_id,</if>
+			<if test="shake_name != null"> shake_name,</if>
+			<if test="start_time != null"> start_time,</if>
+			<if test="end_time != null"> end_time,</if>
+			<if test="activity_rule != null"> activity_rule,</if>
+			<if test="everyone_draw_num != null"> everyone_draw_num,</if>
+			<if test="draw_num_day != null"> draw_num_day,</if>
+			<if test="lottery_activity_num != null"> lottery_activity_num,</if>
+			<if test="draw_out_time != null"> draw_out_time,</if>
+			<if test="probability_winning != null"> probability_winning,</if>
+			<if test="state != null"> state</if>
+			
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="shake_id != null">#{shake_id},</if>
+			<if test="shake_name != null">#{shake_name},</if>
+			<if test="start_time != null">#{start_time},</if>
+			<if test="end_time != null">#{end_time},</if>
+			<if test="activity_rule != null">#{activity_rule},</if>
+			<if test="everyone_draw_num != null">#{everyone_draw_num},</if>
+			<if test="draw_num_day != null">#{draw_num_day},</if>
+			<if test="lottery_activity_num != null">#{lottery_activity_num},</if>
+			<if test="draw_out_time != null">#{draw_out_time},</if>
+			<if test="probability_winning != null">#{probability_winning},</if>
+			<if test="state != null">#{state}</if>
+			
+		</trim>
+	</sql>
+	
+	<insert id="insert" parameterType="com.aten.model.orm.Shake">
+		<include refid="insertCommon" />
+	</insert>
+
+	<insert id="insertGetPk" parameterType="com.aten.model.orm.Shake" >
+		<include refid="insertCommon" />
+		<selectKey resultType="String" order="AFTER" keyProperty="shake_id">  
+	       SELECT @@IDENTITY AS ID  
+	    </selectKey>  
+	</insert>
+	
+	<!-- 更新数据区域 -->
+	<sql id="update_clause">
+		<set>
+			<trim suffixOverrides=",">
+				<if test="shake_id != null"> shake_id = #{shake_id}, </if>
+				<if test="shake_name != null"> shake_name = #{shake_name}, </if>
+				<if test="start_time != null"> start_time = #{start_time}, </if>
+				<if test="end_time != null"> end_time = #{end_time}, </if>
+				<if test="activity_rule != null"> activity_rule = #{activity_rule}, </if>
+				<if test="everyone_draw_num != null"> everyone_draw_num = #{everyone_draw_num}, </if>
+				<if test="draw_num_day != null"> draw_num_day = #{draw_num_day}, </if>
+				<if test="lottery_activity_num != null"> lottery_activity_num = #{lottery_activity_num}, </if>
+				<if test="draw_out_time != null"> draw_out_time = #{draw_out_time}, </if>
+				<if test="probability_winning != null"> probability_winning = #{probability_winning}, </if>
+				<if test="state != null"> state = #{state} </if>
+				
+			</trim>
+		</set>
+	</sql>
+	
+	
+	
+	
+
+	<update id="update" parameterType="com.aten.model.orm.Shake">
+		UPDATE t_shake <include refid="update_clause" /> WHERE shake_id = #{shake_id}
+	</update>
+
+	<!-- 删除数据区域 -->
+	<delete id="delete" parameterType="String">
+		delete from t_shake where shake_id in
+		<foreach item="idItem" collection="array" index="index" open="(" separator="," close=")">
+			#{idItem}
+		</foreach>
+	</delete>
+
+	<!-- 获取对象数据区域 -->
+	<select id="get" parameterType="String"	resultMap="resultShake">
+		 SELECT
+		 t.shake_id,t.probability_winning,t.shake_name,t.start_time,t.end_time,t.activity_rule,t.everyone_draw_num,t.draw_num_day,t.lottery_activity_num,t.draw_out_time,t.state
+		 FROM t_shake t WHERE shake_id = #{shake_id}
+	</select>
+	
+	<!-- 搜索数据区域 -->
+	<sql id="where_clause">
+		<where> 
+			1=1
+			<if test="shake_id != null"> and t.shake_id = #{shake_id} </if>
+			<if test="shake_id_vague != null"> and instr(t.shake_id,#{shake_id_vague})>0 </if>
+			<if test="shake_name != null"> and t.shake_name = #{shake_name} </if>
+			<if test="shake_name_vague != null"> and instr(t.shake_name,#{shake_name_vague})>0 </if>
+			<if test="start_time != null"> and t.start_time = #{start_time} </if>
+			<if test="start_time_vague != null"> and instr(t.start_time,#{start_time_vague})>0 </if>
+			<if test="end_time != null"> and t.end_time = #{end_time} </if>
+			<if test="end_time_vague != null"> and instr(t.end_time,#{end_time_vague})>0 </if>
+			<if test="activity_rule != null"> and t.activity_rule = #{activity_rule} </if>
+			<if test="activity_rule_vague != null"> and instr(t.activity_rule,#{activity_rule_vague})>0 </if>
+			<if test="everyone_draw_num != null"> and t.everyone_draw_num = #{everyone_draw_num} </if>
+			<if test="everyone_draw_num_vague != null"> and instr(t.everyone_draw_num,#{everyone_draw_num_vague})>0 </if>
+			<if test="draw_num_day != null"> and t.draw_num_day = #{draw_num_day} </if>
+			<if test="draw_num_day_vague != null"> and instr(t.draw_num_day,#{draw_num_day_vague})>0 </if>
+			<if test="lottery_activity_num != null"> and t.lottery_activity_num = #{lottery_activity_num} </if>
+			<if test="lottery_activity_num_vague != null"> and instr(t.lottery_activity_num,#{lottery_activity_num_vague})>0 </if>
+			<if test="draw_out_time != null"> and t.draw_out_time = #{draw_out_time} </if>
+			<if test="draw_out_time_vague != null"> and instr(t.draw_out_time,#{draw_out_time_vague})>0 </if>
+			<if test="state != null"> and t.state = #{state} </if>
+			<if test="state_vague != null"> and instr(t.state#{state_vague})>0 </if>
+			<if test="start_date != null"> and  t.order_time  &gt;=  #{start_date}  </if>
+			<if test="end_date != null">   and  t.order_time  &lt;=  #{end_date}</if>
+		</where>
+	</sql>
+	
+	<sql id="getCommon">
+		select  t.shake_id,t.probability_winning,t.shake_name,t.start_time,t.end_time,t.activity_rule,t.everyone_draw_num,t.draw_num_day,t.lottery_activity_num,t.draw_out_time,t.state
+		from t_shake t
+		<include refid="where_clause" /> order by shake_id desc
+	</sql>
+
+	
+
+	<select id="getList" parameterType="map" resultMap="resultShake">
+            <include refid="getCommon" />
+             <if test="start != null">
+         		LIMIT ${start},${limit}
+        	</if> 
+	</select>
+
+	<select id="getCount" parameterType="map" resultType="int">
+			select count(*) ct from t_shake t <include refid="where_clause" />
+	</select>
+	
+	
+	<!-- 排序区域 -->
+	<update id="updateBatch" parameterType="java.util.List">
+	   <foreach collection="list" item="item" index="index" separator=";">  
+			update t_shake 
+			<set>
+				sort_no = #{item.sort_no}
+			</set>
+			WHERE shake_id = #{item.id}
+	   </foreach>
+	</update>
+	
+</mapper>
+

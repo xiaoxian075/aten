@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.GoodsActivityMapDao">
+
+	<!-- 数据库映射模型区域 -->
+	<resultMap id="resultGoodsActivityMap" type="com.aten.model.orm.GoodsActivityMap">
+		<result property="gam_id" column="gam_id" />
+		<result property="goods_id" column="goods_id" />
+		<result property="activity_id" column="activity_id" />
+		<result property="goods_name" column="goods_name" />
+		<result property="fixed_price" column="fixed_price" />
+		<result property="activity_price" column="activity_price" />
+	</resultMap>
+
+	<!-- 新增数据区域 -->
+	<sql id="insertCommon">
+		INSERT INTO t_goods_activity_map
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="gam_id != null"> gam_id,</if>
+			<if test="goods_id != null"> goods_id,</if>
+			<if test="activity_id != null"> activity_id</if>
+
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="gam_id != null">#{gam_id},</if>
+			<if test="goods_id != null">#{goods_id},</if>
+			<if test="activity_id != null">#{activity_id}</if>
+
+		</trim>
+	</sql>
+
+	<insert id="insert" parameterType="com.aten.model.orm.GoodsActivityMap">
+		<include refid="insertCommon" />
+	</insert>
+
+	<insert id="insertGetPk" parameterType="com.aten.model.orm.GoodsActivityMap">
+		<include refid="insertCommon" />
+		<selectKey resultType="String" order="AFTER" keyProperty="gam_id">
+			SELECT @@IDENTITY AS ID
+		</selectKey>
+	</insert>
+
+	<!-- 更新数据区域 -->
+	<sql id="update_clause">
+		<set>
+			<trim suffixOverrides=",">
+				<if test="gam_id != null"> gam_id = #{gam_id}, </if>
+				<if test="goods_id != null"> goods_id = #{goods_id}, </if>
+				<if test="activity_id != null"> activity_id = #{activity_id} </if>
+
+			</trim>
+		</set>
+	</sql>
+
+
+
+	<!-- 删除活动关联的商品 -->
+	<delete id="deleteGoodsActivity" parameterType="String">
+		delete from
+		t_goods_activity_map where activity_id=#{activity_id}
+	</delete>
+
+	<update id="update" parameterType="com.aten.model.orm.GoodsActivityMap">
+		UPDATE t_goods_activity_map
+		<include refid="update_clause" />
+		WHERE gam_id = #{gam_id}
+	</update>
+
+	<!-- 删除数据区域 -->
+	<delete id="delete" parameterType="String">
+		delete from t_goods_activity_map where gam_id in
+		<foreach item="idItem" collection="array" index="index" open="("
+			separator="," close=")">
+			#{idItem}
+		</foreach>
+	</delete>
+
+	<!-- 获取对象数据区域 -->
+	<select id="get" parameterType="String" resultMap="resultGoodsActivityMap">
+		SELECT
+		t.gam_id,t.goods_id,t.activity_id
+		FROM t_goods_activity_map t WHERE gam_id = #{gam_id}
+	</select>
+	<select id="findByActivityId" parameterType="String" resultMap="resultGoodsActivityMap">
+		SELECT
+		t.gam_id,t.goods_id,t.activity_id
+		FROM t_goods_activity_map t WHERE activity_id = #{activity_id}
+	</select>
+	<!-- 搜索数据区域 -->
+	<sql id="where_clause">
+		<where>
+			1=1
+			<if test="gam_id != null"> and t.gam_id = #{gam_id} </if>
+			<if test="gam_id_vague != null"> and instr(t.gam_id,#{gam_id_vague})>0 </if>
+			<if test="goods_id != null"> and t.goods_id = #{goods_id} </if>
+			<if test="goods_id_vague != null"> and instr(t.goods_id,#{goods_id_vague})>0 </if>
+			<if test="activity_id != null"> and t.activity_id = #{activity_id} </if>
+			<if test="activity_id_vague != null"> and instr(t.activity_id#{activity_id_vague})>0 </if>
+
+		</where>
+	</sql>
+
+	<sql id="getCommon">
+		select t.*,g.goods_name,g.fixed_price from t_goods_activity_map t left
+		join t_goods g on t.goods_id=g.goods_id
+		<include refid="where_clause" />
+		order by gam_id desc
+	</sql>
+
+	<select id="findAll" parameterType="String" resultMap="resultGoodsActivityMap">
+		select DISTINCT(goods_id) from t_goods_activity_map where activity_id
+		!=#{activity_id}
+	</select>
+
+	<select id="getList" parameterType="map" resultMap="resultGoodsActivityMap">
+		<include refid="getCommon" />
+		<if test="start != null">
+			LIMIT ${start},${limit}
+		</if>
+	</select>
+
+	<select id="getCount" parameterType="map" resultType="int">
+		select count(*) ct from t_goods_activity_map t
+		<include refid="where_clause" />
+	</select>
+
+
+	<!-- 排序区域 -->
+	<update id="updateBatch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index"
+			separator=";">
+			update t_goods_activity_map
+			<set>
+				sort_no = #{item.sort_no}
+			</set>
+			WHERE gam_id = #{item.id}
+		</foreach>
+	</update>
+
+</mapper>
+

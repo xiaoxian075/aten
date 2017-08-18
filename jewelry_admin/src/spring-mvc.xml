@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-3.0.xsd
+    http://www.springframework.org/schema/mvc
+    http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+	<!-- 添加注解驱动 -->
+	<mvc:annotation-driven>
+		<mvc:message-converters>
+			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+				<property name="supportedMediaTypes">
+					<list>
+						<value>text/plain;charset=UTF-8</value>
+						<value>text/html;charset=UTF-8</value>
+					</list>
+				</property>
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+	<!-- 默认的注解映射的支持 -->
+	<!-- <mvc:annotation-driven /> -->
+
+
+
+	<!-- 自动扫描该包，使SpringMVC认为包下用了@controller注解的类是控制器 -->
+	<context:component-scan base-package="com.aten.controller" />
+
+	<!-- jsp视图文件配置 -->
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<!-- 这里的配置我的理解是自动给后面的方法return的字符串加上前缀和后缀，变成一个 可用的url地址 -->
+		<property name="prefix" value="/WEB-INF/jsp/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+
+	<!-- multipart解析器的配置,多文件上传 -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize" value="104857600" />
+		<property name="maxInMemorySize" value="4096" />
+	</bean>
+	
+	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">  
+	    <property name="webBindingInitializer">  
+	        <bean class="com.aten.annotation.Initializer"/>  
+	    </property>  
+	</bean>
+	
+	<mvc:interceptors>
+		<!-- 验证会话 -->
+		<mvc:interceptor>
+			<mvc:mapping path="/admin/**" />
+			<bean class="com.aten.interceptor.SessionInterceptor">
+				<property name="allowUrls">
+					<list>
+						<value>/login</value>
+						<value>/loginAccount</value>
+						<value>/codepage</value>
+						<value>/admin/index</value>
+						<value>/dbSelect</value>
+						<value>/codeBuild</value>
+						<value>/admin/upload/image</value>
+						<value>/admin/upload/uploadBase64Image</value>
+						<value>/nopower</value>
+						<value>/getCheckCode</value>
+					</list>
+				</property>
+			</bean>
+		</mvc:interceptor>
+		<!-- 验证权限 -->
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<bean class="com.aten.interceptor.PowerInterceptor">
+				<property name="allowUrls">
+					<list>
+						<value>/login</value>
+						<value>/loginAccount</value>
+						<value>/codepage</value>
+						<value>/dbSelect</value>
+						<value>/codeBuild</value>
+						<value>/admin/upload/image</value>
+						<value>/admin/upload/oss</value>
+						<value>/index</value>
+						<value>/loginexit</value>
+						<value>/nopower</value>
+						<value>/getCheckCode</value>
+						<value>/admin/area/normalList</value>
+						<value>/admin/cat/normalList</value>
+					</list>
+				</property>
+			</bean>
+		</mvc:interceptor>
+		<!-- 验证是否重复提交 -->
+		<!-- <mvc:interceptor> <mvc:mapping path="/admin/**" /> <bean class="com.aten.interceptor.TokenInterceptor"/> 
+			有问题，后期处理 </mvc:interceptor> -->
+	</mvc:interceptors>
+
+
+
+
+</beans>  

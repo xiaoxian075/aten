@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.JobDao">
+
+	<!-- 数据库映射模型区域 -->
+	<resultMap id="resultJob" type="com.aten.model.orm.Job">
+		<result property="job_id" column="job_id" />
+		<result property="info_id" column="info_id" />
+		<result property="modoule" column="modoule" />
+		<result property="in_date" column="in_date" />
+
+	</resultMap>
+
+	<!-- 新增数据区域 -->
+	<sql id="insertCommon">
+		INSERT INTO t_job
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="job_id != null"> job_id,</if>
+			<if test="info_id != null"> info_id,</if>
+			<if test="modoule != null"> modoule,</if>
+			<if test="in_date != null"> in_date</if>
+
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="job_id != null">#{job_id},</if>
+			<if test="info_id != null">#{info_id},</if>
+			<if test="modoule != null">#{modoule},</if>
+			<if test="in_date != null">#{in_date}</if>
+
+		</trim>
+	</sql>
+
+	<insert id="insert" parameterType="com.aten.model.orm.Job">
+		<include refid="insertCommon" />
+	</insert>
+
+	<insert id="insertGetPk" parameterType="com.aten.model.orm.Job">
+		<include refid="insertCommon" />
+		<selectKey resultType="String" order="AFTER" keyProperty="job_id">
+			SELECT @@IDENTITY AS ID
+		</selectKey>
+	</insert>
+
+	<!-- 更新数据区域 -->
+	<sql id="update_clause">
+		<set>
+			<trim suffixOverrides=",">
+				<if test="job_id != null"> job_id = #{job_id}, </if>
+				<if test="info_id != null"> info_id = #{info_id}, </if>
+				<if test="modoule != null"> modoule = #{modoule}, </if>
+				<if test="in_date != null"> in_date = #{in_date} </if>
+
+			</trim>
+		</set>
+	</sql>
+
+
+
+
+
+	<update id="update" parameterType="com.aten.model.orm.Job">
+		UPDATE t_job
+		<include refid="update_clause" />
+		WHERE job_id = #{job_id}
+	</update>
+
+	<!-- 删除数据区域 -->
+	<delete id="delete" parameterType="String">
+		delete from t_job where job_id in
+		<foreach item="idItem" collection="array" index="index" open="("
+			separator="," close=")">
+			#{idItem}
+		</foreach>
+	</delete>
+
+	<!-- 获取对象数据区域 -->
+	<select id="get" parameterType="String" resultMap="resultJob">
+		SELECT
+		t.job_id,t.info_id,t.modoule,t.in_date
+		FROM t_job t WHERE job_id = #{job_id}
+	</select>
+
+	<!-- 搜索数据区域 -->
+	<sql id="where_clause">
+		<where>
+			1=1
+			<if test="job_id != null"> and t.job_id = #{job_id} </if>
+			<if test="job_id_vague != null"> and instr(t.job_id,#{job_id_vague})>0 </if>
+			<if test="info_id != null"> and t.info_id = #{info_id} </if>
+			<if test="info_id_vague != null"> and instr(t.info_id,#{info_id_vague})>0 </if>
+			<if test="modoule != null"> and t.modoule = #{modoule} </if>
+			<if test="modoule_vague != null"> and instr(t.modoule,#{modoule_vague})>0 </if>
+			<if test="in_date != null"> and t.in_date = #{in_date} </if>
+			<if test="in_date_vague != null"> and instr(t.in_date#{in_date_vague})>0 </if>
+
+		</where>
+	</sql>
+
+	<sql id="getCommon">
+		select t.job_id,t.info_id,t.modoule,t.in_date
+		from t_job t
+		<include refid="where_clause" />
+		order by job_id desc
+	</sql>
+
+
+
+	<select id="getList" parameterType="map" resultMap="resultJob">
+		<include refid="getCommon" />
+		<if test="start != null">
+			LIMIT ${start},${limit}
+		</if>
+	</select>
+
+	<select id="getCount" parameterType="map" resultType="int">
+		select count(*) ct from t_job t
+		<include refid="where_clause" />
+	</select>
+
+
+	<!-- 排序区域 -->
+	<update id="updateBatch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index"
+			separator=";">
+			update t_job
+			<set>
+				sort_no = #{item.sort_no}
+			</set>
+			WHERE job_id = #{item.id}
+		</foreach>
+	</update>
+
+</mapper>
+

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<decorators defaultdir="/WEB-INF/decorators">
+	<!-- 去掉需要装饰的内容 -->
+	<!-- <excludes> <pattern>/css/*</pattern> <pattern>/image/*</pattern> <pattern>/js/*</pattern> 
+		</excludes> -->
+
+
+	<!-- 定义装饰器需要装饰的页面 -->
+	<decorator name="main" page="main.jsp">
+		<pattern>/admin/*</pattern>
+		<pattern>/nopower</pattern>
+		<pattern>/recommit</pattern>
+		<pattern>/error</pattern>
+	</decorator>
+	<decorator name="mainIndex" page="main.jsp">
+		<pattern>/index</pattern>
+	</decorator>
+</decorators>  

@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.DataCountDao">
+
+	<!-- 数据库映射模型区域 -->
+	<resultMap id="resultDataCount" type="com.aten.model.orm.DataCount" >
+		<result property="dc_id" column="dc_id" />
+		<result property="statistics_date" column="statistics_date" />
+		<result property="settle_date" column="settle_date" />
+		<result property="order_deal_count" column="order_deal_count" />
+		<result property="deal_total_amount" column="deal_total_amount" />
+		<result property="deal_man_num" column="deal_man_num" />
+		<result property="plat_activity_num" column="plat_activity_num" />
+		<result property="avg_price" column="avg_price" />
+		<result property="plat_all_member_count" column="plat_all_member_count" />
+		<result property="plat_inc_member_count" column="plat_inc_member_count" />
+		<result property="plat_vip_member_count" column="plat_vip_member_count" />
+		<result property="plat_vip_inc_member_count" column="plat_vip_inc_member_count" />
+		
+	</resultMap>
+
+	<!-- 新增数据区域 -->
+	<sql id="insertCommon">
+		INSERT INTO t_data_count
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="dc_id != null"> dc_id,</if>
+			<if test="statistics_date != null"> statistics_date,</if>
+			<if test="settle_date != null"> settle_date,</if>
+			<if test="order_deal_count != null"> order_deal_count,</if>
+			<if test="deal_total_amount != null"> deal_total_amount,</if>
+			<if test="deal_man_num != null"> deal_man_num,</if>
+			<if test="plat_activity_num != null"> plat_activity_num,</if>
+			<if test="avg_price != null"> avg_price,</if>
+			<if test="plat_all_member_count != null"> plat_all_member_count,</if>
+			<if test="plat_inc_member_count != null"> plat_inc_member_count,</if>
+			<if test="plat_vip_member_count != null"> plat_vip_member_count,</if>
+			<if test="plat_vip_inc_member_count != null"> plat_vip_inc_member_count</if>
+			
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="dc_id != null">#{dc_id},</if>
+			<if test="statistics_date != null">#{statistics_date},</if>
+			<if test="settle_date != null">#{settle_date},</if>
+			<if test="order_deal_count != null">#{order_deal_count},</if>
+			<if test="deal_total_amount != null">#{deal_total_amount},</if>
+			<if test="deal_man_num != null">#{deal_man_num},</if>
+			<if test="plat_activity_num != null">#{plat_activity_num},</if>
+			<if test="avg_price != null">#{avg_price},</if>
+			<if test="plat_all_member_count != null">#{plat_all_member_count},</if>
+			<if test="plat_inc_member_count != null">#{plat_inc_member_count},</if>
+			<if test="plat_vip_member_count != null">#{plat_vip_member_count},</if>
+			<if test="plat_vip_inc_member_count != null">#{plat_vip_inc_member_count}</if>
+			
+		</trim>
+	</sql>
+	
+	<insert id="insert" parameterType="com.aten.model.orm.DataCount">
+		<include refid="insertCommon" />
+	</insert>
+
+	<insert id="insertGetPk" parameterType="com.aten.model.orm.DataCount" >
+		<include refid="insertCommon" />
+		<selectKey resultType="String" order="AFTER" keyProperty="dc_id">  
+	       SELECT @@IDENTITY AS ID  
+	    </selectKey>  
+	</insert>
+	
+	<!-- 更新数据区域 -->
+	<sql id="update_clause">
+		<set>
+			<trim suffixOverrides=",">
+				<if test="dc_id != null"> dc_id = #{dc_id}, </if>
+				<if test="statistics_date != null"> statistics_date = #{statistics_date}, </if>
+				<if test="settle_date != null"> settle_date = #{settle_date}, </if>
+				<if test="order_deal_count != null"> order_deal_count = #{order_deal_count}, </if>
+				<if test="deal_total_amount != null"> deal_total_amount = #{deal_total_amount}, </if>
+				<if test="deal_man_num != null"> deal_man_num = #{deal_man_num}, </if>
+				<if test="plat_activity_num != null"> plat_activity_num = #{plat_activity_num}, </if>
+				<if test="avg_price != null"> avg_price = #{avg_price}, </if>
+				<if test="plat_all_member_count != null"> plat_all_member_count = #{plat_all_member_count}, </if>
+				<if test="plat_inc_member_count != null"> plat_inc_member_count = #{plat_inc_member_count}, </if>
+				<if test="plat_vip_member_count != null"> plat_vip_member_count = #{plat_vip_member_count}, </if>
+				<if test="plat_vip_inc_member_count != null"> plat_vip_inc_member_count = #{plat_vip_inc_member_count} </if>
+				
+			</trim>
+		</set>
+	</sql>
+	
+	
+	
+	
+
+	<update id="update" parameterType="com.aten.model.orm.DataCount">
+		UPDATE t_data_count <include refid="update_clause" /> WHERE dc_id = #{dc_id}
+	</update>
+
+	<!-- 删除数据区域 -->
+	<delete id="delete" parameterType="String">
+		delete from t_data_count where dc_id in
+		<foreach item="idItem" collection="array" index="index" open="(" separator="," close=")">
+			#{idItem}
+		</foreach>
+	</delete>
+
+	<!-- 获取对象数据区域 -->
+	<select id="get" parameterType="String"	resultMap="resultDataCount">
+		 SELECT
+		 t.dc_id,t.statistics_date,t.settle_date,t.order_deal_count,t.deal_total_amount,t.deal_man_num,t.plat_activity_num,t.avg_price,t.plat_all_member_count,t.plat_inc_member_count,t.plat_vip_member_count,t.plat_vip_inc_member_count
+		 FROM t_data_count t WHERE dc_id = #{dc_id}
+	</select>
+	
+	<!-- 搜索数据区域 -->
+	<sql id="where_clause">
+		<where> 
+			1=1
+			<if test="dc_id != null"> and t.dc_id = #{dc_id} </if>
+			<if test="dc_id_vague != null"> and instr(t.dc_id,#{dc_id_vague})>0 </if>
+			<if test="statistics_date != null"> and t.statistics_date = #{statistics_date} </if>
+			<if test="statistics_date_vague != null"> and instr(t.statistics_date,#{statistics_date_vague})>0 </if>
+			<if test="settle_date != null"> and t.settle_date = #{settle_date} </if>
+			<if test="settle_date_vague != null"> and instr(t.settle_date,#{settle_date_vague})>0 </if>
+			<if test="order_deal_count != null"> and t.order_deal_count = #{order_deal_count} </if>
+			<if test="order_deal_count_vague != null"> and instr(t.order_deal_count,#{order_deal_count_vague})>0 </if>
+			<if test="deal_total_amount != null"> and t.deal_total_amount = #{deal_total_amount} </if>
+			<if test="deal_total_amount_vague != null"> and instr(t.deal_total_amount,#{deal_total_amount_vague})>0 </if>
+			<if test="deal_man_num != null"> and t.deal_man_num = #{deal_man_num} </if>
+			<if test="deal_man_num_vague != null"> and instr(t.deal_man_num,#{deal_man_num_vague})>0 </if>
+			<if test="plat_activity_num != null"> and t.plat_activity_num = #{plat_activity_num} </if>
+			<if test="plat_activity_num_vague != null"> and instr(t.plat_activity_num,#{plat_activity_num_vague})>0 </if>
+			<if test="avg_price != null"> and t.avg_price = #{avg_price} </if>
+			<if test="avg_price_vague != null"> and instr(t.avg_price,#{avg_price_vague})>0 </if>
+			<if test="plat_all_member_count != null"> and t.plat_all_member_count = #{plat_all_member_count} </if>
+			<if test="plat_all_member_count_vague != null"> and instr(t.plat_all_member_count,#{plat_all_member_count_vague})>0 </if>
+			<if test="plat_inc_member_count != null"> and t.plat_inc_member_count = #{plat_inc_member_count} </if>
+			<if test="plat_inc_member_count_vague != null"> and instr(t.plat_inc_member_count,#{plat_inc_member_count_vague})>0 </if>
+			<if test="plat_vip_member_count != null"> and t.plat_vip_member_count = #{plat_vip_member_count} </if>
+			<if test="plat_vip_member_count_vague != null"> and instr(t.plat_vip_member_count,#{plat_vip_member_count_vague})>0 </if>
+			<if test="plat_vip_inc_member_count != null"> and t.plat_vip_inc_member_count = #{plat_vip_inc_member_count} </if>
+			<if test="plat_vip_inc_member_count_vague != null"> and instr(t.plat_vip_inc_member_count#{plat_vip_inc_member_count_vague})>0 </if>
+			
+		</where>
+	</sql>
+	
+	<sql id="getCommon">
+		select  t.dc_id,t.statistics_date,t.settle_date,t.order_deal_count,t.deal_total_amount,t.deal_man_num,t.plat_activity_num,t.avg_price,t.plat_all_member_count,t.plat_inc_member_count,t.plat_vip_member_count,t.plat_vip_inc_member_count
+		from t_data_count t
+		<include refid="where_clause" /> order by dc_id desc
+	</sql>
+
+	
+
+	<select id="getList" parameterType="map" resultMap="resultDataCount">
+            <include refid="getCommon" />
+             <if test="start != null">
+         		LIMIT ${start},${limit}
+        	</if> 
+	</select>
+
+	<select id="getCount" parameterType="map" resultType="int">
+			select count(*) ct from t_data_count t <include refid="where_clause" />
+	</select>
+	
+	
+	<!-- 排序区域 -->
+	<update id="updateBatch" parameterType="java.util.List">
+	   <foreach collection="list" item="item" index="index" separator=";">  
+			update t_data_count 
+			<set>
+				sort_no = #{item.sort_no}
+			</set>
+			WHERE dc_id = #{item.id}
+	   </foreach>
+	</update>
+	
+</mapper>
+

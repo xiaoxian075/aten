@@ -1,0 +1,9 @@
+<tr>
+	<td class="td_left">[field_note][is_must_span]</td>
+	<td class="td_right_two">
+		 <c:set var="one_img_name" value="[field_name]"/>
+		 <c:set var="one_img_url" value="${{DEFINE_CLASS_NAME}.[field_name]}"/>
+		 <c:set var="one_img_tip" value="请上传[field_note]!"/>
+		 <%@ include file="/WEB-INF/common/one_image_show.jsp"%>
+	</td>
+</tr> 

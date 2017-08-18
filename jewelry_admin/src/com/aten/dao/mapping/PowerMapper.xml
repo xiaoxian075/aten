@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.PowerDao">
+
+	<cache type="org.mybatis.caches.ehcache.EhcacheCache"/>
+
+	<!-- 数据库映射模型区域 -->
+	<resultMap id="resultPower" type="com.aten.model.orm.Power">
+		<result property="power_id" column="power_id" />
+		<result property="power_name" column="power_name" />
+		<result property="menu_id" column="menu_id" />
+		<result property="url" column="url" />
+		<result property="note" column="note" />
+		<result property="add_time" column="add_time" />
+		<result property="path_name" column="path_name" />
+		<result property="plat_role" column="plat_role" />
+		<result property="is_control_power" column="is_control_power" />
+	</resultMap>
+
+	<!-- 新增数据区域 -->
+	<sql id="insertCommon">
+		insert into t_power(
+		<if test="power_id != null"> power_id,</if>
+		<if test="power_name != null"> power_name,</if>
+		<if test="menu_id != null"> menu_id,</if>
+		<if test="url != null"> url,</if>
+		<if test="note != null"> note,</if>
+		<if test="path_name != null"> path_name,</if>
+		<if test="plat_role != null"> plat_role,</if>
+		<if test="is_control_power != null"> is_control_power,</if>
+		add_time
+		)
+		values(
+		<if test="power_id != null">#{power_id},</if>
+		<if test="power_name != null">#{power_name},</if>
+		<if test="menu_id != null">#{menu_id},</if>
+		<if test="url != null">#{url},</if>
+		<if test="note != null">#{note},</if>
+		<if test="path_name != null">#{path_name},</if>
+		<if test="plat_role != null">#{plat_role},</if>
+		<if test="is_control_power != null"> #{is_control_power},</if>
+		now()
+		)
+	</sql>
+
+	<insert id="insert" parameterType="com.aten.model.orm.Power">
+		<include refid="insertCommon" />
+	</insert>
+
+	<!-- 更新数据区域 -->
+	<sql id="update_clause">
+		<set>
+			<if test="power_name != null"> power_name = #{power_name}, </if>
+			<if test="menu_id != null"> menu_id = #{menu_id}, </if>
+			<if test="url != null"> url = #{url}, </if>
+			<if test="note != null"> note = #{note}, </if>
+			<if test="path_name != null"> path_name = #{path_name},</if>
+			<if test="plat_role != null"> plat_role = #{plat_role},</if>
+			<if test="power_id != null"> power_id = #{power_id}, </if>
+			<if test="is_control_power != null"> is_control_power = #{is_control_power} </if>
+		</set>
+	</sql>
+
+
+	<update id="update" parameterType="com.aten.model.orm.Power">
+		update t_power
+		<include refid="update_clause" />
+		where power_id = #{power_id}
+	</update>
+
+	<!-- 删除数据区域 -->
+	<delete id="delete" parameterType="String">
+		delete from t_power where power_id in
+		<foreach item="idItem" collection="array" index="index" open="("
+			separator="," close=")">
+			#{idItem}
+		</foreach>
+	</delete>
+
+	<!-- 获取对象数据区域 -->
+	<select id="get" parameterType="String" resultMap="resultPower">
+		select
+		power_id,power_name,menu_id,url,note,add_time,path_name,plat_role,is_control_power
+		from t_power where power_id = #{power_id}
+	</select>
+
+	<!-- 搜索数据区域 -->
+	<sql id="where_clause">
+		<if test="power_id != null"> and power_id = #{power_id} </if>
+		<if test="power_name != null"> and instr(power_name,#{power_name})>0</if>
+		<if test="menu_id != null"> and menu_id = #{menu_id} </if>
+		<if test="url != null"> and url = #{url} </if>
+		<if test="url_vague != null"> and  instr(url,#{url_vague}) > 0 </if>
+		<if test="url_search != null"> and instr(url,#{url_search})>0</if>
+		<if test="note != null"> and note = #{note} </if>
+		<if test="add_time != null"> and add_time = #{add_time} </if>
+		<if test="path_name != null"> and path_name = #{path_name} </if>
+		<if test="plat_role != null"> and plat_role = #{plat_role} </if>
+		<if test="is_control_power != null"> and is_control_power = #{is_control_power} </if>
+	</sql>
+
+	<select id="getList" parameterType="map" resultMap="resultPower">
+		select * from t_power
+		where 1 = 1
+		<include refid="where_clause" />
+		order by menu_id desc,power_id desc
+		<if test="start != null">
+			LIMIT ${start},${limit}
+		</if>
+	</select>
+
+	<select id="getCount" parameterType="map" resultType="int">
+		select count(*) ct from t_power
+		where 1 = 1
+		<include refid="where_clause" />
+	</select>
+
+
+	<!-- 排序区域 -->
+	<update id="updateBatch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index"
+			separator=";">
+			update t_power
+			<set>
+				sort_no = #{item.sort_no}
+			</set>
+			where power_id = #{item.id}
+		</foreach>
+	</update>
+
+</mapper>
+

@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.CatAttrDao">
+
+	<cache type="org.mybatis.caches.ehcache.EhcacheCache"/> 
+
+	<!-- 数据库映射模型区域 -->
+	<resultMap id="resultCatAttr" type="com.aten.model.orm.CatAttr">
+		<result property="ident_id" column="ident_id" />
+		<result property="cat_id" column="cat_id" />
+		<result property="attr_id" column="attr_id" />
+		<result property="show_type" column="show_type" />
+		<result property="option_type" column="option_type" />
+		<result property="is_alisa" column="is_alisa" />
+		<result property="is_sku" column="is_sku" />
+		<result property="is_key" column="is_key" />
+		<result property="is_index" column="is_index" />
+		<result property="is_must" column="is_must" />
+		<result property="is_custom_value" column="is_custom_value" />
+		<result property="attr_name" column="attr_name" />
+		<result property="manual_fee" column="manual_fee" />
+	</resultMap>
+	<!-- 删除分类关联的品牌 -->
+	<delete id="deleteCatSkuAttr" parameterType="String">
+		delete from
+		t_cat_attr where cat_id =#{cat_id} and is_sku='1'
+	</delete>
+	<!-- 删除分类关联的品牌 -->
+	<delete id="deleteCatKeyAttr" parameterType="String">
+		delete from
+		t_cat_attr where cat_id =#{cat_id} and is_key='1'
+	</delete>
+	<!-- 新增数据区域 -->
+	<sql id="insertCommon">
+		INSERT INTO t_cat_attr(
+		<if test="ident_id != null"> ident_id,</if>
+		<if test="cat_id != null"> cat_id,</if>
+		<if test="attr_id != null"> attr_id,</if>
+		<if test="show_type != null"> show_type,</if>
+		<if test="option_type != null"> option_type,</if>
+		<if test="is_alisa != null"> is_alisa,</if>
+		<if test="is_sku != null"> is_sku,</if>
+		<if test="is_key != null"> is_key,</if>
+		<if test="is_index != null"> is_index,</if>
+		<if test="is_must != null"> is_must,</if>
+		<if test="manual_fee != null"> manual_fee,</if>
+		<if test="is_custom_value != null"> is_custom_value</if>
+		)
+		VALUES(
+		<if test="ident_id != null">#{ident_id},</if>
+		<if test="cat_id != null">#{cat_id},</if>
+		<if test="attr_id != null">#{attr_id},</if>
+		<if test="show_type != null">#{show_type},</if>
+		<if test="option_type != null">#{option_type},</if>
+		<if test="is_alisa != null">#{is_alisa},</if>
+		<if test="is_sku != null">#{is_sku},</if>
+		<if test="is_key != null">#{is_key},</if>
+		<if test="is_index != null">#{is_index},</if>
+		<if test="is_must != null">#{is_must},</if>
+		<if test="manual_fee != null">#{manual_fee},</if>
+		<if test="is_custom_value != null">#{is_custom_value}</if>
+		)
+	</sql>
+
+	<insert id="insert" parameterType="com.aten.model.orm.CatAttr">
+		<include refid="insertCommon" />
+	</insert>
+
+	<insert id="insertGetPk" parameterType="com.aten.model.orm.CatAttr">
+		<selectKey resultType="String" order="AFTER" keyProperty="ident_id">
+			SELECT @@IDENTITY AS ID
+		</selectKey>
+		<include refid="insertCommon" />
+	</insert>
+
+	<!-- 更新数据区域 -->
+	<sql id="update_clause">
+		<set>
+			<if test="ident_id != null"> ident_id = #{ident_id}, </if>
+			<if test="cat_id != null"> cat_id = #{cat_id}, </if>
+			<if test="attr_id != null"> attr_id = #{attr_id}, </if>
+			<if test="show_type != null"> show_type = #{show_type}, </if>
+			<if test="option_type != null"> option_type = #{option_type}, </if>
+			<if test="is_alisa != null"> is_alisa = #{is_alisa}, </if>
+			<if test="is_sku != null"> is_sku = #{is_sku}, </if>
+			<if test="is_key != null"> is_key = #{is_key}, </if>
+			<if test="is_index != null"> is_index = #{is_index}, </if>
+			<if test="is_must != null"> is_must = #{is_must}, </if>
+			<if test="manual_fee != null"> manual_fee = #{manual_fee}, </if>
+			<if test="is_custom_value != null"> is_custom_value = #{is_custom_value} </if>
+
+		</set>
+	</sql>
+
+
+	<update id="update" parameterType="com.aten.model.orm.CatAttr">
+		UPDATE t_cat_attr
+		<include refid="update_clause" />
+		WHERE ident_id = #{ident_id}
+	</update>
+
+	<!-- 删除数据区域 -->
+	<delete id="delete" parameterType="String">
+		delete from t_cat_attr where ident_id in
+		<foreach item="idItem" collection="array" index="index" open="("
+			separator="," close=")">
+			#{idItem}
+		</foreach>
+	</delete>
+
+	<!-- 获取对象数据区域 -->
+	<select id="get" parameterType="String" resultMap="resultCatAttr">
+		SELECT
+		t.ident_id,t.cat_id,t.manual_fee,t.attr_id,t.show_type,t.option_type,t.is_alisa,t.is_sku,t.is_key,t.is_index,t.is_must,t.is_custom_value
+		FROM t_cat_attr t WHERE ident_id = #{ident_id}
+	</select>
+	<select id="findByAttrId" parameterType="String" resultMap="resultCatAttr">
+		SELECT
+		t.ident_id,t.cat_id,t.manual_fee,t.attr_id,t.show_type,t.option_type,t.is_alisa,t.is_sku,t.is_key,t.is_index,t.is_must,t.is_custom_value
+		FROM t_cat_attr t WHERE attr_id = #{attr_id}
+	</select>
+	<!-- 获取对象数据区域 -->
+	<select id="getByCatId" parameterType="String" resultMap="resultCatAttr">
+		SELECT
+		*
+		FROM t_cat_attr t WHERE t.cat_id = #{cat_id}
+	</select>
+
+	<!-- 搜索数据区域 -->
+	<sql id="where_clause">
+		<where>
+			1=1
+			<if test="ident_id != null"> and t.ident_id = #{ident_id} </if>
+			<if test="cat_id != null"> and t.cat_id = #{cat_id} </if>
+			<if test="manual_fee != null"> and t.manual_fee = #{manual_fee} </if>
+			<if test="attr_id != null"> and t.attr_id = #{attr_id} </if>
+			<if test="show_type != null"> and t.show_type = #{show_type} </if>
+			<if test="option_type != null"> and t.option_type = #{option_type} </if>
+			<if test="is_alisa != null"> and t.is_alisa = #{is_alisa} </if>
+			<if test="is_sku != null"> and t.is_sku = #{is_sku} </if>
+			<if test="is_key != null"> and t.is_key = #{is_key} </if>
+			<if test="is_index != null"> and t.is_index = #{is_index} </if>
+			<if test="is_must != null"> and t.is_must = #{is_must} </if>
+			<if test="is_custom_value != null"> and t.is_custom_value = #{is_custom_value} </if>
+
+		</where>
+	</sql>
+
+	<sql id="getCommon">
+		select t.* ,a.attr_name
+		from t_cat_attr t join t_attr a on
+		a.attr_id=t.attr_id
+		<include refid="where_clause" />
+		order by ident_id asc
+	</sql>
+
+
+
+	<select id="getList" parameterType="map" resultMap="resultCatAttr">
+		<include refid="getCommon" />
+		<if test="start != null">
+			LIMIT ${start},${limit}
+		</if>
+	</select>
+
+	<select id="getCount" parameterType="map" resultType="int">
+		select count(*) ct from t_cat_attr t
+		<include refid="where_clause" />
+	</select>
+
+
+	<!-- 排序区域 -->
+	<update id="updateBatch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" open="begin"
+			close=";end;" separator=";">
+			update t_cat_attr
+			<set>
+				sort_no = #{item.sort_no}
+			</set>
+			WHERE ident_id = #{item.id}
+		</foreach>
+	</update>
+</mapper>
+

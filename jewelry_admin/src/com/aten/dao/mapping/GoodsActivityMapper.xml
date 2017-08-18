@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.GoodsActivityDao">
+
+	<!-- 数据库映射模型区域 -->
+	<resultMap id="resultGoodsActivity" type="com.aten.model.orm.GoodsActivity">
+		<result property="activity_id" column="activity_id" />
+		<result property="activity_type" column="activity_type" />
+		<result property="activity_state" column="activity_state" />
+		<result property="activity_name" column="activity_name" />
+		<result property="introduce" column="introduce" />
+		<result property="activity_img" column="activity_img" />
+		<result property="discount" column="discount" />
+		<result property="start_time" column="start_time" />
+		<result property="end_time" column="end_time" />
+
+	</resultMap>
+
+	<!-- 新增数据区域 -->
+	<sql id="insertCommon">
+		INSERT INTO t_goods_activity
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="activity_id != null"> activity_id,</if>
+			<if test="activity_type != null"> activity_type,</if>
+			<if test="activity_state != null"> activity_state,</if>
+			<if test="activity_name != null"> activity_name,</if>
+			<if test="introduce != null"> introduce,</if>
+			<if test="activity_img != null"> activity_img,</if>
+			<if test="discount != null"> discount,</if>
+			<if test="start_time != null"> start_time,</if>
+			<if test="end_time != null"> end_time</if>
+
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="activity_id != null">#{activity_id},</if>
+			<if test="activity_type != null">#{activity_type},</if>
+			<if test="activity_state != null">#{activity_state},</if>
+			<if test="activity_name != null">#{activity_name},</if>
+			<if test="introduce != null">#{introduce},</if>
+			<if test="activity_img != null">#{activity_img},</if>
+			<if test="discount != null">#{discount},</if>
+			<if test="start_time != null">#{start_time},</if>
+			<if test="end_time != null">#{end_time}</if>
+
+		</trim>
+	</sql>
+
+	<insert id="insert" parameterType="com.aten.model.orm.GoodsActivity">
+		<include refid="insertCommon" />
+	</insert>
+
+	<insert id="insertGetPk" parameterType="com.aten.model.orm.GoodsActivity">
+		<include refid="insertCommon" />
+		<selectKey resultType="String" order="AFTER" keyProperty="activity_id">
+			SELECT @@IDENTITY AS ID
+		</selectKey>
+	</insert>
+
+	<!-- 更新数据区域 -->
+	<sql id="update_clause">
+		<set>
+			<trim suffixOverrides=",">
+				<if test="activity_id != null"> activity_id = #{activity_id}, </if>
+				<if test="activity_type != null"> activity_type = #{activity_type}, </if>
+				<if test="activity_state != null"> activity_state = #{activity_state}, </if>
+				<if test="activity_name != null"> activity_name = #{activity_name}, </if>
+				<if test="introduce != null"> introduce = #{introduce}, </if>
+				<if test="activity_img != null"> activity_img = #{activity_img}, </if>
+				<if test="discount != null"> discount = #{discount}, </if>
+				<if test="start_time != null"> start_time = #{start_time}, </if>
+				<if test="end_time != null"> end_time = #{end_time} </if>
+
+			</trim>
+		</set>
+	</sql>
+
+
+
+	<update id="update" parameterType="com.aten.model.orm.GoodsActivity">
+		UPDATE t_goods_activity
+		<include refid="update_clause" />
+		WHERE activity_id = #{activity_id}
+	</update>
+
+	<!-- 删除数据区域 -->
+	<delete id="delete" parameterType="String">
+		delete from t_goods_activity where activity_id in
+		<foreach item="idItem" collection="array" index="index" open="("
+			separator="," close=")">
+			#{idItem}
+		</foreach>
+	</delete>
+
+	<!-- 获取对象数据区域 -->
+	<select id="get" parameterType="String" resultMap="resultGoodsActivity">
+		SELECT
+		t.activity_id,t.activity_type,t.activity_state,t.activity_name,t.introduce,t.activity_img,t.discount,t.start_time,t.end_time
+		FROM t_goods_activity t WHERE activity_id = #{activity_id}
+	</select>
+
+	<!-- 搜索数据区域 -->
+	<sql id="where_clause">
+		<where>
+			1=1
+			<if test="activity_id != null"> and t.activity_id = #{activity_id} </if>
+			<if test="activity_type != null"> and t.activity_type = #{activity_type} </if>
+			<if test="activity_type_vague != null"> and instr(t.activity_type,#{activity_type_vague})>0 </if>
+			<if test="activity_state != null"> and t.activity_state = #{activity_state} </if>
+			<if test="activity_state_vague != null"> and instr(t.activity_state,#{activity_state_vague})>0
+			</if>
+			<if test="activity_name != null"> and t.activity_name = #{activity_name} </if>
+			<if test="activity_name_vague != null"> and instr(t.activity_name,#{activity_name_vague})>0 </if>
+			<if test="introduce != null"> and t.introduce = #{introduce} </if>
+			<if test="introduce_vague != null"> and instr(t.introduce,#{introduce_vague})>0 </if>
+			<if test="activity_img != null"> and t.activity_img = #{activity_img} </if>
+			<if test="activity_img_vague != null"> and instr(t.activity_img,#{activity_img_vague})>0 </if>
+			<if test="discount != null"> and t.discount = #{discount} </if>
+			<if test="discount_vague != null"> and instr(t.discount,#{discount_vague})>0 </if>
+			<if test="start_time != null"> and t.start_time = #{start_time} </if>
+			<if test="start_time_vague != null"> and instr(t.start_time,#{start_time_vague})>0 </if>
+			<if test="end_time != null"> and t.end_time = #{end_time} </if>
+			<if test="end_time_vague != null"> and instr(t.end_time#{end_time_vague})>0 </if>
+			<if test="state == 0"> and t.start_time &gt; now() </if>
+			<if test="state == 1"> and t.start_time &lt;= now() and  t.end_time &gt;= now()</if>
+			<if test="state == 2"> and t.end_time &lt;= now() </if>
+		</where>
+	</sql>
+
+	<sql id="getCommon">
+		select
+		t.activity_id,t.activity_type,t.activity_state,t.activity_name,t.introduce,t.activity_img,t.discount,t.start_time,t.end_time
+		from t_goods_activity t
+		<include refid="where_clause" />
+		order by t.activity_id desc
+	</sql>
+
+
+
+	<select id="getList" parameterType="map" resultMap="resultGoodsActivity">
+		<include refid="getCommon" />
+		<if test="start != null">
+			LIMIT ${start},${limit}
+		</if>
+	</select>
+
+	<select id="getCount" parameterType="map" resultType="int">
+		select count(*) ct from t_goods_activity t
+		<include refid="where_clause" />
+	</select>
+
+
+	<!-- 排序区域 -->
+	<update id="updateBatch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index"
+			separator=";">
+			update t_goods_activity
+			<set>
+				sort_no = #{item.sort_no}
+			</set>
+			WHERE activity_id = #{item.activity_id}
+		</foreach>
+	</update>
+
+</mapper>
+

@@ -1,0 +1,1 @@
+	public String get[up_incremental_add_field]() {		return [incremental_add_field];	}	public void set[up_incremental_add_field](String [incremental_add_field]) {		this.[incremental_add_field] = [incremental_add_field];	}

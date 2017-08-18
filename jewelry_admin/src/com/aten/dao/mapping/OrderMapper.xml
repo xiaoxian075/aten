@@ -1,0 +1,601 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.OrderDao">
+
+	<!-- t_order -->
+	<resultMap id="resultlistOrder" type="com.aten.model.orm.OrderNode">
+		<id property="order_id" column="order_id" />
+		<result property="com_id" column="com_id" />
+		<result property="order_number" column="order_number" />
+		<result property="pay_number" column="pay_number" />
+		<result property="order_state" column="order_state" />
+		<result property="pay_state" column="pay_state" />
+		<result property="order_type" column="order_type" />
+		<result property="seller_id" column="seller_id" />
+		<result property="account_id" column="account_id" />
+		<result property="consignee" column="consignee" />
+		<result property="consignee_area" column="consignee_area" />
+		<result property="consignee_address" column="consignee_address" />
+		<result property="consignee_postcode" column="consignee_postcode" />
+		<result property="consignee_mobile" column="consignee_mobile" />
+		<result property="create_time" column="create_time" />
+		<result property="modified_time" column="modified_time" />
+		<result property="end_time" column="end_time" />
+		<result property="pay_time" column="pay_time" />
+		<result property="send_time" column="send_time" />
+		<result property="time_out_time" column="time_out_time" />
+		<result property="order_amount" column="order_amount" />
+		<result property="discount_amount" column="discount_amount" />
+		<result property="pay_amount" column="pay_amount" />
+		<result property="trans_exp" column="trans_exp" />
+		<result property="is_return" column="is_return" />
+		<result property="coupon_id" column="coupon_id" />
+		<result property="remark" column="remark" />
+		<result property="buyer_msg" column="buyer_msg" />
+		<result property="buy_note" column="buy_note" />
+		<result property="seller_note" column="seller_note" />
+		<result property="buyer_nick" column="buyer_nick" />
+		<result property="seller_nick" column="seller_nick" />
+		<result property="can_rate" column="can_rate" />
+		<result property="seller_cell" column="seller_cell" />
+		<result property="seller_phone" column="seller_phone" />
+		<result property="seller_name" column="seller_name" />
+		<result property="is_logis" column="is_logis" />
+		<result property="is_bill" column="is_bill" />
+		<result property="is_delete" column="is_delete" />
+		<result property="payway" column="payway" />
+		<result property="payway_name" column="payway_name" />
+		<result property="is_send" column="is_send" />
+		<result property="is_change_price" column="is_change_price" />
+	</resultMap>
+
+	<!-- t_order_detail -->
+	<resultMap id="resultlistOrderDetail" type="com.aten.model.orm.OrderDetailNode">
+		<id property="detail_id" column="detail_id" />
+		<result property="create_time" column="create_time" />
+		<result property="order_id" column="order_id" />
+		<result property="detail_number" column="detail_number" />
+		<result property="goods_id" column="goods_id" />
+		<result property="goods_name" column="goods_name" />
+		<result property="sku_name" column="sku_name" />
+		<result property="sku_id" column="sku_id" />
+		<result property="num" column="num" />
+		<result property="price" column="price" />
+		<result property="goods_img" column="goods_img" />
+		<result property="delivery_state" column="delivery_state" />
+		<result property="state" column="state" />
+		<result property="fast_code" column="fast_code" />
+		<result property="fast_waybill" column="fast_waybill" />
+		<result property="send_time" column="send_time" />
+		<result property="sign_time" column="sign_time" />
+		<result property="share_account" column="share_account" />
+		<result property="fenrun_amount" column="fenrun_amount" />
+		<result property="sale_price" column="sale_price" />
+		<result property="total_amount" column="total_amount" />
+		<result property="is_delete" column="is_delete" />
+	</resultMap>
+
+	<select id="selectcountOrderByPage" parameterType="map"
+		resultType="Integer">
+		SELECT
+		COUNT(`order_id`)
+		FROM
+		`t_order`
+		WHERE
+		1=1
+		<if test="order_number != null">
+			AND `order_number`=#{order_number}
+		</if>
+		<if test="order_state != null">
+			AND `order_state`=#{order_state}
+		</if>
+		<if test="order_type != null">
+			AND `order_type`=#{order_type}
+		</if>
+		<if test="start_time != null">
+			AND `create_time`&gt;=#{start_time}
+		</if>
+		<if test="end_time != null">
+			AND `create_time`&lt;=#{end_time}
+		</if>
+		<if test="is_bill != null">
+			AND `is_bill`=#{is_bill}
+		</if>
+	</select>
+
+	<select id="selectlistOrderByPage" parameterType="map"
+		resultMap="resultlistOrder">
+		SELECT
+		`order_id`,
+		`order_number`,
+		`pay_number`,
+		`order_state`,
+		`pay_state`,
+		`order_type`,
+		`seller_id`,
+		`account_id`,
+		`consignee`,
+		`consignee_area`,
+		`consignee_address`,
+		`consignee_postcode`,
+		`consignee_mobile`,
+		`create_time`,
+		`modified_time`,
+		`end_time`,
+		`pay_time`,
+		`send_time`,
+		`time_out_time`,
+		`order_amount`,
+		`discount_amount`,
+		`pay_amount`,
+		`trans_exp`,
+		`is_return`,
+		`coupon_id`,
+		`remark`,
+		`buyer_msg`,
+		`buy_note`,
+		`seller_note`,
+		`buyer_nick`,
+		`seller_nick`,
+		`can_rate`,
+		`seller_cell`,
+		`seller_phone`,
+		`seller_name`,
+		`is_logis`,
+		`is_bill`,
+		`is_delete`,
+		`payway`,
+		`payway_name`,
+		`is_send`,
+		`is_change_price`
+		FROM
+		`t_order`
+		WHERE
+		1=1
+		<if test="order_number != null">
+			AND `order_number`=#{order_number}
+		</if>
+		<if test="order_state != null">
+			AND `order_state`=#{order_state}
+		</if>
+		<if test="order_type != null">
+			AND `order_type`=#{order_type}
+		</if>
+		<if test="start_time != null">
+			AND `create_time`&gt;=#{start_time}
+		</if>
+		<if test="end_time != null">
+			AND `create_time`&lt;=#{end_time}
+		</if>
+		<if test="is_bill != null">
+			AND `is_bill`=#{is_bill}
+		</if>
+		ORDER BY `order_id` DESC
+		LIMIT ${page},${count}
+	</select>
+
+	<select id="selectlistOrderDetailByOrderid" parameterType="BigInteger"
+		resultMap="resultlistOrderDetail">
+		SELECT
+		`detail_id`,
+		`create_time`,
+		`order_id`,
+		`detail_number`,
+		`goods_id`,
+		`goods_name`,
+		`sku_name`,
+		`sku_id`,
+		`num`,
+		`price`,
+		`goods_img`,
+		`delivery_state`,
+		`state`,
+		`fast_code`,
+		`fast_waybill`,
+		`send_time`,
+		`sign_time`,
+		`share_account`,
+		`fenrun_amount`,
+		`sale_price`,
+		`total_amount`,
+		`is_delete`
+		FROM
+		`t_order_detail`
+		WHERE
+		`order_id`=#{order_id}
+	</select>
+
+
+	<select id="selectoneOrderByOrderid" parameterType="BigInteger"
+		resultType="com.aten.model.orm.OrderNode">
+		SELECT
+		`order_id`,
+		`order_number`,
+		`pay_number`,
+		`order_state`,
+		`pay_state`,
+		`order_type`,
+		`seller_id`,
+		`account_id`,
+		`consignee`,
+		`consignee_area`,
+		`consignee_address`,
+		`consignee_postcode`,
+		`consignee_mobile`,
+		`create_time`,
+		`modified_time`,
+		`end_time`,
+		`pay_time`,
+		`send_time`,
+		`time_out_time`,
+		`order_amount`,
+		`discount_amount`,
+		`pay_amount`,
+		`trans_exp`,
+		`is_return`,
+		`coupon_id`,
+		`remark`,
+		`buyer_msg`,
+		`buy_note`,
+		`seller_note`,
+		`buyer_nick`,
+		`seller_nick`,
+		`can_rate`,
+		`seller_cell`,
+		`seller_phone`,
+		`seller_name`,
+		`is_logis`,
+		`is_bill`,
+		`is_delete`,
+		`payway`,
+		`payway_name`,
+		`is_send`,
+		`is_change_price`
+		FROM
+		`t_order`
+		WHERE
+		`order_id`=#{order_id}
+		LIMIT 1
+	</select>
+
+	<select id="selectoneOrderByOrderNumber" parameterType="String"
+		resultType="com.aten.model.orm.OrderNode">
+		SELECT
+		`order_id`,
+		`order_number`,
+		`pay_number`,
+		`order_state`,
+		`pay_state`,
+		`order_type`,
+		`seller_id`,
+		`account_id`,
+		`consignee`,
+		`consignee_area`,
+		`consignee_address`,
+		`consignee_postcode`,
+		`consignee_mobile`,
+		`create_time`,
+		`modified_time`,
+		`end_time`,
+		`pay_time`,
+		`send_time`,
+		`time_out_time`,
+		`order_amount`,
+		`discount_amount`,
+		`pay_amount`,
+		`trans_exp`,
+		`is_return`,
+		`coupon_id`,
+		`remark`,
+		`buyer_msg`,
+		`buy_note`,
+		`seller_note`,
+		`buyer_nick`,
+		`seller_nick`,
+		`can_rate`,
+		`seller_cell`,
+		`seller_phone`,
+		`seller_name`,
+		`is_logis`,
+		`is_bill`,
+		`is_delete`,
+		`payway`,
+		`payway_name`,
+		`is_send`,
+		`is_change_price`
+		FROM
+		`t_order`
+		WHERE
+		`order_number`=#{order_number}
+		LIMIT 1
+	</select>
+
+
+	<update id="updateoneOrderForOrderstate" parameterType="map">
+		UPDATE
+		`t_order`
+		<set>
+			<trim suffixOverrides=",">
+				<if test="is_send != null">`is_send` = #{is_send},</if>
+				<if test="order_state != null">`order_state` = #{order_state},</if>
+				<if test="time_out_time != null"> `time_out_time` = #{time_out_time},</if>
+				<if test="send_time != null"> `send_time` = #{send_time},</if>
+			</trim>
+		</set>
+		WHERE
+			`order_id`=#{order_id}
+		LIMIT 1
+	</update>
+
+	<update id="updateoneOrderForChangpriceById" parameterType="map">
+		UPDATE
+		`t_order`
+		<set>
+			<trim suffixOverrides=",">
+				<if test="order_amount != null">`order_amount` = #{order_amount},</if>
+				<if test="trans_exp != null"> `trans_exp` = #{trans_exp},</if>
+				<if test="pay_amount != null"> `pay_amount` = #{pay_amount},</if>
+				<if test="is_change_price != null"> `is_change_price` = #{is_change_price},</if>
+			</trim>
+		</set>
+		WHERE
+		`order_id`=#{order_id}
+		LIMIT 1
+	</update>
+
+	<update id="updateoneOrderDetailForChangpriceById"
+		parameterType="map">
+		UPDATE
+		`t_order_detail`
+		<set>
+			<trim suffixOverrides=",">
+				<if test="total_amount != null">`total_amount` = #{total_amount},</if>
+				<if test="fenrun_amount != null"> `fenrun_amount` = #{fenrun_amount},</if>
+			</trim>
+		</set>
+		WHERE
+		`detail_id`=#{detail_id}
+		LIMIT 1
+	</update>
+
+	<update id="updateoneOrderDetailForStateById" parameterType="map">
+		UPDATE
+		`t_order_detail`
+		SET
+		`state`=#{state}
+		WHERE
+		`detail_id`=#{detail_id}
+		LIMIT 1
+	</update>
+
+	<select id="selectonOrderExpressByOrderid" parameterType="String"
+		resultType="com.aten.model.orm.OrderExpressNode">
+		SELECT
+		`oe_id`,
+		`order_number`,
+		`consignee`,
+		`consignee_area`,
+		`consignee_address`,
+		`consignee_postcode`,
+		`consignee_mobile`,
+		`fast_code`,
+		`fast_name`,
+		`fast_waybill`,
+		`logistics_record`,
+		`logistics_state`,
+		`last_update_time`,
+		`fast_phone`
+		FROM
+		`t_order_express`
+		WHERE
+		`order_number`=#{order_number}
+		LIMIT 1
+	</select>
+
+	<update id="updateoneOrderExpressForExpress" parameterType="map">
+		UPDATE
+		`t_order_express`
+		SET
+		`fast_code`=#{fast_code},
+		`fast_name`=#{fast_name},
+		`logistics_state`=#{logistics_state},
+		`logistics_record`=#{logistics_record},
+		`fast_phone`=#{fast_phone},
+		`last_update_time`=#{last_update_time}
+		WHERE
+		`oe_id`=#{oe_id}
+		LIMIT 1
+	</update>
+
+	<update id="updateoneOrderExpressForExpressSendgoods"
+		parameterType="map">
+		UPDATE
+		`t_order_express`
+		SET
+		`fast_code`=#{fast_code},
+		`fast_waybill`=#{fast_waybill},
+		`logistics_state`=#{logistics_state},
+		`last_update_time`=#{last_update_time}
+		WHERE
+		`oe_id`=#{oe_id}
+		LIMIT 1
+	</update>
+
+
+	<insert id="insertoneOrderTrans" parameterType="com.aten.model.orm.OrderTransNode">
+		INSERT INTO
+		`t_order_trans`
+		(
+		`order_id`,
+		`account_id`,
+		`account_name`,
+		`com_id`,
+		`com_name`,
+		`order_state_name`,
+		`reason`,
+		`trans_time`
+		)
+		VALUES
+		(
+		#{order_id},
+		#{account_id},
+		#{account_name},
+		#{com_id},
+		#{com_name},
+		#{order_state_name},
+		#{reason},
+		#{trans_time}
+		)
+	</insert>
+
+
+
+	<select id="selectoneOrderFullbookByOrderid" parameterType="BigInteger"
+		resultType="com.aten.model.orm.OrderFullbook">
+		SELECT
+		`order_id`,
+		`full_send_time_type`,
+		`full_send_time_type_name`,
+		`end_book_time`,
+		`end_send_time`,
+		`create_time`
+		FROM
+		`t_order_fullbook`
+		WHERE
+		`order_id`=#{order_id}
+		LIMIT 1
+	</select>
+
+	<select id="selectoneOrderDepositbookByOrderid" parameterType="BigInteger"
+		resultType="com.aten.model.orm.OrderDeposit">
+		SELECT
+		`order_id`,
+		`deposit_amount`,
+		`retainage`,
+		`end_book_time`,
+		`end_send_time`,
+		`retainage_pay_start_time`,
+		`create_time`,
+		`pay_state`,
+		`deposit_pay_time`,
+		`retainage_pay_time`,
+		`retainage_pay_end_time`
+		FROM
+		`t_order_deposit`
+		WHERE
+		`order_id`=#{order_id}
+		LIMIT 1
+	</select>
+
+	<select id="selectoneOrderAuxiliaryByOrderid" parameterType="String"
+		resultType="com.aten.model.orm.OrderAuxiliary">
+		SELECT
+		`oa_id`,
+		`order_number`,
+		`invoice_open_type`,
+		`invoice_type`,
+		`invoice_header`,
+		`invoice_phone`,
+		`invoice_email`,
+		`invoice_tax_no`,
+		`invoice_unit_address`
+		FROM
+		`t_order_auxiliary`
+		WHERE
+		`order_number`=#{order_number}
+		LIMIT 1
+	</select>
+
+
+	<update id="updateoneOrderDetailForSendgoods" parameterType="map">
+		UPDATE
+		`t_order_detail`
+		SET
+		`state`=#{newState},
+		`delivery_state`=#{delivery_state},
+		`fast_code`=#{fast_code},
+		`fast_waybill`=#{fast_waybill},
+		`send_time`=#{send_time}
+		WHERE
+		`order_id`=#{order_id}
+		AND `state`=#{state}
+	</update>
+
+
+	<select id="selectoneOrderDetailById" parameterType="BigInteger"
+		resultType="com.aten.model.orm.OrderDetailNode">
+		SELECT
+		`detail_id`,
+		`create_time`,
+		`order_id`,
+		`detail_number`,
+		`goods_id`,
+		`goods_name`,
+		`sku_name`,
+		`sku_id`,
+		`num`,
+		`price`,
+		`goods_img`,
+		`delivery_state`,
+		`state`,
+		`fast_code`,
+		`fast_waybill`,
+		`send_time`,
+		`sign_time`,
+		`share_account`,
+		`fenrun_amount`,
+		`sale_price`,
+		`total_amount`,
+		`is_delete`
+		FROM
+		`t_order_detail`
+		WHERE
+		`detail_id`=#{detail_id}
+		LIMIT 1
+	</select>
+
+	<select id="selectoneOrderDetailByNumber" parameterType="String"
+		resultType="com.aten.model.orm.OrderDetailNode">
+		SELECT
+		`detail_id`,
+		`create_time`,
+		`order_id`,
+		`detail_number`,
+		`goods_id`,
+		`goods_name`,
+		`sku_name`,
+		`sku_id`,
+		`num`,
+		`price`,
+		`goods_img`,
+		`delivery_state`,
+		`state`,
+		`fast_code`,
+		`fast_waybill`,
+		`send_time`,
+		`sign_time`,
+		`share_account`,
+		`fenrun_amount`,
+		`sale_price`,
+		`total_amount`,
+		`is_delete`
+		FROM
+		`t_order_detail`
+		WHERE
+		`detail_number`=#{detail_number}
+		LIMIT 1
+	</select>
+
+	<select id="getcountOrderExpressByFastcode" parameterType="String"
+		resultType="int">
+		SELECT
+		COUNT(`oe_id`)
+		FROM
+		`t_order_express`
+		WHERE
+		`fast_code`=#{fast_code}
+	</select>
+</mapper>
+

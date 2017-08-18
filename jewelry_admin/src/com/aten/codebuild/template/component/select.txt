@@ -1,0 +1,12 @@
+<tr>
+	<td class="td_left">[field_note][is_must_span]</td>
+	<td class="td_right_two">	  
+ 		<select class="[validate]"  name="[field_name]" [is_must] type="[field_type]" tipmsg="[field_note]" widthtip="100">
+			<option value="">请选择</option>
+			<option value="1" <c:if test="${{DEFINE_CLASS_NAME}.[field_name]=="1"}"> selected</c:if>>是</option>
+			<option value="0" <c:if test="${{DEFINE_CLASS_NAME}.[field_name]=="0"}"> selected</c:if>>否</option>
+			{optionlist}<option value="[key]" <c:if test="${{DEFINE_CLASS_NAME}.[field_name]==[key]}"> selected</c:if>>[value]</option>{/optionlist}
+		</select>  
+	</td>
+</tr>
+

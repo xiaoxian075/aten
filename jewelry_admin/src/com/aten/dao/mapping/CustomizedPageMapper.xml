@@ -1,0 +1,452 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aten.dao.CustomizedPageDao">
+	<resultMap id="BaseResultAllMap" type="com.aten.model.orm.CustomizedPage">
+		<result column="page_unique" property="pageUnique" jdbcType="VARCHAR" />
+		<result column="page_title" property="pageTitle" jdbcType="VARCHAR" />
+		<result column="page_type" property="pageType" jdbcType="DECIMAL" />
+		<result column="page_url" property="pageUrl" jdbcType="VARCHAR" />
+		<result column="module_unique" property="moduleUnique" jdbcType="VARCHAR" />
+		<result column="module_taxis" property="moduleTaxis" jdbcType="DECIMAL" />
+		<result column="module_type" property="moduleType" jdbcType="VARCHAR" />
+		<result column="view_img" property="viewImg" jdbcType="VARCHAR" />
+		<result column="view_url" property="viewUrl" jdbcType="VARCHAR" />
+		<result column="view_taxis" property="viewTaxis" jdbcType="DECIMAL" />
+	</resultMap>
+	<resultMap id="BaseResultPageMap" type="com.aten.model.orm.CustomizedPage">
+		<result column="page_unique" property="pageUnique" jdbcType="VARCHAR" />
+		<result column="page_title" property="pageTitle" jdbcType="VARCHAR" />
+		<result column="page_body" property="pageBody" jdbcType="VARCHAR" />
+		<result column="page_type" property="pageType" jdbcType="DECIMAL" />
+		<result column="page_url" property="pageUrl" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="BaseResultModuleMap" type="com.aten.model.orm.CustomizedPage">
+		<result column="page_unique" property="pageUnique" jdbcType="VARCHAR" />
+		<result column="module_unique" property="moduleUnique" jdbcType="VARCHAR" />
+		<result column="module_taxis" property="moduleTaxis" jdbcType="DECIMAL" />
+		<result column="module_type" property="moduleType" jdbcType="VARCHAR" />
+		<result column="module_height" property="moduleHeight" jdbcType="DECIMAL" />
+	</resultMap>
+	<resultMap id="BaseResultViewMap" type="com.aten.model.orm.CustomizedPage">
+		<result column="module_unique" property="moduleUnique" jdbcType="VARCHAR" />
+		<result column="view_img" property="viewImg" jdbcType="VARCHAR" />
+		<result column="view_url" property="viewUrl" jdbcType="VARCHAR" />
+		<result column="view_taxis" property="viewTaxis" jdbcType="DECIMAL" />
+		<result column="view_url_type" property="viewUrlType" jdbcType="VARCHAR" />
+	</resultMap>
+
+
+	<select id="selectActivityGoodsList"  resultType="java.util.HashMap" parameterType="map">
+		select
+		t.activity_type,t.activity_name,t.start_time,t.end_time ,t.discount,g.goods_id ,g.goods_name , g.list_img,g.fixed_price,g.lower_price,g.height_price
+		from t_goods_activity t
+		left join t_goods_activity_map map on map.activity_id = t.activity_id
+		left join t_goods g on g.goods_id = map.goods_id
+		<where>
+			1=1
+			<if test="goodsName != null"> and g.goods_name = #{goodsName} </if>
+			and g.goods_name is not null
+		</where>
+		<if test="start != null and limit != null">
+			LIMIT ${start},${limit}
+		</if>
+	</select>
+
+	<select id="selectActivityGoodsCount"  resultType="Integer" parameterType="map">
+		select count(1)
+		from t_goods_activity t
+		left join t_goods_activity_map map on map.activity_id = t.activity_id
+		left join t_goods g on g.goods_id = map.goods_id
+		<where>
+			1=1
+			<if test="goodsName != null"> and instr(g.goods_name,#{goodsName})>0 </if>
+			and g.goods_name is not null
+		</where>
+	</select>
+
+	<select id="selectCustomizedPageMap" resultMap="BaseResultAllMap" parameterType="com.aten.model.orm.BaseExample">
+		select page_title,page_type , page_url, module.* ,v.view_img , v.view_url,v.view_taxis,v.view_url_type  from  t_customized_page page , t_customized_module module ,  t_customized_view v
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause"/>
+		</if>
+		and page.page_unique = module.page_unique
+		and module.module_unique = v.module_unique
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+	</select>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultPageMap" parameterType="java.lang.String">
+		select
+		*
+		from t_customized_page
+		where page_unique = #{pageUnique,jdbcType=VARCHAR}
+	</select>
+	<insert id="insertCustomizedPage" parameterType="com.aten.model.orm.BaseExample" >
+		insert into t_customized_page
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="pageUnique != null">
+				page_unique,
+			</if>
+			<if test="pageTitle != null">
+				page_title,
+			</if>
+			<if test="pageType != null">
+				page_type,
+			</if>
+			<if test="pageUrl != null">
+				page_url,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="pageUnique != null">
+				#{pageUnique,jdbcType=VARCHAR},
+			</if>
+			<if test="pageTitle != null">
+				#{pageTitle,jdbcType=VARCHAR},
+			</if>
+			<if test="pageType != null">
+				#{pageType,jdbcType=DECIMAL},
+			</if>
+			<if test="pageUrl != null">
+				#{pageUrl,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<insert id="insertModule" parameterType="com.aten.model.orm.BaseExample" >
+		insert into t_customized_module
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="pageUnique != null">
+				page_unique,
+			</if>
+			<if test="moduleUnique != null">
+				module_unique,
+			</if>
+			<if test="moduleTaxis != null">
+				module_taxis,
+			</if>
+			<if test="moduleType != null">
+				module_type,
+			</if>
+			<if test="moduleHeight != null">
+				module_height,
+			</if>
+			<if test="moduleRowsInterval != null">
+				module_rows_interval,
+			</if>
+			<if test="moduleColsInterval != null">
+				module_cols_interval,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="pageUnique != null">
+				#{pageUnique,jdbcType=VARCHAR},
+			</if>
+			<if test="moduleUnique != null">
+				#{moduleUnique,jdbcType=VARCHAR},
+			</if>
+			<if test="moduleTaxis != null">
+				#{moduleTaxis,jdbcType=DECIMAL},
+			</if>
+			<if test="moduleType != null">
+				#{moduleType,jdbcType=VARCHAR},
+			</if>
+			<if test="moduleHeight != null">
+				#{moduleHeight,jdbcType=DECIMAL},
+			</if>
+			<if test="moduleRowsInterval != null">
+				#{moduleRowsInterval,jdbcType=DECIMAL},
+			</if>
+			<if test="moduleColsInterval != null">
+				#{moduleColsInterval,jdbcType=DECIMAL},
+			</if>
+		</trim>
+	</insert>
+	<insert id="insertView" parameterType="com.aten.model.orm.BaseExample" >
+		insert into t_customized_view
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="moduleUnique != null">
+				module_Unique,
+			</if>
+			<if test="viewImg != null">
+				view_img,
+			</if>
+			<if test="viewUrl != null">
+				view_url,
+			</if>
+			<if test="viewTaxis != null">
+				view_taxis,
+			</if>
+			<if test="viewUrlType != null">
+				view_url_type,
+			</if>
+			<if test="viewTitle != null">
+				view_title,
+			</if>
+			<if test="viewPrice != null">
+				view_price,
+			</if>
+			<if test="viewSalePrice != null">
+				view_sale_price,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="moduleUnique != null">
+				#{moduleUnique,jdbcType=VARCHAR},
+			</if>
+			<if test="viewImg != null">
+				#{viewImg,jdbcType=VARCHAR},
+			</if>
+			<if test="viewUrl != null">
+				#{viewUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="viewTaxis != null">
+				#{viewTaxis,jdbcType=DECIMAL},
+			</if>
+			<if test="viewUrlType != null">
+				#{viewUrlType,jdbcType=VARCHAR},
+			</if>
+			<if test="viewTitle != null">
+				#{viewTitle,jdbcType=VARCHAR},
+			</if>
+			<if test="viewPrice != null">
+				#{viewPrice,jdbcType=DECIMAL},
+			</if>
+			<if test="viewSalePrice != null">
+				#{viewSalePrice,jdbcType=DECIMAL},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateCustomizedPage" parameterType="com.aten.model.orm.BaseExample">
+		update t_customized_page
+		<set>
+			<if test="pageUnique != null">
+				page_unique= #{pageUnique,jdbcType=VARCHAR},
+			</if>
+			<if test="pageTitle != null">
+				page_title= #{pageTitle,jdbcType=VARCHAR},
+			</if>
+			<if test="pageType != null">
+				page_type= #{pageType,jdbcType=DECIMAL},
+			</if>
+			<if test="pageUrl != null">
+				page_url= #{pageUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="pageBody != null">
+				page_body= #{pageBody,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where page_unique = #{pageUnique,jdbcType=VARCHAR}
+	</update>
+
+	<update id="updateModule" parameterType="com.aten.model.orm.BaseExample">
+		update t_customized_module
+		<set>
+			<if test="pageUnique != null">
+				page_unique= #{pageUnique,jdbcType=VARCHAR},
+			</if>
+			<if test="moduleUnique != null">
+				module_unique= #{moduleUnique,jdbcType=VARCHAR},
+			</if>
+			<if test="moduleTaxis != null">
+				module_taxis= #{moduleTaxis,jdbcType=DECIMAL},
+			</if>
+			<if test="moduleType != null">
+				module_type= #{moduleType,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where module_unique = #{moduleUnique,jdbcType=VARCHAR}
+	</update>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+		delete from t_customized_page
+		where page_unique = #{pageUnique,jdbcType=VARCHAR}
+	</delete>
+	<delete id="deleteModule" parameterType="com.aten.model.orm.CustomizedPage" >
+		delete from t_customized_module
+		where page_unique = #{pageUnique,jdbcType=VARCHAR}
+	</delete>
+	<delete id="deleteView" parameterType="com.aten.model.orm.CustomizedPage" >
+		delete from t_customized_view
+		where module_unique in (select module_unique from t_customized_module where page_unique = #{pageUnique,jdbcType=VARCHAR}  )
+	</delete>
+
+	<sql id="Example_Where_Clause" >
+		<where >
+			<foreach collection="oredCriteria" item="criteria" separator="or" >
+				<if test="criteria.valid" >
+					<trim prefix="(" suffix=")" prefixOverrides="and" >
+						<foreach collection="criteria.criteria" item="criterion" >
+							<choose >
+								<when test="criterion.noValue" >
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue" >
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue" >
+									and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue" >
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<!-- 数据库映射模型区域 -->
+	<resultMap id="resultCustomizedPage" type="com.aten.model.orm.CustomizedPage" >
+		<result column="page_unique" property="pageUnique" jdbcType="VARCHAR" />
+		<result column="page_title" property="pageTitle" jdbcType="VARCHAR" />
+		<result column="page_body" property="pageBody" jdbcType="VARCHAR" />
+		<result column="page_type" property="pageType" jdbcType="DECIMAL" />
+		<result column="page_url" property="pageUrl" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
+		<result column="last_time" property="lastTime" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<!-- 新增数据区域 -->
+	<sql id="insertCommon">
+		INSERT INTO t_customized_page
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="pageUnique != null"> page_unique,</if>
+			create_time,
+			<if test="pageTitle != null"> page_title,</if>
+			<if test="pageType != null"> page_type,</if>
+			<if test="pageUrl != null"> page_url,</if>
+			last_time,
+			<if test="pageBody != null"> page_body</if>
+			
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="pageUnique != null">#{pageUnique},</if>
+			now(),
+			<if test="pageTitle != null">#{pageTitle},</if>
+			<if test="pageType != null">#{pageType},</if>
+			<if test="pageUrl != null">#{pageUrl},</if>
+			now(),
+			<if test="pageBody != null">#{pageBody}</if>
+			
+		</trim>
+	</sql>
+	
+	<insert id="insert" parameterType="com.aten.model.orm.CustomizedPage">
+		<include refid="insertCommon" />
+	</insert>
+
+	<insert id="insertGetPk" parameterType="com.aten.model.orm.CustomizedPage" >
+		<include refid="insertCommon" />
+		<selectKey resultType="String" order="AFTER" keyProperty="page_unique">  
+	       SELECT @@IDENTITY AS ID  
+	    </selectKey>  
+	</insert>
+	
+	<!-- 更新数据区域 -->
+	<sql id="update_clause">
+		<set>
+			<trim suffixOverrides=",">
+				<if test="pageUnique != null"> page_unique = #{pageUnique}, </if>
+				<if test="createTime != null"> create_time = #{createTime}, </if>
+				<if test="pageTitle != null"> page_title = #{pageTitle}, </if>
+				<if test="pageType != null"> page_type = #{pageType}, </if>
+				<if test="pageUrl != null"> page_url = #{pageUrl}, </if>
+				last_time = now(), 
+				<if test="pageBody != null"> page_body = #{pageBody} </if>
+				
+			</trim>
+		</set>
+	</sql>
+	
+	
+	
+	
+
+	<update id="update" parameterType="com.aten.model.orm.CustomizedPage">
+		UPDATE t_customized_page <include refid="update_clause" /> WHERE page_unique = #{pageUnique}
+	</update>
+
+	<!-- 删除数据区域 -->
+	<delete id="delete" parameterType="String">
+		delete from t_customized_page where page_unique in
+		<foreach item="idItem" collection="array" index="index" open="(" separator="," close=")">
+			#{idItem}
+		</foreach>
+	</delete>
+
+	<!-- 获取对象数据区域 -->
+	<select id="get" parameterType="String"	resultMap="resultCustomizedPage">
+		 SELECT
+		 t.page_unique,t.create_time,t.page_title,t.page_type,t.page_url,t.last_time,t.page_body
+		 FROM t_customized_page t WHERE page_unique = #{pageUnique}
+	</select>
+	
+	<!-- 搜索数据区域 -->
+	<sql id="where_clause">
+		<where> 
+			1=1
+			<if test="pageUnique != null"> and t.page_unique = #{pageUnique} </if>
+			<if test="page_unique_vague != null"> and instr(t.page_unique,#{page_unique_vague})>0 </if>
+			<if test="createTime != null"> and t.create_time = #{createTime} </if>
+			<if test="create_time_vague != null"> and instr(t.create_time,#{create_time_vague})>0 </if>
+			<if test="pageTitle != null"> and t.page_title = #{pageTitle} </if>
+			<if test="page_title_vague != null"> and instr(t.page_title,#{page_title_vague})>0 </if>
+			<if test="pageType != null"> and t.page_type = #{pageType} </if>
+			<if test="page_type_vague != null"> and instr(t.page_type,#{page_type_vague})>0 </if>
+			<if test="pageUrl != null"> and t.page_url = #{pageUrl} </if>
+			<if test="page_url_vague != null"> and instr(t.page_url,#{page_url_vague})>0 </if>
+			<if test="lastTime != null"> and t.last_time = #{lastTime} </if>
+			<if test="last_time_vague != null"> and instr(t.last_time,#{last_time_vague})>0 </if>
+			<if test="pageBody != null"> and t.page_body = #{pageBody} </if>
+			<if test="page_body_vague != null"> and instr(t.page_body#{page_body_vague})>0 </if>
+			
+		</where>
+	</sql>
+	
+	<sql id="getCommon">
+		select  t.page_unique,t.create_time,t.page_title,t.page_type,t.page_url,t.last_time,t.page_body
+		from t_customized_page t
+		<include refid="where_clause" /> order by page_unique desc
+	</sql>
+
+	
+
+	<select id="getList" parameterType="map" resultMap="resultCustomizedPage">
+            <include refid="getCommon" />
+             <if test="start != null">
+         		LIMIT ${start},${limit}
+        	</if> 
+	</select>
+
+	<select id="getCount" parameterType="map" resultType="int">
+			select count(*) ct from t_customized_page t <include refid="where_clause" />
+	</select>
+	
+	
+	<!-- 排序区域 -->
+	<update id="updateBatch" parameterType="java.util.List">
+	   <foreach collection="list" item="item" index="index" separator=";">  
+			update t_customized_page 
+			<set>
+				sort_no = #{item.sort_no}
+			</set>
+			WHERE page_unique = #{item.id}
+	   </foreach>
+	</update>
+	
+</mapper>
+

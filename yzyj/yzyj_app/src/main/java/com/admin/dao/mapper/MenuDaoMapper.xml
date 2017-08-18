@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.admin.dao.MenuDaoMapper">
+    <resultMap id="BaseResultMap" type="com.admin.model.Menu">
+        <id column="ID" jdbcType="VARCHAR" property="id"/>
+        <result column="PID" jdbcType="VARCHAR" property="pid"/>
+        <result column="URL" jdbcType="VARCHAR" property="url"/>
+        <result column="NAME" jdbcType="VARCHAR" property="name"/>
+        <result column="PX" jdbcType="DECIMAL" property="px"/>
+        <association property="pName" column="Pid" javaType="String" select="selectpName"/>
+    </resultMap>
+    <resultMap id="RoleFunctionMap" type="com.admin.model.RoleFunction">
+        <result column="ROLE_ID" jdbcType="VARCHAR" property="roleId"/>
+        <result column="MENU_ID" jdbcType="VARCHAR" property="menuId"/>
+    </resultMap>
+    <sql id="Example_Where_Clause" >
+        <where >
+            <foreach collection="oredCriteria" item="criteria" separator="or" >
+                <if test="criteria.valid" >
+                    <trim prefix="(" suffix=")" prefixOverrides="and" >
+                        <foreach collection="criteria.criteria" item="criterion" >
+                            <choose >
+                                <when test="criterion.noValue" >
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue" >
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue" >
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue" >
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        *
+        from t_menu
+        where ID = #{id,jdbcType=VARCHAR}
+    </select>
+    <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.admin.model.Menu" >
+        select
+        *
+        from t_menu
+        <if test="_parameter != null" >
+            <include refid="Example_Where_Clause" />
+        </if>
+        <if test="orderByClause != null" >
+            order by ${orderByClause}
+        </if>
+    </select>
+    <select id="selectpName" resultType="String">
+        select NAME from T_MENU WHERE id = #{id}
+    </select>
+    <select id="selectRoleFunction" resultMap="RoleFunctionMap" parameterType="java.lang.String">
+        select * from t_role_menu_c WHERE ROLE_ID = #{id,jdbcType=VARCHAR}
+
+    </select>
+</mapper>

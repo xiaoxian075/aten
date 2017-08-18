@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.admin.dao.WithdrawRecordDaoMapper">
+    <resultMap id="BaseResultMap" type="com.admin.model.WithdrawRecord">
+        <result column="ID" property="id" jdbcType="DECIMAL" />
+        <result column="AGENT_UNIQUE" property="agentUnique" jdbcType="VARCHAR" />
+        <result column="ORDER_NUMBER" property="orderNumber" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="TOTAL_FEE" property="totalFee" jdbcType="DECIMAL" />
+        <result column="TYPE" property="type" jdbcType="DECIMAL" />
+        <result column="STATE" property="state" jdbcType="DECIMAL" />
+        <result column="NOTE" property="note" jdbcType="VARCHAR" />
+        <result column="REALNAME" property="realName" jdbcType="VARCHAR"/>
+        <result column="YUNPAYLOGINNAME" property="yunPayLoginName" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Example_Where_Clause" >
+        <where >
+            <foreach collection="oredCriteria" item="criteria" separator="or" >
+                <if test="criteria.valid" >
+                    <trim prefix="(" suffix=")" prefixOverrides="and" >
+                        <foreach collection="criteria.criteria" item="criterion" >
+                            <choose >
+                                <when test="criterion.noValue" >
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue" >
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue" >
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue" >
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+
+    <select id="selectByExampleAndPage" parameterType="com.admin.model.BaseExample"  resultMap="BaseResultMap">
+        select
+        *
+        from T_YW_AGENT_TOTAL_CHANGE
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+
+    <select id="selectByExampleAndPage1" parameterType="com.admin.model.BaseExample"  resultMap="BaseResultMap">
+        select t.*,agent.REALNAME,agent.YUNPAYLOGINNAME from  T_YW_AGENT_TOTAL_CHANGE t
+        left join Z_AGENCY_PERSON agent on agent.agent_unique = t.agent_unique
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+
+    <select id="getCountWithdraw" resultType="java.lang.Integer">
+        select NVL(sum(t.TOTAL_FEE),0) as MONEYCOUNT from T_YW_AGENT_TOTAL_CHANGE t
+    </select>
+
+    <select id="getCountWithdrawByAgent"  parameterType="java.lang.String"   resultType="java.lang.Integer">
+        select NVL(sum(t.TOTAL_FEE),0) as MONEYCOUNT from T_YW_AGENT_TOTAL_CHANGE t where t.AGENT_UNIQUE = #{agentUnique,jdbcType=VARCHAR}
+    </select>
+
+</mapper>

@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.ShakeAwardsDao">
+
+	<!-- 数据库映射模型区域 -->
+	<resultMap id="resultShakeAwards" type="com.aten.model.orm.ShakeAwards" >
+		<result property="awards_id" column="awards_id" />
+		<result property="shake_id" column="shake_id" />
+		<result property="awards_name" column="awards_name" />
+		<result property="prize_type" column="prize_type" />
+		<result property="give_integral" column="give_integral" />
+		<result property="coupon_id" column="coupon_id" />
+		<result property="awards_level" column="awards_level" />
+		<result property="awards_level_name" column="awards_level_name" />
+		<result property="awards_probability" column="awards_probability" />
+		<result property="awards_num" column="awards_num" />
+		<result property="shake_name" column="shake_name" />
+	</resultMap>
+
+	<!-- 新增数据区域 -->
+	<sql id="insertCommon">
+		INSERT INTO t_shake_awards
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="awards_id != null"> awards_id,</if>
+			<if test="shake_id != null"> shake_id,</if>
+			<if test="awards_name != null"> awards_name,</if>
+			<if test="prize_type != null"> prize_type,</if>
+			<if test="give_integral != null"> give_integral,</if>
+			<if test="coupon_id != null"> coupon_id,</if>
+			<if test="awards_level != null"> awards_level,</if>
+			<if test="awards_level_name != null"> awards_level_name,</if>
+			<if test="awards_probability != null"> awards_probability,</if>
+			<if test="awards_num != null"> awards_num</if>
+			
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="awards_id != null">#{awards_id},</if>
+			<if test="shake_id != null">#{shake_id},</if>
+			<if test="awards_name != null">#{awards_name},</if>
+			<if test="prize_type != null">#{prize_type},</if>
+			<if test="give_integral != null">#{give_integral},</if>
+			<if test="coupon_id != null">#{coupon_id},</if>
+			<if test="awards_level != null">#{awards_level},</if>
+			<if test="awards_level_name != null">#{awards_level_name},</if>
+			<if test="awards_probability != null">#{awards_probability},</if>
+			<if test="awards_num != null">#{awards_num}</if>
+			
+		</trim>
+	</sql>
+	
+	<insert id="insert" parameterType="com.aten.model.orm.ShakeAwards">
+		<include refid="insertCommon" />
+	</insert>
+
+	<insert id="insertGetPk" parameterType="com.aten.model.orm.ShakeAwards" >
+		<include refid="insertCommon" />
+		<selectKey resultType="String" order="AFTER" keyProperty="awards_id">  
+	       SELECT @@IDENTITY AS ID  
+	    </selectKey>  
+	</insert>
+	
+	<!-- 更新数据区域 -->
+	<sql id="update_clause">
+		<set>
+			<trim suffixOverrides=",">
+				<if test="awards_id != null"> awards_id = #{awards_id}, </if>
+				<if test="shake_id != null"> shake_id = #{shake_id}, </if>
+				<if test="awards_name != null"> awards_name = #{awards_name}, </if>
+				<if test="prize_type != null"> prize_type = #{prize_type}, </if>
+				<if test="give_integral != null"> give_integral = #{give_integral}, </if>
+				<if test="coupon_id != null"> coupon_id = #{coupon_id}, </if>
+				<if test="awards_level != null"> awards_level = #{awards_level}, </if>
+				<if test="awards_level_name != null"> awards_level_name = #{awards_level_name}, </if>
+				<if test="awards_probability != null"> awards_probability = #{awards_probability}, </if>
+				<if test="awards_num != null"> awards_num = #{awards_num} </if>
+				
+			</trim>
+		</set>
+	</sql>
+	
+	
+	
+	
+
+	<update id="update" parameterType="com.aten.model.orm.ShakeAwards">
+		UPDATE t_shake_awards <include refid="update_clause" /> WHERE awards_id = #{awards_id}
+	</update>
+
+	<!-- 删除数据区域 -->
+	<delete id="delete" parameterType="String">
+		delete from t_shake_awards where awards_id in
+		<foreach item="idItem" collection="array" index="index" open="(" separator="," close=")">
+			#{idItem}
+		</foreach>
+	</delete>
+
+	<!-- 获取对象数据区域 -->
+	<select id="get" parameterType="String"	resultMap="resultShakeAwards">
+		 SELECT
+		 t.awards_id,t.shake_id,t.awards_name,t.prize_type,t.give_integral,t.coupon_id,t.awards_level,t.awards_level_name,t.awards_probability,t.awards_num
+		 FROM t_shake_awards t WHERE awards_id = #{awards_id}
+	</select>
+	
+	<!-- 搜索数据区域 -->
+	<sql id="where_clause">
+		<where> 
+			1=1
+			<if test="awards_id != null"> and t.awards_id = #{awards_id} </if>
+			<if test="awards_id_vague != null"> and instr(t.awards_id,#{awards_id_vague})>0 </if>
+			<if test="shake_id != null"> and t.shake_id = #{shake_id} </if>
+			<if test="shake_id_vague != null"> and instr(t.shake_id,#{shake_id_vague})>0 </if>
+			<if test="awards_name != null"> and t.awards_name = #{awards_name} </if>
+			<if test="awards_name_vague != null"> and instr(t.awards_name,#{awards_name_vague})>0 </if>
+			<if test="prize_type != null"> and t.prize_type = #{prize_type} </if>
+			<if test="prize_type_vague != null"> and instr(t.prize_type,#{prize_type_vague})>0 </if>
+			<if test="give_integral != null"> and t.give_integral = #{give_integral} </if>
+			<if test="give_integral_vague != null"> and instr(t.give_integral,#{give_integral_vague})>0 </if>
+			<if test="coupon_id != null"> and t.coupon_id = #{coupon_id} </if>
+			<if test="coupon_id_vague != null"> and instr(t.coupon_id,#{coupon_id_vague})>0 </if>
+			<if test="awards_level != null"> and t.awards_level = #{awards_level} </if>
+			<if test="awards_level_vague != null"> and instr(t.awards_level,#{awards_level_vague})>0 </if>
+			<if test="awards_level_name != null"> and t.awards_level_name = #{awards_level_name} </if>
+			<if test="awards_level_name_vague != null"> and instr(t.awards_level_name,#{awards_level_name_vague})>0 </if>
+			<if test="awards_probability != null"> and t.awards_probability = #{awards_probability} </if>
+			<if test="awards_probability_vague != null"> and instr(t.awards_probability,#{awards_probability_vague})>0 </if>
+			<if test="awards_num != null"> and t.awards_num = #{awards_num} </if>
+			<if test="awards_num_vague != null"> and instr(t.awards_num#{awards_num_vague})>0 </if>
+			
+		</where>
+	</sql>
+	
+	<sql id="getCommon">
+		select  s.shake_name,t.awards_id,t.shake_id,t.awards_name,t.prize_type,t.give_integral,t.coupon_id,t.awards_level,t.awards_level_name,t.awards_probability,t.awards_num
+		from t_shake_awards t
+		left join t_shake s on s.shake_id=t.shake_id
+		<include refid="where_clause" /> order by awards_level asc
+	</sql>
+
+	
+
+	<select id="getList" parameterType="map" resultMap="resultShakeAwards">
+            <include refid="getCommon" />
+             <if test="start != null">
+         		LIMIT ${start},${limit}
+        	</if> 
+	</select>
+
+	<select id="getCount" parameterType="map" resultType="int">
+			select count(*) ct from t_shake_awards t <include refid="where_clause" />
+	</select>
+	
+	
+	<!-- 排序区域 -->
+	<update id="updateBatch" parameterType="java.util.List">
+	   <foreach collection="list" item="item" index="index" separator=";">  
+			update t_shake_awards 
+			<set>
+				sort_no = #{item.sort_no}
+			</set>
+			WHERE awards_id = #{item.id}
+	   </foreach>
+	</update>
+	
+</mapper>
+

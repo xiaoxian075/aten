@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.SupplyDao">
+
+	<cache type="org.mybatis.caches.ehcache.EhcacheCache"/> 
+
+	<!-- 数据库映射模型区域 -->
+	<resultMap id="resultSupply" type="com.aten.model.orm.Supply">
+		<result property="supply_id" column="supply_id" />
+		<result property="supply_name" column="supply_name" />
+		<result property="the_area" column="the_area" />
+		<result property="supply_contacts" column="supply_contacts" />
+		<result property="supply_contacts_phone" column="supply_contacts_phone" />
+		<result property="sort_no" column="sort_no" />
+		<result property="state" column="state" />
+		<result property="valid_time_start" column="valid_time_start" />
+		<result property="valid_time_end" column="valid_time_end" />
+		<result property="license_number" column="license_number" />
+		<result property="license_picture" column="license_picture" />
+		<result property="legal_name" column="legal_name" />
+		<result property="legal_id_card_number" column="legal_id_card_number" />
+		<result property="legal_id_card_picture" column="legal_id_card_picture" />
+		<result property="note" column="note" />
+	</resultMap>
+
+	<!-- 新增数据区域 -->
+	<sql id="insertCommon">
+		INSERT INTO t_supply(
+		<if test="supply_id != null"> supply_id,</if>
+		<if test="supply_name != null"> supply_name,</if>
+		<if test="the_area != null"> the_area,</if>
+		<if test="supply_contacts != null"> supply_contacts,</if>
+		<if test="supply_contacts_phone != null"> supply_contacts_phone,</if>
+		<if test="sort_no != null"> sort_no,</if>
+		<if test="state != null"> state,</if>
+		<if test="valid_time_start != null"> valid_time_start,</if>
+		<if test="valid_time_end != null"> valid_time_end,</if>
+		<if test="license_number != null"> license_number,</if>
+		<if test="license_picture != null"> license_picture,</if>
+		<if test="legal_name != null"> legal_name,</if>
+		<if test="legal_id_card_number != null"> legal_id_card_number,</if>
+		<if test="legal_id_card_picture != null"> legal_id_card_picture,</if>
+		<if test="note != null"> note,</if>
+		create_time
+		)
+		VALUES(
+		<if test="supply_id != null">#{supply_id},</if>
+		<if test="supply_name != null">#{supply_name},</if>
+		<if test="the_area != null">#{the_area},</if>
+		<if test="supply_contacts != null">#{supply_contacts},</if>
+		<if test="supply_contacts_phone != null">#{supply_contacts_phone},</if>
+		<if test="sort_no != null">#{sort_no},</if>
+		<if test="state != null">#{state},</if>
+		<if test="valid_time_start != null">#{valid_time_start},</if>
+		<if test="valid_time_end != null">#{valid_time_end},</if>
+		<if test="license_number != null">#{license_number},</if>
+		<if test="license_picture != null">#{license_picture},</if>
+		<if test="legal_name != null">#{legal_name},</if>
+		<if test="legal_id_card_number != null">#{legal_id_card_number},</if>
+		<if test="legal_id_card_picture != null">#{legal_id_card_picture},</if>
+		<if test="note != null">#{note},</if>
+		now()
+		)
+	</sql>
+
+	<insert id="insert" parameterType="com.aten.model.orm.Supply">
+		<include refid="insertCommon" />
+	</insert>
+
+	<insert id="insertGetPk" parameterType="com.aten.model.orm.Supply">
+		<selectKey resultType="String" order="BEFORE" keyProperty="supply_id">
+			SELECT t_supply_sequence.Nextval from DUAL
+		</selectKey>
+		<include refid="insertCommon" />
+	</insert>
+
+	<!-- 更新数据区域 -->
+	<sql id="update_clause">
+		<set>
+			<if test="supply_id != null"> supply_id = #{supply_id}, </if>
+			<if test="supply_name != null"> supply_name = #{supply_name}, </if>
+			<if test="the_area != null"> the_area = #{the_area}, </if>
+			<if test="supply_contacts != null"> supply_contacts = #{supply_contacts}, </if>
+			<if test="supply_contacts_phone != null"> supply_contacts_phone = #{supply_contacts_phone}, </if>
+			<if test="sort_no != null"> sort_no = #{sort_no}, </if>
+			<if test="state != null"> state = #{state}, </if>
+			<if test="valid_time_start != null"> valid_time_start = #{valid_time_start}, </if>
+			<if test="valid_time_end != null"> valid_time_end = #{valid_time_end}, </if>
+			<if test="license_number != null"> license_number = #{license_number}, </if>
+			<if test="license_picture != null"> license_picture = #{license_picture}, </if>
+			<if test="legal_name != null"> legal_name = #{legal_name}, </if>
+			<if test="legal_id_card_number != null"> legal_id_card_number = #{legal_id_card_number}, </if>
+			<if test="legal_id_card_picture != null"> legal_id_card_picture = #{legal_id_card_picture}, </if>
+			<if test="note != null"> note = #{note}, </if>
+			<if test="create_time != null"> create_time = #{create_time} </if>
+
+		</set>
+	</sql>
+
+
+	<update id="update" parameterType="com.aten.model.orm.Supply">
+		UPDATE t_supply
+		<include refid="update_clause" />
+		WHERE supply_id = #{supply_id}
+	</update>
+
+	<!-- 删除数据区域 -->
+	<delete id="delete" parameterType="String">
+		delete from t_supply where supply_id in
+		<foreach item="idItem" collection="array" index="index" open="("
+			separator="," close=")">
+			#{idItem}
+		</foreach>
+	</delete>
+
+	<!-- 获取对象数据区域 -->
+	<select id="get" parameterType="String" resultMap="resultSupply">
+		SELECT
+		t.supply_id,t.supply_name,t.the_area,t.supply_contacts,t.supply_contacts_phone,t.note,t.sort_no,t.state,t.valid_time_start,t.valid_time_end,t.license_number,t.license_picture,t.legal_name,t.legal_id_card_number,t.legal_id_card_picture,t.create_time
+		FROM t_supply t WHERE supply_id = #{supply_id}
+	</select>
+
+	<!-- 搜索数据区域 -->
+	<sql id="where_clause">
+		<where>
+			1=1
+			<if test="supply_id != null"> and t.supply_id = #{supply_id} </if>
+			<if test="not_supply_id != null"> and t.supply_id != #{not_supply_id} </if>
+			<if test="supply_name != null"> and t.supply_name = #{supply_name} </if>
+			<if test="supply_name_vague != null"> and instr(t.supply_name,#{supply_name_vague})>0</if>
+			<if test="the_area != null"> and t.the_area = #{the_area} </if>
+			<if test="supply_contacts != null"> and t.supply_contacts = #{supply_contacts} </if>
+			<if test="supply_contacts_phone != null"> and t.supply_contacts_phone = #{supply_contacts_phone}
+			</if>
+			<if test="sort_no != null"> and t.sort_no = #{sort_no} </if>
+			<if test="state != null"> and t.state = #{state} </if>
+			<if test="valid_time_start != null"> and t.valid_time_start = #{valid_time_start} </if>
+			<if test="valid_time_end != null"> and t.valid_time_end = #{valid_time_end} </if>
+			<if test="license_number != null"> and t.license_number = #{license_number} </if>
+			<if test="license_picture != null"> and t.license_picture = #{license_picture} </if>
+			<if test="legal_name != null"> and t.legal_name = #{legal_name} </if>
+			<if test="legal_id_card_number != null"> and t.legal_id_card_number = #{legal_id_card_number}
+			</if>
+			<if test="legal_id_card_picture != null"> and t.legal_id_card_picture = #{legal_id_card_picture}
+			</if>
+			<if test="create_time != null"> and t.create_time = #{create_time} </if>
+
+		</where>
+	</sql>
+
+	<sql id="getCommon">
+		select
+		t.supply_id,t.supply_name,t.the_area,t.supply_contacts,t.supply_contacts_phone,t.note,t.sort_no,t.state,t.valid_time_start,t.valid_time_end,t.license_number,t.license_picture,t.legal_name,t.legal_id_card_number,t.legal_id_card_picture,t.create_time
+		from t_supply t
+		<include refid="where_clause" />
+		order by sort_no desc
+	</sql>
+
+
+
+	<select id="getList" parameterType="map" resultMap="resultSupply">
+		<include refid="getCommon" />
+		<if test="start != null">
+			LIMIT ${start},${limit}
+		</if>
+	</select>
+
+	<select id="getCount" parameterType="map" resultType="int">
+		select count(*) ct from t_supply t
+		<include refid="where_clause" />
+	</select>
+
+
+	<!-- 排序区域 -->
+	<update id="updateBatch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" open=""
+			close=";" separator=";">
+			update t_supply
+			<set>
+				sort_no = #{item.sort_no}
+			</set>
+			WHERE supply_id = #{item.id}
+		</foreach>
+	</update>
+
+	<!-- 更改状态 -->
+	<update id="updateStatus" parameterType="map">
+		update
+		t_supply
+		<set>
+			status = #{status}
+		</set>
+		WHERE
+		supply_id = #{supply_id}
+		LIMIT 1
+	</update>
+	<select id="queryList" parameterType="map" resultType="com.aten.model.orm.Supply">
+		select * from t_supply t
+		<include refid="where_clause" />
+
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	<select id="selectByCatId" parameterType="java.lang.String"
+		resultType="com.aten.model.orm.Supply">
+		select s.* from t_supply s
+		left join t_cat_supply cs on
+		s.supply_id=cs.supply_id
+		where s.state=1 and cs.cat_id=#{id}
+	</select>
+</mapper>
+

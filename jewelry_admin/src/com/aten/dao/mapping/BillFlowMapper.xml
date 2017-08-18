@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.BillFlowDao">
+	<insert id="insert" parameterType="com.aten.model.orm.BillFlow">
+		INSERT INTO
+		`t_bill_flow`
+		(
+		`seller_id`,
+		`trade_id`,
+		`bill_amount`,
+		`bill_type`,
+		`bill_time`,
+		`order_type`,
+		`order_type_name`,
+		`pay_way`,
+		`pay_way_name`,
+		`ralation_id`,
+		`note`,
+		`oper_man`,
+		`oper_time`
+		)
+		VALUES
+		(
+		#{seller_id},
+		#{trade_id},
+		#{bill_amount},
+		#{bill_type},
+		#{bill_time},
+		#{order_type},
+		#{order_type_name},
+		#{pay_way},
+		#{pay_way_name},
+		#{ralation_id},
+		#{note},
+		#{oper_man},
+		#{oper_time}
+		)
+	</insert>
+	<!-- 数据库映射模型区域 -->
+	<resultMap id="resultBillFlow" type="com.aten.model.orm.BillFlow" >
+		<result property="bf_id" column="bf_id" />
+		<result property="seller_id" column="seller_id" />
+		<result property="trade_id" column="trade_id" />
+		<result property="bill_amount" column="bill_amount" />
+		<result property="bill_type" column="bill_type" />
+		<result property="bill_time" column="bill_time" />
+		<result property="order_type" column="order_type" />
+		<result property="order_type_name" column="order_type_name" />
+		<result property="pay_way" column="pay_way" />
+		<result property="pay_way_name" column="pay_way_name" />
+		<result property="ralation_id" column="ralation_id" />
+		<result property="note" column="note" />
+		<result property="oper_man" column="oper_man" />
+		<result property="oper_time" column="oper_time" />
+		
+	</resultMap>
+
+	<!-- 新增数据区域 -->
+	<sql id="insertCommon">
+		INSERT INTO t_bill_flow
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bf_id != null"> bf_id,</if>
+			<if test="seller_id != null"> seller_id,</if>
+			<if test="trade_id != null"> trade_id,</if>
+			<if test="bill_amount != null"> bill_amount,</if>
+			<if test="bill_type != null"> bill_type,</if>
+			<if test="bill_time != null"> bill_time,</if>
+			<if test="order_type != null"> order_type,</if>
+			<if test="order_type_name != null"> order_type_name,</if>
+			<if test="pay_way != null"> pay_way,</if>
+			<if test="pay_way_name != null"> pay_way_name,</if>
+			<if test="ralation_id != null"> ralation_id,</if>
+			<if test="note != null"> note,</if>
+			<if test="oper_man != null"> oper_man,</if>
+			<if test="oper_time != null"> oper_time</if>
+			
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="bf_id != null">#{bf_id},</if>
+			<if test="seller_id != null">#{seller_id},</if>
+			<if test="trade_id != null">#{trade_id},</if>
+			<if test="bill_amount != null">#{bill_amount},</if>
+			<if test="bill_type != null">#{bill_type},</if>
+			<if test="bill_time != null">#{bill_time},</if>
+			<if test="order_type != null">#{order_type},</if>
+			<if test="order_type_name != null">#{order_type_name},</if>
+			<if test="pay_way != null">#{pay_way},</if>
+			<if test="pay_way_name != null">#{pay_way_name},</if>
+			<if test="ralation_id != null">#{ralation_id},</if>
+			<if test="note != null">#{note},</if>
+			<if test="oper_man != null">#{oper_man},</if>
+			<if test="oper_time != null">#{oper_time}</if>
+			
+		</trim>
+	</sql>
+	
+	<!--<insert id="insert" parameterType="com.aten.model.orm.BillFlow">-->
+		<!--<include refid="insertCommon" />-->
+	<!--</insert>-->
+
+	<insert id="insertGetPk" parameterType="com.aten.model.orm.BillFlow" >
+		<include refid="insertCommon" />
+		<selectKey resultType="String" order="AFTER" keyProperty="bf_id">  
+	       SELECT @@IDENTITY AS ID  
+	    </selectKey>  
+	</insert>
+	
+	<!-- 更新数据区域 -->
+	<sql id="update_clause">
+		<set>
+			<trim suffixOverrides=",">
+				<if test="bf_id != null"> bf_id = #{bf_id}, </if>
+				<if test="seller_id != null"> seller_id = #{seller_id}, </if>
+				<if test="trade_id != null"> trade_id = #{trade_id}, </if>
+				<if test="bill_amount != null"> bill_amount = #{bill_amount}, </if>
+				<if test="bill_type != null"> bill_type = #{bill_type}, </if>
+				<if test="bill_time != null"> bill_time = #{bill_time}, </if>
+				<if test="order_type != null"> order_type = #{order_type}, </if>
+				<if test="order_type_name != null"> order_type_name = #{order_type_name}, </if>
+				<if test="pay_way != null"> pay_way = #{pay_way}, </if>
+				<if test="pay_way_name != null"> pay_way_name = #{pay_way_name}, </if>
+				<if test="ralation_id != null"> ralation_id = #{ralation_id}, </if>
+				<if test="note != null"> note = #{note}, </if>
+				<if test="oper_man != null"> oper_man = #{oper_man}, </if>
+				<if test="oper_time != null"> oper_time = #{oper_time} </if>
+				
+			</trim>
+		</set>
+	</sql>
+	
+	
+	
+	
+
+	<update id="update" parameterType="com.aten.model.orm.BillFlow">
+		UPDATE t_bill_flow <include refid="update_clause" /> WHERE bf_id = #{bf_id}
+	</update>
+
+	<!-- 删除数据区域 -->
+	<delete id="delete" parameterType="String">
+		delete from t_bill_flow where bf_id in
+		<foreach item="idItem" collection="array" index="index" open="(" separator="," close=")">
+			#{idItem}
+		</foreach>
+	</delete>
+
+	<!-- 获取对象数据区域 -->
+	<select id="get" parameterType="String"	resultMap="resultBillFlow">
+		 SELECT
+		 t.bf_id,t.seller_id,t.trade_id,t.bill_amount,t.bill_type,t.bill_time,t.order_type,t.order_type_name,t.pay_way,t.pay_way_name,t.ralation_id,t.note,t.oper_man,t.oper_time
+		 FROM t_bill_flow t WHERE bf_id = #{bf_id}
+	</select>
+	
+	<!-- 搜索数据区域 -->
+	<sql id="where_clause">
+		<where> 
+			1=1
+			<if test="bf_id != null"> and t.bf_id = #{bf_id} </if>
+			<if test="bf_id_vague != null"> and instr(t.bf_id,#{bf_id_vague})>0 </if>
+			<if test="seller_id != null"> and t.seller_id = #{seller_id} </if>
+			<if test="seller_id_vague != null"> and instr(t.seller_id,#{seller_id_vague})>0 </if>
+			<if test="trade_id != null"> and t.trade_id = #{trade_id} </if>
+			<if test="trade_id_vague != null"> and instr(t.trade_id,#{trade_id_vague})>0 </if>
+			<if test="bill_amount != null"> and t.bill_amount = #{bill_amount} </if>
+			<if test="bill_amount_vague != null"> and instr(t.bill_amount,#{bill_amount_vague})>0 </if>
+			<if test="bill_type != null"> and t.bill_type = #{bill_type} </if>
+			<if test="bill_type_vague != null"> and instr(t.bill_type,#{bill_type_vague})>0 </if>
+			<if test="bill_time != null"> and t.bill_time = #{bill_time} </if>
+			<if test="bill_time_vague != null"> and instr(t.bill_time,#{bill_time_vague})>0 </if>
+			<if test="order_type != null"> and t.order_type = #{order_type} </if>
+			<if test="order_type_vague != null"> and instr(t.order_type,#{order_type_vague})>0 </if>
+			<if test="order_type_name != null"> and t.order_type_name = #{order_type_name} </if>
+			<if test="order_type_name_vague != null"> and instr(t.order_type_name,#{order_type_name_vague})>0 </if>
+			<if test="pay_way != null"> and t.pay_way = #{pay_way} </if>
+			<if test="pay_way_vague != null"> and instr(t.pay_way,#{pay_way_vague})>0 </if>
+			<if test="pay_way_name != null"> and t.pay_way_name = #{pay_way_name} </if>
+			<if test="pay_way_name_vague != null"> and instr(t.pay_way_name,#{pay_way_name_vague})>0 </if>
+			<if test="ralation_id != null"> and t.ralation_id = #{ralation_id} </if>
+			<if test="ralation_id_vague != null"> and instr(t.ralation_id,#{ralation_id_vague})>0 </if>
+			<if test="note != null"> and t.note = #{note} </if>
+			<if test="note_vague != null"> and instr(t.note,#{note_vague})>0 </if>
+			<if test="oper_man != null"> and t.oper_man = #{oper_man} </if>
+			<if test="oper_man_vague != null"> and instr(t.oper_man,#{oper_man_vague})>0 </if>
+			<if test="oper_time != null"> and t.oper_time = #{oper_time} </if>
+			<if test="oper_time_vague != null"> and instr(t.oper_time#{oper_time_vague})>0 </if>
+			<if test="settle_date != null">   and  instr(t.bill_time,#{settle_date})>0 </if>
+			<if test="start_date != null"> and  t.bill_time  &gt;=  #{start_date}  </if>
+			<if test="end_date != null">   and  t.bill_time  &lt;=  #{end_date}</if>
+		</where>
+	</sql>
+	
+	<sql id="getCommon">
+		select  t.bf_id,t.seller_id,t.trade_id,t.bill_amount,t.bill_type,t.bill_time,t.order_type,t.order_type_name,t.pay_way,t.pay_way_name,t.ralation_id,t.note,t.oper_man,t.oper_time
+		from t_bill_flow t
+		<include refid="where_clause" /> order by bf_id desc
+	</sql>
+
+	
+
+	<select id="getList" parameterType="map" resultMap="resultBillFlow">
+            <include refid="getCommon" />
+             <if test="start != null">
+         		LIMIT ${start},${limit}
+        	</if> 
+	</select>
+
+	<select id="getCount" parameterType="map" resultType="int">
+			select count(*) ct from t_bill_flow t <include refid="where_clause" />
+	</select>
+	
+	
+	<!-- 排序区域 -->
+	<update id="updateBatch" parameterType="java.util.List">
+	   <foreach collection="list" item="item" index="index" separator=";">  
+			update t_bill_flow 
+			<set>
+				sort_no = #{item.sort_no}
+			</set>
+			WHERE bf_id = #{item.id}
+	   </foreach>
+	</update>
+	
+</mapper>
+

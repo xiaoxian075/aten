@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.admin.dao.SmsAccountDaoMapper">
+
+    <resultMap id="BaseResultMap" type="com.admin.model.SmsAccount">
+        <id column="ID" jdbcType="BIGINT" property="id"/>
+        <result column="NAME" jdbcType="VARCHAR" property="name"/>
+        <result column="SEX" jdbcType="INTEGER" property="sex"/>
+        <result column="PHONE" jdbcType="VARCHAR" property="phone"/>
+        <result column="GROUP_ID" jdbcType="BIGINT" property="groupId"/>
+        <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+    <sql id="Example_Where_Clause" >
+        <where >
+            <foreach collection="oredCriteria" item="criteria" separator="or" >
+                <if test="criteria.valid" >
+                    <trim prefix="(" suffix=")" prefixOverrides="and" >
+                        <foreach collection="criteria.criteria" item="criterion" >
+                            <choose >
+                                <when test="criterion.noValue" >
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue" >
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue" >
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue" >
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+
+    <select id="selectList" resultMap="BaseResultMap" parameterType="com.admin.model.BaseExample" >
+        select
+            ID,
+            NAME,
+            SEX,
+            PHONE,
+            GROUP_ID,
+            CREATE_TIME,
+            UPDATE_TIME
+        from T_SMS_ACCOUNT
+        <if test="_parameter != null" >
+            <include refid="Example_Where_Clause" />
+        </if>
+        <if test="orderByClause != null" >
+            order by ${orderByClause}
+        </if>
+    </select>
+
+    <select id="selectOne" parameterType="java.lang.Long" resultType="com.admin.model.SmsAccount" >
+        SELECT
+            ID,
+            NAME,
+            SEX,
+            PHONE,
+            GROUP_ID,
+            CREATE_TIME,
+            UPDATE_TIME
+        FROM
+            T_SMS_ACCOUNT
+        WHERE
+            ID=#{id}
+            AND rownum = 1
+    </select>
+
+    <select id="selectAllAccount" resultMap="BaseResultMap" parameterType="map" >
+        select
+        ID,
+        NAME,
+        SEX,
+        PHONE,
+        GROUP_ID,
+        CREATE_TIME,
+        UPDATE_TIME
+        from T_SMS_ACCOUNT
+        WHERE
+        1=1
+        <if test="id != null" >
+            AND ID = #{id}
+        </if>
+    </select>
+
+    <select id="selectAccountByGroupId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        ID,
+        NAME,
+        SEX,
+        PHONE,
+        GROUP_ID,
+        CREATE_TIME,
+        UPDATE_TIME
+        from T_SMS_ACCOUNT
+        WHERE
+        GROUP_ID = #{groupId}
+    </select>
+
+
+    <insert id="insertOne" parameterType="com.admin.model.SmsAccount" >
+        INSERT INTO
+            T_SMS_ACCOUNT
+            (
+                ID,
+                NAME,
+                SEX,
+                PHONE,
+                GROUP_ID,
+                CREATE_TIME,
+                UPDATE_TIME
+            )
+        VALUES
+            (
+                T_SMS_ACCOUNT_SEQUENCE.nextval,
+                #{name},
+                #{sex},
+                #{phone},
+                #{groupId},
+                #{createTime},
+                #{updateTime}
+            )
+    </insert>
+
+    <delete id="deleteOne" parameterType="java.lang.Long" >
+        DELETE FROM
+          T_SMS_ACCOUNT
+        WHERE
+            ID = #{id}
+            AND rownum = 1
+    </delete>
+
+    <delete id="deleteByGroupid" parameterType="java.lang.Long" >
+        DELETE FROM
+        T_SMS_ACCOUNT
+        WHERE
+        GROUP_ID = #{groupId}
+        AND rownum = 1
+    </delete>
+
+    <update id="updateOne" parameterType="com.admin.model.SmsAccount">
+        UPDATE
+        T_SMS_ACCOUNT
+        SET
+        NAME = #{name},
+        SEX = #{sex},
+        PHONE = #{phone},
+        UPDATE_TIME = #{updateTime}
+        WHERE
+        id = #{id}
+        AND rownum = 1
+    </update>
+
+
+
+
+<!--
+    <select id="signList" resultMap="BaseResultMap" >
+        SELECT
+        ID,
+        TYPE,
+        SIGN,
+        CONTENT,
+        STATUS,
+        REASON,
+        CREATE_TIME,
+        UPDATE_TIME
+        FROM
+        T_SMS_MODEL
+        WHERE
+        STATUS=1
+    </select>
+
+
+
+
+
+    -->
+</mapper>

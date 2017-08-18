@@ -1,0 +1,17 @@
+.style_name_div {
+	padding: 5px;
+	text-align: left;
+	font-size: 14px;
+}
+
+.model_name_li {
+	padding: 5px;
+	margin-left: 30px;
+	border: 1px solid green;
+	text-align: left;
+}
+
+.model_name_add {
+	float: right;
+	padding-right: 20px;
+}

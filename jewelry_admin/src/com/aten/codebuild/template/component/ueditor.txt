@@ -1,0 +1,18 @@
+<tr>
+	<td colspan="2">
+		<div class="line_div ">
+ 			<div class="detail_div">
+ 			<p class="detail_div_p">
+ 				<b class="detail_div_b">[field_note][is_must_span]</b>
+ 			</p>
+	 		<div class="ueditor_content">
+	 			  <textarea id="[field_name]_textarea" name="[field_name]">${{DEFINE_CLASS_NAME}.[field_name]}</textarea>
+	 			  <script>
+			 			  var editor =new UE.ui.Editor();
+			 			  UE.getEditor('[field_name]_textarea');
+	 			  </script> 
+	 		</div>
+			</div>
+		</div>
+	</td>
+</tr>

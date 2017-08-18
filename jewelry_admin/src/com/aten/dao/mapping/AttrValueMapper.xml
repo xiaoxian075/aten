@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.AttrValueDao">
+<!-- 
+	<cache type="org.mybatis.caches.ehcache.EhcacheCache"/>  -->
+
+	<!-- 数据库映射模型区域 -->
+	<resultMap id="resultAttrValue" type="com.aten.model.orm.AttrValue">
+		<result property="attr_value_ico" column="attr_value_ico" />
+		<result property="sort_no" column="sort_no" />
+		<result property="attr_value_id" column="attr_value_id" />
+		<result property="attr_id" column="attr_id" />
+		<result property="attr_value" column="attr_value" />
+		<result property="state" column="state" />
+	</resultMap>
+
+	<!-- 新增数据区域 -->
+	<sql id="insertCommon">
+		insert into t_attr_value(
+		<if test="attr_value_ico != null"> attr_value_ico,</if>
+		<if test="sort_no != null"> sort_no,</if>
+		<if test="attr_id != null"> attr_id,</if>
+		<if test="state != null"> state,</if>
+		<if test="attr_value != null"> attr_value</if>
+		)
+		values(
+		<if test="attr_value_ico != null">#{attr_value_ico},</if>
+		<if test="sort_no != null">#{sort_no},</if>
+		<if test="attr_id != null">#{attr_id},</if>
+		<if test="state != null">#{state},</if>
+		<if test="attr_value != null">#{attr_value}</if>
+		)
+	</sql>
+
+	<insert id="insert" parameterType="com.aten.model.orm.AttrValue">
+		<include refid="insertCommon" />
+	</insert>
+
+	<insert id="insertGetPk" parameterType="com.aten.model.orm.AttrValue">
+		<include refid="insertCommon" />
+	</insert>
+
+	<!-- 更新数据区域 -->
+	<sql id="update_clause">
+		<set>
+			<if test="attr_value_ico != null"> attr_value_ico = #{attr_value_ico}, </if>
+			<if test="sort_no != null"> sort_no = #{sort_no}, </if>
+			<if test="attr_value_id != null"> attr_value_id = #{attr_value_id}, </if>
+			<if test="attr_id != null"> attr_id = #{attr_id}, </if>
+			<if test="attr_value != null"> attr_value = #{attr_value}, </if>
+			<if test="state != null"> state = #{state} </if>
+		</set>
+	</sql>
+
+
+	<update id="update" parameterType="com.aten.model.orm.AttrValue">
+		update t_attr_value
+		<include refid="update_clause" />
+		where attr_value_id = #{attr_value_id}
+	</update>
+
+	<!-- 删除数据区域 -->
+	<delete id="delete" parameterType="String">
+		delete from t_attr_value where attr_value_id in
+		<foreach item="idItem" collection="array" index="index" open="("
+			separator="," close=")">
+			#{idItem}
+		</foreach>
+	</delete>
+
+	<!-- 获取对象数据区域 -->
+	<select id="get" parameterType="String" resultMap="resultAttrValue">
+		SELECT
+		t.attr_value_ico, t.sort_no, t.attr_value_id, t.attr_id, t.attr_value,t.state
+		FROM t_attr_value t WHERE attr_value_id = #{attr_value_id}
+	</select>
+
+	<select id="getObjByMap" parameterType="map" resultMap="resultAttrValue">
+		SELECT
+		t.attr_value_ico, t.sort_no, t.attr_value_id, t.attr_id, t.attr_value,t.state
+		FROM t_attr_value t
+		<include refid="where_clause" />
+	</select>
+
+	<select id="findByAttrId" parameterType="String" resultMap="resultAttrValue">
+		SELECT
+		t.attr_value_ico, t.sort_no, t.attr_value_id, t.attr_id,
+		t.attr_value,t.state
+		FROM t_attr_value t where t.attr_id=#{attr_id}
+	</select>
+
+	<!-- 搜索数据区域 -->
+	<sql id="where_clause">
+		<where>
+			1=1
+			<if test="attr_value_ico != null"> and t.attr_value_ico = #{attr_value_ico} </if>
+			<if test="sort_no != null"> and t.sort_no = #{sort_no} </if>
+			<if test="attr_value_id != null"> and t.attr_value_id = #{attr_value_id} </if>
+			<if test="attr_id != null"> and t.attr_id = #{attr_id} </if>
+			<if test="attr_value != null"> and t.attr_value = #{attr_value} </if>
+			<if test="attr_code != null"> and t.attr_id = #{attr_code} </if>
+			<if test="state != null"> and t.state = #{state} </if>
+		</where>
+	</sql>
+
+	<sql id="getCommon">
+		select t.attr_value_ico, t.sort_no, t.attr_value_id, t.attr_id,
+		t.attr_value,t.state
+		from t_attr_value t
+		<include refid="where_clause" />
+		order by t.sort_no desc,t.attr_value_id desc
+	</sql>
+
+
+
+	<select id="getList" parameterType="map" resultMap="resultAttrValue">
+		<choose>
+			<when test="start != null">
+				SELECT * FROM
+				( SELECT s.*, ROWNUM RN FROM
+				(
+				<include refid="getCommon" />)
+				s WHERE 1=1 and ROWNUM &lt;= #{top}
+				)
+				WHERE RN >= #{start}
+			</when>
+			<otherwise>
+				<include refid="getCommon" />
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="getCount" parameterType="map" resultType="int">
+		select count(*) ct from (
+		<include refid="getCommon" />
+		)
+	</select>
+
+
+	<!-- 排序区域 -->
+	<update id="updateBatch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" open=""
+			close="" separator=";">
+			update t_attr_value
+			<set>
+				sort_no = #{item.sort_no}
+			</set>
+			WHERE attr_value_id = #{item.id}
+		</foreach>
+	</update>
+
+</mapper>
+

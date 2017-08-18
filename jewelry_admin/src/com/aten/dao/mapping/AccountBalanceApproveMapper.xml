@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.AccountBalanceApproveDao">
+
+	<!-- 数据库映射模型区域 -->
+	<resultMap id="resultAccountBalanceApprove" type="com.aten.model.orm.AccountBalanceApprove">
+		<result property="ba_id" column="ba_id" />
+		<result property="approve_num" column="approve_num" />
+		<result property="create_time" column="create_time" />
+		<result property="submitter_id" column="submitter_id" />
+		<result property="submitter_name" column="submitter_name" />
+		<result property="submitter_rolename" column="submitter_rolename" />
+		<result property="login_name" column="login_name" />
+		<result property="account_id" column="account_id" />
+		<result property="io_type" column="io_type" />
+		<result property="approve_amount" column="approve_amount" />
+		<result property="submitter_note" column="submitter_note" />
+		<result property="submitter_img" column="submitter_img" />
+		<result property="audit_state" column="audit_state" />
+		<result property="approve_mana_id" column="approve_mana_id" />
+		<result property="approve_mana_name" column="approve_mana_name" />
+		<result property="approve_rolename" column="approve_rolename" />
+		<result property="approve_time" column="approve_time" />
+		<result property="approve_note" column="approve_note" />
+
+	</resultMap>
+
+	<!-- 新增数据区域 -->
+	<sql id="insertCommon">
+		INSERT INTO t_account_balance_approve
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="ba_id != null"> ba_id,</if>
+			<if test="approve_num != null"> approve_num,</if>
+			create_time,
+			<if test="submitter_id != null"> submitter_id,</if>
+			<if test="submitter_name != null"> submitter_name,</if>
+			<if test="submitter_rolename != null"> submitter_rolename,</if>
+			<if test="login_name != null"> login_name,</if>
+			<if test="account_id != null"> account_id,</if>
+			<if test="io_type != null"> io_type,</if>
+			<if test="approve_amount != null"> approve_amount,</if>
+			<if test="submitter_note != null"> submitter_note,</if>
+			<if test="submitter_img != null"> submitter_img,</if>
+			<if test="audit_state != null"> audit_state,</if>
+			<if test="approve_mana_id != null"> approve_mana_id,</if>
+			<if test="approve_mana_name != null"> approve_mana_name,</if>
+			<if test="approve_rolename != null"> approve_rolename,</if>
+			<if test="approve_time != null"> approve_time,</if>
+			<if test="approve_note != null"> approve_note</if>
+
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="ba_id != null">#{ba_id},</if>
+			<if test="approve_num != null">#{approve_num},</if>
+			now(),
+			<if test="submitter_id != null">#{submitter_id},</if>
+			<if test="submitter_name != null">#{submitter_name},</if>
+			<if test="submitter_rolename != null">#{submitter_rolename},</if>
+			<if test="login_name != null">#{login_name},</if>
+			<if test="account_id != null">#{account_id},</if>
+			<if test="io_type != null">#{io_type},</if>
+			<if test="approve_amount != null">#{approve_amount},</if>
+			<if test="submitter_note != null">#{submitter_note},</if>
+			<if test="submitter_img != null">#{submitter_img},</if>
+			<if test="audit_state != null">#{audit_state},</if>
+			<if test="approve_mana_id != null">#{approve_mana_id},</if>
+			<if test="approve_mana_name != null">#{approve_mana_name},</if>
+			<if test="approve_rolename != null">#{approve_rolename},</if>
+			<if test="approve_time != null">#{approve_time},</if>
+			<if test="approve_note != null">#{approve_note}</if>
+
+		</trim>
+	</sql>
+
+	<insert id="insert" parameterType="com.aten.model.orm.AccountBalanceApprove">
+		<include refid="insertCommon" />
+	</insert>
+
+	<insert id="insertGetPk" parameterType="com.aten.model.orm.AccountBalanceApprove">
+		<include refid="insertCommon" />
+		<selectKey resultType="String" order="AFTER" keyProperty="ba_id">
+			SELECT @@IDENTITY AS ID
+		</selectKey>
+	</insert>
+
+	<!-- 更新数据区域 -->
+	<sql id="update_clause">
+		<set>
+			<trim suffixOverrides=",">
+				<if test="ba_id != null"> ba_id = #{ba_id}, </if>
+				<if test="approve_num != null"> approve_num = #{approve_num}, </if>
+				<if test="create_time != null"> create_time = #{create_time}, </if>
+				<if test="submitter_id != null"> submitter_id = #{submitter_id}, </if>
+				<if test="submitter_name != null"> submitter_name = #{submitter_name}, </if>
+				<if test="submitter_rolename != null"> submitter_rolename = #{submitter_rolename}, </if>
+				<if test="login_name != null"> login_name = #{login_name}, </if>
+				<if test="account_id != null"> account_id = #{account_id}, </if>
+				<if test="io_type != null"> io_type = #{io_type}, </if>
+				<if test="approve_amount != null"> approve_amount = #{approve_amount}, </if>
+				<if test="submitter_note != null"> submitter_note = #{submitter_note}, </if>
+				<if test="submitter_img != null"> submitter_img = #{submitter_img}, </if>
+				<if test="audit_state != null"> audit_state = #{audit_state}, </if>
+				<if test="approve_mana_id != null"> approve_mana_id = #{approve_mana_id}, </if>
+				<if test="approve_mana_name != null"> approve_mana_name = #{approve_mana_name}, </if>
+				<if test="approve_rolename != null"> approve_rolename = #{approve_rolename}, </if>
+				approve_time = now(),
+				<if test="approve_note != null"> approve_note = #{approve_note} </if>
+
+			</trim>
+		</set>
+	</sql>
+
+
+
+
+
+	<update id="update" parameterType="com.aten.model.orm.AccountBalanceApprove">
+		UPDATE t_account_balance_approve
+		<include refid="update_clause" />
+		WHERE ba_id = #{ba_id}
+	</update>
+
+	<!-- 删除数据区域 -->
+	<delete id="delete" parameterType="String">
+		delete from t_account_balance_approve where ba_id in
+		<foreach item="idItem" collection="array" index="index" open="("
+			separator="," close=")">
+			#{idItem}
+		</foreach>
+	</delete>
+
+	<!-- 获取对象数据区域 -->
+	<select id="get" parameterType="String" resultMap="resultAccountBalanceApprove">
+		SELECT
+		t.ba_id,t.approve_num,t.create_time,t.submitter_id,t.submitter_name,t.submitter_rolename,t.login_name,t.account_id,t.io_type,t.approve_amount,t.submitter_note,t.submitter_img,t.audit_state,t.approve_mana_id,t.approve_mana_name,t.approve_rolename,t.approve_time,t.approve_note
+		FROM t_account_balance_approve t WHERE ba_id = #{ba_id}
+	</select>
+
+	<!-- 搜索数据区域 -->
+	<sql id="where_clause">
+		<where>
+			1=1
+			<if test="ba_id != null"> and t.ba_id = #{ba_id} </if>
+			<if test="ba_id_vague != null"> and instr(t.ba_id,#{ba_id_vague})>0 </if>
+			<if test="approve_num != null"> and t.approve_num = #{approve_num} </if>
+			<if test="approve_num_vague != null"> and instr(t.approve_num,#{approve_num_vague})>0 </if>
+			<if test="create_time != null"> and t.create_time = #{create_time} </if>
+			<if test="create_time_vague != null"> and instr(t.create_time,#{create_time_vague})>0 </if>
+			<if test="submitter_id != null"> and t.submitter_id = #{submitter_id} </if>
+			<if test="submitter_id_vague != null"> and instr(t.submitter_id,#{submitter_id_vague})>0 </if>
+			<if test="submitter_name != null"> and t.submitter_name = #{submitter_name} </if>
+			<if test="submitter_name_vague != null"> and instr(t.submitter_name,#{submitter_name_vague})>0
+			</if>
+			<if test="submitter_rolename != null"> and t.submitter_rolename = #{submitter_rolename} </if>
+			<if test="submitter_rolename_vague != null"> and
+				instr(t.submitter_rolename,#{submitter_rolename_vague})>0 </if>
+			<if test="login_name != null"> and t.login_name = #{login_name} </if>
+			<if test="login_name_vague != null"> and instr(t.login_name,#{login_name_vague})>0 </if>
+			<if test="account_id != null"> and t.account_id = #{account_id} </if>
+			<if test="account_id_vague != null"> and instr(t.account_id,#{account_id_vague})>0 </if>
+			<if test="io_type != null"> and t.io_type = #{io_type} </if>
+			<if test="io_type_vague != null"> and instr(t.io_type,#{io_type_vague})>0 </if>
+			<if test="approve_amount != null"> and t.approve_amount = #{approve_amount} </if>
+			<if test="approve_amount_vague != null"> and instr(t.approve_amount,#{approve_amount_vague})>0
+			</if>
+			<if test="submitter_note != null"> and t.submitter_note = #{submitter_note} </if>
+			<if test="submitter_note_vague != null"> and instr(t.submitter_note,#{submitter_note_vague})>0
+			</if>
+			<if test="submitter_img != null"> and t.submitter_img = #{submitter_img} </if>
+			<if test="submitter_img_vague != null"> and instr(t.submitter_img,#{submitter_img_vague})>0 </if>
+			<if test="audit_state != null"> and t.audit_state = #{audit_state} </if>
+			<if test="audit_state_vague != null"> and instr(t.audit_state,#{audit_state_vague})>0 </if>
+			<if test="approve_mana_id != null"> and t.approve_mana_id = #{approve_mana_id} </if>
+			<if test="approve_mana_id_vague != null"> and instr(t.approve_mana_id,#{approve_mana_id_vague})>0
+			</if>
+			<if test="approve_mana_name != null"> and t.approve_mana_name = #{approve_mana_name} </if>
+			<if test="approve_mana_name_vague != null"> and
+				instr(t.approve_mana_name,#{approve_mana_name_vague})>0 </if>
+			<if test="approve_rolename != null"> and t.approve_rolename = #{approve_rolename} </if>
+			<if test="approve_rolename_vague != null"> and
+				instr(t.approve_rolename,#{approve_rolename_vague})>0 </if>
+			<if test="approve_time != null"> and t.approve_time = #{approve_time} </if>
+			<if test="approve_time_vague != null"> and instr(t.approve_time,#{approve_time_vague})>0 </if>
+			<if test="approve_note != null"> and t.approve_note = #{approve_note} </if>
+			<if test="approve_note_vague != null"> and instr(t.approve_note#{approve_note_vague})>0 </if>
+
+		</where>
+	</sql>
+
+	<sql id="getCommon">
+		select
+		t.ba_id,t.approve_num,t.create_time,t.submitter_id,t.submitter_name,t.submitter_rolename,t.login_name,t.account_id,t.io_type,t.approve_amount,t.submitter_note,t.submitter_img,t.audit_state,t.approve_mana_id,t.approve_mana_name,t.approve_rolename,t.approve_time,t.approve_note
+		from t_account_balance_approve t
+		<include refid="where_clause" />
+		order by ba_id desc
+	</sql>
+
+
+
+	<select id="getList" parameterType="map" resultMap="resultAccountBalanceApprove">
+		<include refid="getCommon" />
+		<if test="start != null">
+			LIMIT ${start},${limit}
+		</if>
+	</select>
+
+	<select id="getCount" parameterType="map" resultType="int">
+		select count(*) ct from t_account_balance_approve t
+		<include refid="where_clause" />
+	</select>
+
+
+	<!-- 排序区域 -->
+	<update id="updateBatch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index"
+			separator=";">
+			update t_account_balance_approve
+			<set>
+				sort_no = #{item.sort_no}
+			</set>
+			WHERE ba_id = #{item.id}
+		</foreach>
+	</update>
+
+</mapper>
+

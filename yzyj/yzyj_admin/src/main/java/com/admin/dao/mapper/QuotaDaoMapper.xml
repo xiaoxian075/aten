@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.admin.dao.QuotaDaoMapper">
+    <resultMap id="BaseResultMap" type="com.admin.model.Quota">
+        <result column="ID" property="id" jdbcType="DECIMAL" />
+        <result column="QUOTA_GROUP" property="quotaGroup" jdbcType="DECIMAL" />
+        <result column="DEVICE_UNIQUE" property="deviceUnique" jdbcType="VARCHAR" />
+        <result column="CXK_ONE" property="cxkOne" jdbcType="BIGINT" />
+        <result column="CXK_DAY" property="cxkDay" jdbcType="BIGINT" />
+        <result column="CXK_MONTH" property="cxkMonth" jdbcType="BIGINT" />
+        <result column="XYK_ONE" property="xykOne" jdbcType="BIGINT" />
+        <result column="XYK_DAY" property="xykDay" jdbcType="BIGINT" />
+        <result column="XYK_MONTH" property="xykMonth" jdbcType="BIGINT" />
+        <result column="XYK_EXCESS_ONE" property="xykExcessOne" jdbcType="BIGINT" />
+        <result column="XYK_EXCESS_DAY" property="xykExcessDay" jdbcType="BIGINT" />
+        <result column="XYK_EXCESS_MONTH" property="xykExcessMonth" jdbcType="BIGINT" />
+        <result column="CXK_EXCESS_ONE" property="cxkExcessOne" jdbcType="BIGINT" />
+        <result column="CXK_EXCESS_DAY" property="cxkExcessDay" jdbcType="BIGINT" />
+        <result column="CXK_EXCESS_MONTH" property="cxkExcessMonth" jdbcType="BIGINT" />
+        <result column="NOTE" property="note" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <sql id="Example_Where_Clause" >
+        <where >
+            <foreach collection="oredCriteria" item="criteria" separator="or" >
+                <if test="criteria.valid" >
+                    <trim prefix="(" suffix=")" prefixOverrides="and" >
+                        <foreach collection="criteria.criteria" item="criterion" >
+                            <choose >
+                                <when test="criterion.noValue" >
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue" >
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue" >
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue" >
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+
+    <select id="selectByExampleAndPage" parameterType="com.admin.model.BaseExample"  resultMap="BaseResultMap">
+        select
+        *
+        from T_DEVICE_PAY_CARD_QUOTA
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+
+    <insert id="insertQuotaInfo" parameterType="com.admin.model.Quota" >
+        insert into T_DEVICE_PAY_CARD_QUOTA
+        <selectKey keyProperty="id" resultType="Integer" order="BEFORE">
+            select T_DEVICE_CARD_QUOTA_SEQUENCE.nextval from dual
+        </selectKey>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                ID,
+            </if>
+            <if test="quotaGroup != null">
+                QUOTA_GROUP,
+            </if>
+            <if test="cxkOne != null">
+                CXK_ONE,
+            </if>
+            <if test="cxkDay != null">
+                CXK_DAY,
+            </if>
+            <if test="cxkMonth != null">
+                CXK_MONTH,
+            </if>
+            <if test="xykOne != null">
+                XYK_ONE,
+            </if>
+            <if test="xykDay != null">
+                XYK_DAY,
+            </if>
+            <if test="xykMonth != null">
+                XYK_MONTH,
+            </if>
+            <if test="xykExcessOne != null">
+                XYK_EXCESS_ONE,
+            </if>
+            <if test="xykExcessDay != null">
+                XYK_EXCESS_DAY,
+            </if>
+            <if test="xykExcessMonth != null">
+                XYK_EXCESS_MONTH,
+            </if>
+            <if test="cxkExcessOne != null">
+                CXK_EXCESS_ONE,
+            </if>
+            <if test="cxkExcessDay != null">
+                CXK_EXCESS_DAY,
+            </if>
+            <if test="cxkExcessMonth != null">
+                CXK_EXCESS_MONTH,
+            </if>
+            <if test="note != null">
+                NOTE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=DECIMAL},
+            </if>
+            <if test="quotaGroup != null">
+                #{quotaGroup,jdbcType=DECIMAL},
+            </if>
+            <if test="cxkOne != null">
+                #{cxkOne,jdbcType=DECIMAL}*100,
+            </if>
+            <if test="cxkDay != null">
+                #{cxkDay,jdbcType=DECIMAL}*100,
+            </if>
+            <if test="cxkMonth != null">
+                #{cxkMonth,jdbcType=DECIMAL}*100,
+            </if>
+            <if test="xykOne != null">
+                #{xykOne,jdbcType=DECIMAL}*100,
+            </if>
+            <if test="xykDay != null">
+                #{xykDay,jdbcType=DECIMAL}*100,
+            </if>
+            <if test="xykMonth != null">
+                #{xykMonth,jdbcType=DECIMAL}*100,
+            </if>
+            <if test="xykExcessOne != null">
+                #{xykExcessOne,jdbcType=DECIMAL}*100,
+            </if>
+            <if test="xykExcessDay != null">
+                #{xykExcessDay,jdbcType=DECIMAL}*100,
+            </if>
+            <if test="xykExcessMonth != null">
+                #{xykExcessMonth,jdbcType=DECIMAL}*100,
+            </if>
+            <if test="cxkExcessOne != null">
+                #{cxkExcessOne,jdbcType=DECIMAL}*100,
+            </if>
+            <if test="cxkExcessDay != null">
+                #{cxkExcessDay,jdbcType=DECIMAL}*100,
+            </if>
+            <if test="cxkExcessDay != null">
+                #{cxkExcessMonth,jdbcType=DECIMAL}*100,
+            </if>
+            <if test="note != null">
+                #{note,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateQuotaInfo" parameterType="Quota">
+        update T_DEVICE_PAY_CARD_QUOTA
+        <set>
+            <if test="cxkOne != null">
+                CXK_ONE= #{cxkOne,jdbcType=DECIMAL}*100,
+            </if>
+            <if test="cxkDay != null">
+                CXK_DAY= #{cxkDay,jdbcType=DECIMAL}*100,
+            </if>
+            <if test="cxkMonth != null">
+                CXK_MONTH= #{cxkMonth,jdbcType=DECIMAL}*100,
+            </if>
+            <if test="xykOne != null">
+                XYK_ONE= #{xykOne,jdbcType=DECIMAL}*100,
+            </if>
+            <if test="xykDay != null">
+                XYK_DAY= #{xykDay,jdbcType=DECIMAL}*100,
+            </if>
+            <if test="xykMonth != null">
+                XYK_MONTH= #{xykMonth,jdbcType=DECIMAL}*100,
+            </if>
+            <if test="xykExcessOne != null">
+                XYK_EXCESS_ONE= #{xykExcessOne,jdbcType=DECIMAL}*100,
+            </if>
+            <if test="xykExcessDay != null">
+                XYK_EXCESS_DAY= #{xykExcessDay,jdbcType=DECIMAL}*100,
+            </if>
+            <if test="xykExcessMonth != null">
+                XYK_EXCESS_MONTH= #{xykExcessMonth,jdbcType=DECIMAL}*100,
+            </if>
+            <if test="cxkExcessOne != null">
+                CXK_EXCESS_ONE= #{cxkExcessOne,jdbcType=DECIMAL}*100,
+            </if>
+            <if test="cxkExcessDay != null">
+                CXK_EXCESS_DAY= #{cxkExcessDay,jdbcType=DECIMAL}*100,
+            </if>
+            <if test="cxkExcessMonth != null">
+                CXK_EXCESS_MONTH= #{cxkExcessMonth,jdbcType=DECIMAL}*100,
+            </if>
+        </set>
+        where id = #{id,jdbcType=DECIMAL}
+    </update>
+
+    <select id="selectByQuotaId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select ID,
+        QUOTA_GROUP,
+        DEVICE_UNIQUE,
+        (CXK_ONE/100) as CXK_ONE,
+        (CXK_ONE/100) as CXK_ONE,
+        (CXK_DAY/100) as CXK_DAY,
+        (CXK_MONTH/100) as CXK_MONTH,
+        (XYK_ONE/100) as XYK_ONE,
+        (XYK_DAY/100) as XYK_DAY,
+        (XYK_MONTH/100) as XYK_MONTH,
+        (XYK_EXCESS_ONE/100) as XYK_EXCESS_ONE,
+        (XYK_EXCESS_DAY/100) as XYK_EXCESS_DAY,
+        (XYK_EXCESS_MONTH/100) as XYK_EXCESS_MONTH,
+        (CXK_EXCESS_ONE/100) as CXK_EXCESS_ONE,
+        (CXK_EXCESS_DAY/100) as CXK_EXCESS_DAY,
+        (CXK_EXCESS_MONTH/100) as CXK_EXCESS_MONTH,
+        NOTE
+        from T_DEVICE_PAY_CARD_QUOTA where id = #{id}
+    </select>
+
+    <select id="selectMinGroup" resultType="java.lang.Integer" >
+       select min(t.QUOTA_GROUP) as  minGroup from T_DEVICE_PAY_CARD_QUOTA t
+    </select>
+</mapper>

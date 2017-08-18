@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.DivideRecordDao">
+
+	<!-- 数据库映射模型区域 -->
+	<resultMap id="resultDivideRecord" type="com.aten.model.orm.DivideRecord">
+		<result property="dr_record" column="dr_record" />
+		<result property="rate_id" column="rate_id" />
+		<result property="divide_rate" column="divide_rate" />
+		<result property="oper_man_id" column="oper_man_id" />
+		<result property="oper_man" column="oper_man" />
+		<result property="oper_time" column="oper_time" />
+
+	</resultMap>
+
+	<!-- 新增数据区域 -->
+	<sql id="insertCommon">
+		INSERT INTO t_divide_record(
+		<if test="dr_record != null"> dr_record,</if>
+		<if test="rate_id != null"> rate_id,</if>
+		<if test="divide_rate != null"> divide_rate,</if>
+		<if test="oper_man_id != null"> oper_man_id,</if>
+		<if test="oper_man != null"> oper_man,</if>
+		<if test="oper_time != null"> oper_time</if>
+		)
+		VALUES(
+		<if test="dr_record != null">#{dr_record},</if>
+		<if test="rate_id != null">#{rate_id},</if>
+		<if test="divide_rate != null">#{divide_rate},</if>
+		<if test="oper_man_id != null">#{oper_man_id},</if>
+		<if test="oper_man != null">#{oper_man},</if>
+		<if test="oper_time != null">#{oper_time}</if>
+		)
+	</sql>
+
+	<insert id="insert" parameterType="com.aten.model.orm.DivideRecord">
+		<include refid="insertCommon" />
+	</insert>
+
+	<insert id="insertGetPk" parameterType="com.aten.model.orm.DivideRecord">
+		<selectKey resultType="String" order="BEFORE" keyProperty="dr_record">
+			SELECT t_divide_record_sequence.Nextval from DUAL
+		</selectKey>
+		<include refid="insertCommon" />
+	</insert>
+
+	<!-- 更新数据区域 -->
+	<sql id="update_clause">
+		<set>
+			<if test="dr_record != null"> dr_record = #{dr_record}, </if>
+			<if test="rate_id != null"> rate_id = #{rate_id}, </if>
+			<if test="divide_rate != null"> divide_rate = #{divide_rate}, </if>
+			<if test="oper_man_id != null"> oper_man_id = #{oper_man_id}, </if>
+			<if test="oper_man != null"> oper_man = #{oper_man}, </if>
+			<if test="oper_time != null"> oper_time = #{oper_time} </if>
+
+		</set>
+	</sql>
+
+
+	<update id="update" parameterType="com.aten.model.orm.DivideRecord">
+		UPDATE t_divide_record
+		<include refid="update_clause" />
+		WHERE dr_record = #{dr_record}
+	</update>
+
+	<!-- 删除数据区域 -->
+	<delete id="delete" parameterType="String">
+		delete from t_divide_record where dr_record in
+		<foreach item="idItem" collection="array" index="index" open="("
+			separator="," close=")">
+			#{idItem}
+		</foreach>
+	</delete>
+
+	<!-- 获取对象数据区域 -->
+	<select id="get" parameterType="String" resultMap="resultDivideRecord">
+		SELECT
+		t.dr_record,t.rate_id,t.divide_rate,t.oper_man_id,t.oper_man,t.oper_time
+		FROM t_divide_record t WHERE dr_record = #{dr_record}
+	</select>
+
+	<!-- 搜索数据区域 -->
+	<sql id="where_clause">
+		<where>
+			1=1
+			<if test="dr_record != null"> and t.dr_record = #{dr_record} </if>
+			<if test="rate_id != null"> and t.rate_id = #{rate_id} </if>
+			<if test="divide_rate != null"> and t.divide_rate = #{divide_rate} </if>
+			<if test="oper_man_id != null"> and t.oper_man_id = #{oper_man_id} </if>
+			<if test="oper_man != null"> and t.oper_man = #{oper_man} </if>
+			<if test="oper_time != null"> and t.oper_time = #{oper_time} </if>
+
+		</where>
+	</sql>
+
+	<sql id="getCommon">
+		select
+		t.dr_record,t.rate_id,t.divide_rate,t.oper_man_id,t.oper_man,t.oper_time
+		from t_divide_record t
+		<include refid="where_clause" />
+		order by dr_record desc
+	</sql>
+
+
+
+	<select id="getList" parameterType="map" resultMap="resultDivideRecord">
+		<include refid="getCommon" />
+		<if test="start != null">
+			LIMIT ${start},${limit}
+		</if>
+	</select>
+
+	<select id="getCount" parameterType="map" resultType="int">
+		select count(*) ct from t_divide_record t
+		<include refid="where_clause" />
+	</select>
+
+
+	<!-- 排序区域 -->
+	<update id="updateBatch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" open="begin"
+			close=";end;" separator=";">
+			update t_divide_record
+			<set>
+				sort_no = #{item.sort_no}
+			</set>
+			WHERE dr_record = #{item.id}
+		</foreach>
+	</update>
+
+</mapper>
+

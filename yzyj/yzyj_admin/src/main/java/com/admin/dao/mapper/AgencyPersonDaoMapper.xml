@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.admin.dao.AgencyPersonDaoMapper">
+    <resultMap id="BaseResultMap" type="com.admin.model.AgencyPerson">
+        <result column="id" property="id" jdbcType="VARCHAR" />
+        <result column="realname" property="realName" jdbcType="VARCHAR" />
+        <result column="phone" property="phone" jdbcType="VARCHAR" />
+        <result column="address" property="address" jdbcType="VARCHAR" />
+        <result column="paperstype" property="papersType" jdbcType="VARCHAR" />
+        <result column="papersnumber" property="papersNumber" jdbcType="VARCHAR" />
+        <result column="province" property="province" jdbcType="VARCHAR" />
+        <result column="city" property="city" jdbcType="VARCHAR" />
+        <result column="yunpayloginname" property="yunPayLoginName" jdbcType="VARCHAR" />
+        <result column="note" property="note" jdbcType="VARCHAR" />
+        <result column="jointime" property="joinTime" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="VARCHAR" />
+        <result column="agent_unique" property="agentUnique" jdbcType="VARCHAR" />
+        <result column="total_fee" property="totalFee" jdbcType="DECIMAL"/>
+        <result column="remaining_sum" property="remainingSum" jdbcType="DECIMAL"/>
+    </resultMap>
+    <resultMap id="BaseResultMap1" type="com.admin.model.AgencyPerson">
+        <result column="REALNAME" property="realName" jdbcType="VARCHAR" />
+        <result column="YUNPAYLOGINNAME" property="yunPayLoginName" jdbcType="VARCHAR" />
+        <result column="AGENT_UNIQUE" property="agentUnique" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <sql id="Example_Where_Clause" >
+        <where >
+            <foreach collection="oredCriteria" item="criteria" separator="or" >
+                <if test="criteria.valid" >
+                    <trim prefix="(" suffix=")" prefixOverrides="and" >
+                        <foreach collection="criteria.criteria" item="criterion" >
+                            <choose >
+                                <when test="criterion.noValue" >
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue" >
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue" >
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue" >
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.admin.model.BaseExample">
+        select
+        *
+        from z_agency_person
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+
+    <select id="selectByExampleAndPage" parameterType="com.admin.model.BaseExample"  resultMap="BaseResultMap">
+        select
+        *
+        from z_agency_person
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+
+    <select id="getAgencyList" parameterType="com.admin.model.BaseExample"  resultMap="BaseResultMap1">
+        select REALNAME,AGENT_UNIQUE,YUNPAYLOGINNAME from Z_AGENCY_PERSON
+    </select>
+
+    <select id="getMoneyByAgentUnique" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select t.REMAINING_SUM,TOTAL_FEE from z_agency_person t where t.AGENT_UNIQUE=#{agentUnique,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getAllRemainingSum"  resultType="java.lang.Integer">
+        select NVL(sum(t.REMAINING_SUM),0) as remainingSum from z_agency_person t where 1=1
+    </select>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        *
+        from z_agency_person
+        where agent_unique = #{agentUnique,jdbcType=VARCHAR}
+    </select>
+
+    <insert id="insertSelective" parameterType="com.admin.model.BaseExample" >
+        insert into z_agency_person
+        <selectKey keyProperty="id" resultType="String" order="BEFORE">
+            select Z_AGENCY_PERSON_SEQUENCE.nextval from dual
+        </selectKey>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="realName != null">
+                realname,
+            </if>
+            <if test="phone != null">
+                phone,
+            </if>
+            <if test="address != null">
+                address,
+            </if>
+            <if test="papersType != null">
+                paperstype,
+            </if>
+            <if test="papersNumber != null">
+                papersnumber,
+            </if>
+            <if test="province != null">
+                province,
+            </if>
+            <if test="city != null">
+                city,
+            </if>
+            <if test="yunPayLoginName != null">
+                yunpayloginname,
+            </if>
+            <if test="note != null">
+                note,
+            </if>
+            <if test="joinTime != null">
+                jointime,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="agentUnique != null">
+                agent_unique,
+            </if>
+            <if test="totalFee != null">
+                total_fee,
+            </if>
+            <if test="remainingSum != null">
+                remaining_sum,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="realName != null">
+                #{realName,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="address != null">
+                #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="papersType != null">
+                #{papersType,jdbcType=VARCHAR},
+            </if>
+            <if test="papersNumber != null">
+                #{papersNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="province != null">
+                #{province,jdbcType=VARCHAR},
+            </if>
+            <if test="city != null">
+                #{city,jdbcType=VARCHAR},
+            </if>
+            <if test="yunPayLoginName != null">
+                #{yunPayLoginName,jdbcType=VARCHAR},
+            </if>
+            <if test="note != null">
+                #{note,jdbcType=VARCHAR},
+            </if>
+            <if test="joinTime != null">
+                #{joinTime,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=DECIMAL},
+            </if>
+            <if test="agentUnique != null">
+                #{agentUnique,jdbcType=VARCHAR},
+            </if>
+            <if test="totalFee != null">
+                #{totalFee,jdbcType=DECIMAL},
+            </if>
+            <if test="remainingSum != null">
+                #{remainingSum,jdbcType=DECIMAL},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateAgencyPerson" parameterType="AgencyPerson">
+        update z_agency_person
+        <set>
+            <if test="realName != null">
+                realname= #{realName,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                phone= #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="address != null">
+                address= #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="papersType != null">
+                paperstype= #{papersType,jdbcType=VARCHAR},
+            </if>
+            <if test="papersNumber != null">
+                papersnumber= #{papersNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="province != null">
+                province= #{province,jdbcType=VARCHAR},
+            </if>
+            <if test="city != null">
+                city= #{city,jdbcType=VARCHAR},
+            </if>
+            <if test="yunPayLoginName != null">
+                yunpayloginname= #{yunPayLoginName,jdbcType=VARCHAR},
+            </if>
+            <if test="note != null">
+                note= #{note,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status= #{status,jdbcType=DECIMAL},
+            </if>
+        </set>
+        where agent_unique = #{agentUnique,jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateAgencyPersonMoney">
+        update z_agency_person
+        <set>
+            <if test="incomeMoney != null">
+                TOTAL_FEE = nvl(TOTAL_FEE,0) + #{incomeMoney},
+            </if>
+            <if test="incomeMoney != null">
+                REMAINING_SUM = nvl(REMAINING_SUM,0) + #{incomeMoney}
+            </if>
+        </set>
+        where agent_unique = #{agent_unique}
+    </update>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from z_agency_person
+        where agent_unique = #{agentUnique,jdbcType=VARCHAR}
+    </delete>
+
+    <insert id="insertAgentIncomeRecord" parameterType="com.admin.model.InComeRecord">
+        INSERT INTO T_AGENT_INCOME_RECORD
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            ID,
+            <if test="money != null">MONEY,</if>
+            <if test="agentUnique != null">AGENT_UNIQUE,</if>
+            <if test="checkDay != null">CHECKDAY,</if>
+            <if test="type != null">TYPE,</if>
+            <if test="time != null">TIME,</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            T_AGENT_INCOME_RECORD_SEQUENCE.Nextval,
+            <if test="money != null">#{money},</if>
+            <if test="agentUnique != null">#{agentUnique},</if>
+            <if test="checkDay != null">#{checkDay},</if>
+            <if test="type != null">#{type},</if>
+            <if test="time != null">#{time},</if>
+        </trim>
+    </insert>
+</mapper>

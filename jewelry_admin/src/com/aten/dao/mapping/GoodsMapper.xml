@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.GoodsDao">
+
+	<!-- <cache type="org.mybatis.caches.ehcache.EhcacheCache"/> -->
+
+	<!-- 数据库映射模型区域 -->
+	<resultMap id="resultGoods" type="com.aten.model.orm.Goods">
+		<result property="goods_id" column="goods_id" />
+		<result property="com_id" column="com_id" />
+		<result property="cat_id" column="cat_id" />
+		<result property="goods_name" column="goods_name" />
+		<result property="brand_id" column="brand_id" />
+		<result property="supply_id" column="supply_id" />
+		<result property="appraisal_id" column="appraisal_id" />
+		<result property="sale_mode" column="sale_mode" />
+		<result property="presale_model" column="presale_model" />
+		<result property="list_img" column="list_img" />
+		<result property="show_imgs" column="show_imgs" />
+		<result property="fixed_price" column="fixed_price" />
+		<result property="lower_price" column="lower_price" />
+		<result property="height_price" column="height_price" />
+		<result property="weight" column="weight" />
+		<result property="volume" column="volume" />
+		<result property="goods_detail" column="goods_detail" />
+		<result property="ship_template" column="ship_template" />
+		<result property="state" column="state" />
+		<result property="is_del" column="is_del" />
+		<result property="in_date" column="in_date" />
+		<result property="mana_id" column="mana_id" />
+		<result property="customer_service" column="customer_service" />
+		<result property="stock_type" column="stock_type" />
+		<result property="total_stock" column="total_stock" />
+		<result property="total_sales" column="total_sales" />
+		<result property="divide_rate" column="divide_rate" />
+		<result property="info_state" column="info_state" />
+		<result property="audit_state" column="audit_state" />
+		<result property="add_time" column="add_time" />
+		<result property="is_off_the_shelf" column="is_off_the_shelf" />
+		<result property="manual_fee" column="manual_fee" />
+		<result property="goods_number" column="goods_number" />
+	</resultMap>
+
+
+	<!-- 新增数据区域 -->
+	<sql id="insertCommon">
+		INSERT INTO t_goods(
+		<if test="com_id != null"> com_id,</if>
+		<if test="cat_id != null"> cat_id,</if>
+		<if test="goods_number != null"> goods_number,</if>
+		<if test="goods_name != null"> goods_name,</if>
+		<if test="brand_id != null"> brand_id,</if>
+		<if test="supply_id != null"> supply_id,</if>
+		<if test="appraisal_id != null"> appraisal_id,</if>
+		<if test="sale_mode != null"> sale_mode,</if>
+		<if test="presale_model != null"> presale_model,</if>
+		<if test="list_img != null"> list_img,</if>
+		<if test="show_imgs != null"> show_imgs,</if>
+		<if test="fixed_price != null"> fixed_price,</if>
+		<if test="lower_price != null"> lower_price,</if>
+		<if test="height_price != null"> height_price,</if>
+		<if test="weight != null"> weight,</if>
+		<if test="volume != null"> volume,</if>
+		<if test="goods_detail != null"> goods_detail,</if>
+		<if test="ship_template != null"> ship_template,</if>
+		<if test="state != null"> state,</if>
+		<if test="is_del != null"> is_del,</if>
+		<if test="in_date != null"> in_date,</if>
+		<if test="mana_id != null"> mana_id,</if>
+		<if test="customer_service != null"> customer_service,</if>
+		<if test="stock_type != null"> stock_type,</if>
+		<if test="total_stock != null"> total_stock,</if>
+		<if test="total_sales != null"> total_sales,</if>
+		<if test="divide_rate != null"> divide_rate,</if>
+		<if test="info_state != null"> info_state,</if>
+		<if test="audit_state != null"> audit_state,</if>
+		<if test="manual_fee != null"> manual_fee,</if>
+		add_time
+		)
+		VALUES(
+		<if test="com_id != null"> #{com_id},</if>
+		<if test="cat_id != null"> #{cat_id},</if>
+		<if test="goods_number != null"> #{goods_number},</if>
+		<if test="goods_name != null"> #{goods_name},</if>
+		<if test="brand_id != null"> #{brand_id},</if>
+		<if test="supply_id != null"> #{supply_id},</if>
+		<if test="appraisal_id != null"> #{appraisal_id},</if>
+		<if test="sale_mode != null"> #{sale_mode},</if>
+		<if test="presale_model != null"> #{presale_model},</if>
+		<if test="list_img != null"> #{list_img},</if>
+		<if test="show_imgs != null"> #{show_imgs},</if>
+		<if test="fixed_price != null"> #{fixed_price},</if>
+		<if test="lower_price != null"> #{lower_price},</if>
+		<if test="height_price != null"> #{height_price},</if>
+		<if test="weight != null"> #{weight},</if>
+		<if test="volume != null"> #{volume},</if>
+		<if test="goods_detail != null"> #{goods_detail},</if>
+		<if test="ship_template != null"> #{ship_template},</if>
+		<if test="state != null"> #{state},</if>
+		<if test="is_del != null"> #{is_del},</if>
+		<if test="in_date != null"> #{in_date},</if>
+		<if test="mana_id != null"> #{mana_id},</if>
+		<if test="customer_service != null"> #{customer_service},</if>
+		<if test="stock_type != null"> #{stock_type},</if>
+		<if test="total_stock != null"> #{total_stock},</if>
+		<if test="total_sales != null"> #{total_sales},</if>
+		<if test="divide_rate != null"> #{divide_rate},</if>
+		<if test="info_state != null"> #{info_state},</if>
+		<if test="audit_state != null"> #{audit_state},</if>
+		<if test="manual_fee != null"> #{manual_fee},</if>
+		now()
+		)
+	</sql>
+
+	<insert id="insert" parameterType="com.aten.model.orm.Goods">
+		<include refid="insertCommon" />
+	</insert>
+
+	<insert id="insertGetPk" parameterType="com.aten.model.orm.Goods"
+		useGeneratedKeys="true" keyProperty="goods_id">
+		<include refid="insertCommon" />
+	</insert>
+	<!-- 搜索数据区域 -->
+	<sql id="where_clause">
+		<where>
+			1=1
+			<if test="goods_id != null"> and t.goods_id = #{goods_id} </if>
+			<if test="com_id != null"> and t.com_id = #{com_id} </if>
+			<if test="cat_id != null and cat_id!=''"> and t.cat_id = #{cat_id} </if>
+			<if test="goods_name != null"> and t.goods_name = #{goods_name} </if>
+			<if test="goods_name_vague != null"> and instr(t.goods_name,#{goods_name_vague})>0</if>
+			<if test="goods_number != null"> and t.goods_number = #{goods_number} </if>
+			<if test="goods_number_vague != null"> and instr(t.goods_number,#{goods_number_vague})>0</if>
+			<if test="name_code_vague != null"> and instr(t.goods_name,#{name_code_vague})>0 </if>
+			<if test="brand_id != null"> and t.brand_id = #{brand_id} </if>
+			<if test="supply_id != null"> and t.supply_id = #{supply_id} </if>
+			<if test="appraisal_id != null"> and t.appraisal_id = #{appraisal_id} </if>
+			<if test="sale_mode != null"> and t.sale_mode = #{sale_mode} </if>
+			<if test="presale_model != null"> and t.presale_model = #{presale_model} </if>
+			<if test="sale_mode_not != null"> and t.sale_mode != #{sale_mode_not} </if>
+			<if test="list_img != null"> and t.list_img = #{list_img} </if>
+			<if test="show_imgs != null"> and t.show_imgs = #{show_imgs} </if>
+			<if test="fixed_price != null"> and t.fixed_price = #{fixed_price} </if>
+			<if test="lower_price != null"> and t.lower_price = #{lower_price} </if>
+			<if test="height_price != null"> and t.height_price = #{height_price} </if>
+			<if test="weight != null"> and t.weight = #{weight} </if>
+			<if test="volume != null"> and t.volume = #{volume} </if>
+			<if test="goods_detail != null"> and t.goods_detail = #{goods_detail} </if>
+			<if test="ship_template != null"> and t.ship_template = #{ship_template} </if>
+			<if test="state != null"> and t.state = #{state} </if>
+			<if test="is_del != null"> and t.is_del = #{is_del} </if>
+			<if test="in_date != null"> and t.in_date = #{in_date} </if>
+			<if test="mana_id != null"> and t.mana_id = #{mana_id} </if>
+			<if test="customer_service != null"> and t.customer_service = #{customer_service} </if>
+			<if test="stock_type != null"> and t.stock_type = #{stock_type} </if>
+			<if test="total_stock != null"> and t.total_stock = #{total_stock} </if>
+			<if test="total_sales != null"> and t.total_sales = #{total_sales} </if>
+			<if test="divide_rate != null"> and t.total_sales = #{divide_rate} </if>
+			<if test="info_state != null"> and t.info_state = #{info_state} </if>
+			<if test="audit_state != null"> and t.audit_state = #{audit_state} </if>
+			<if test="add_time != null"> and t.add_time = #{add_time} </if>
+			<if test="manual_fee != null"> and t.manual_fee = #{manual_fee} </if>
+			<if test="is_off_the_shelf != null"> and t.state != #{is_off_the_shelf} </if>
+			<if test="catIds != null ">
+				and t.cat_id in
+				<foreach item="item" index="index" collection="catIds" open="("
+					separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+
+			<if test="goodsIds != null">
+				and t.goods_id not in
+				<foreach item="item" index="index" collection="goodsIds"
+					open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			</if>
+
+		</where>
+	</sql>
+
+	<select id="getCount" parameterType="map" resultType="int">
+		select count(*) ct from t_goods t
+		<include refid="where_clause" />
+	</select>
+
+	<select id="checkGoodsClass" parameterType="String"
+		resultType="com.aten.model.orm.Goods">
+		select * from t_goods t where t.cat_id=#{cat_id} and
+		t.is_del='1'
+	</select>
+
+	<select id="getList" parameterType="map" resultMap="resultGoods">
+		<include refid="getCommon" />
+		<if test="start != null">
+			LIMIT ${start},${limit}
+		</if>
+	</select>
+
+	<sql id="getCommon">
+		select *
+		from t_goods t
+		<include refid="where_clause" />
+		order by t.goods_id desc
+	</sql>
+
+	<update id="updateOneIsdel" parameterType="map">
+		UPDATE
+		`t_goods`
+		SET
+		`is_del`=#{is_del}
+		WHERE
+		`goods_id`=#{goods_id}
+		LIMIT 1
+	</update>
+
+	<update id="updateOneState" parameterType="map">
+		UPDATE t_goods
+		<set>
+			<if test="state != null">state = #{state},</if>
+			<if test="in_date != null">in_date = #{in_date},</if>
+			add_time = now() 
+		</set>
+		WHERE goods_id=#{goods_id}
+	</update>
+
+	<update id="updateGoodsPrice" parameterType="map">
+		update t_goods
+		<set>
+			<if test="lower_price != null"> lower_price = #{lower_price}, </if>
+			<if test="height_price != null"> height_price = #{height_price}, </if>
+			<if test="total_stock != null"> total_stock = #{total_stock} </if>
+		</set>
+		where goods_id = #{goods_id}
+	</update>
+
+
+	<select id="get" parameterType="String" resultType="com.aten.model.orm.Goods">
+		SELECT
+		`goods_id`,
+		`com_id`,
+		`cat_id`,
+		`goods_name`,
+		`goods_number`,
+		`brand_id`,
+		`supply_id`,
+		`appraisal_id`,
+		`sale_mode`,
+		`presale_model`,
+		`list_img`,
+		`show_imgs`,
+		`fixed_price`,
+		`lower_price`,
+		`height_price`,
+		`weight`,
+		`volume`,
+		`goods_detail`,
+		`ship_template`,
+		`state`,
+		`is_del`,
+		`in_date`,
+		`mana_id`,
+		`customer_service`,
+		`stock_type`,
+		`total_stock`,
+		`total_sales`,
+		`info_state`,
+		`audit_state`,
+		`divide_rate`,
+		`manual_fee`,
+		`add_time`
+		FROM
+		`t_goods`
+		WHERE
+		`goods_id`=#{id} and `is_del` = 1
+		LIMIT 1
+	</select>
+
+	<!-- 通过传入goods_id获取对应的属性值串 -->
+	<select id="getAvIdstr" parameterType="map" resultType="String">
+		SELECT
+		GROUP_CONCAT(LPAD(custom_av_id,10,0)) AS avIdStr FROM t_custom_attr a
+		LEFT JOIN t_custom_attr_value v ON a.custom_attr_id=v.custom_attr_id
+		WHERE goods_id=#{goods_id}
+	</select>
+
+	<select id="queryList" parameterType="map" resultType="com.aten.model.orm.Goods">
+		select * from t_goods t
+		<include refid="where_clause" />
+
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
+	<update id="updateGoodsInfo" parameterType="com.aten.model.orm.Goods">
+		update t_goods
+		<set>
+			<if test="com_id != null"> com_id = #{com_id}, </if>
+			<if test="cat_id != null"> cat_id = #{cat_id}, </if>
+			<if test="goods_number != null"> goods_number = #{goods_number}, </if>
+			<if test="goods_name != null"> goods_name = #{goods_name}, </if>
+			<if test="brand_id != null"> brand_id = #{brand_id}, </if>
+			<if test="supply_id != null"> supply_id = #{supply_id}, </if>
+			<if test="appraisal_id != null"> appraisal_id = #{appraisal_id}, </if>
+			<if test="sale_mode != null"> sale_mode = #{sale_mode}, </if>
+			<if test="presale_model != null"> presale_model = #{presale_model}, </if>
+			<if test="list_img != null"> list_img = #{list_img}, </if>
+			<if test="show_imgs != null"> show_imgs = #{show_imgs}, </if>
+			<if test="fixed_price != null"> fixed_price = #{fixed_price}, </if>
+			<if test="lower_price != null"> lower_price = #{lower_price}, </if>
+			<if test="height_price != null"> height_price = #{height_price}, </if>
+			<if test="weight != null"> weight = #{weight}, </if>
+			<if test="volume != null"> volume = #{volume}, </if>
+			<if test="goods_detail != null"> goods_detail = #{goods_detail}, </if>
+			<if test="ship_template != null"> ship_template = #{ship_template}, </if>
+			<if test="state != null"> state = #{state}, </if>
+			<if test="is_del != null"> is_del = #{is_del}, </if>
+			<choose>
+		        <when test="in_date != null">
+		           in_date = #{in_date},
+		        </when>
+		        <otherwise>
+		           in_date = null,
+		        </otherwise>
+    		</choose>
+			<if test="mana_id != null"> mana_id = #{mana_id}, </if>
+			<if test="customer_service != null"> customer_service = #{customer_service}, </if>
+			<if test="stock_type != null"> stock_type = #{stock_type}, </if>
+			<if test="total_stock != null"> total_stock = #{total_stock}, </if>
+			<if test="total_sales != null"> total_sales = #{total_sales}, </if>
+			<choose>
+		        <when test="divide_rate != null">
+		           divide_rate = #{divide_rate},
+		        </when>
+		        <otherwise>
+		           divide_rate = null,
+		        </otherwise>
+    		</choose>
+			<if test="info_state != null"> info_state = #{info_state}, </if>
+			<if test="audit_state != null"> audit_state = #{audit_state}, </if>
+			<if test="manual_fee != null"> manual_fee = #{manual_fee}, </if>
+			<if test="add_time != null"> add_time = #{add_time} </if>
+		</set>
+		where goods_id = #{goods_id}
+	</update>
+
+	<select id="getcountByShipTemplate" parameterType="BigInteger"
+		resultType="int">
+		SELECT
+		COUNT(`goods_id`)
+		FROM
+		`t_goods`
+		WHERE
+		`ship_template`=#{ship_template}
+	</select>
+</mapper>
+

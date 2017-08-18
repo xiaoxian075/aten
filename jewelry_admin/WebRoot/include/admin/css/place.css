@@ -1,0 +1,81 @@
+.map_wicket {
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 1000;
+}
+
+.map_wicket .mask {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.5);
+}
+
+.map_wicket .cont {
+	position: absolute;
+	top: 0;
+	left: 63%;
+	width: 400px;
+	background: #fff;
+	border-radius: 10px;
+	z-index: 2;
+}
+
+.map_wicket .cont .title {
+	line-height: 44px;
+	font-size: 16px;
+	padding: 0 15px;
+	color: #333;
+	border-bottom: 1px solid #ddd;
+}
+
+.map_wicket .cont .loading {
+	height: 200px;
+	background: url(/include/admin/image/loading.gif) no-repeat center
+		center;
+	background-size: auto 50%;
+}
+
+.map_wicket .cont ul {
+	display: none;
+	padding: 0 15px;
+}
+
+.map_wicket .cont li {
+	height: 40px;
+	line-height: 40px;
+	border: 1px solid #eee;
+	margin: 20px 0;
+}
+
+.map_wicket .cont li span.name {
+	display: inline-block;
+	width: 120px;
+	background: #f2f2f2;
+	text-align: center;
+}
+
+.map_wicket .cont li span.text {
+	display: inline-block;
+	width: 248px;
+	text-align: center;
+}
+
+.map_wicket .close_btn {
+	float: right;
+	width: 20px;
+	height: 20px;
+	margin-top: 12px;
+	background: url(/include/admin/image/close_map.png) no-repeat 0 0;
+	cursor: pointer;
+}
+
+.map_wicket .close_btn:hover {
+	background: url(/include/admin/image/close_map_hover.png) no-repeat 0 0;
+}

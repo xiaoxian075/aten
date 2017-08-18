@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.MemberDao">
+
+	<!-- 数据库映射模型区域 -->
+	<resultMap id="resultMember" type="com.aten.model.orm.Member" >
+		<result property="id" column="id" />
+		<result property="create_time" column="create_time" />
+		<result property="login_name" column="login_name" />
+		<result property="pwd" column="pwd" />
+		<result property="nick_name" column="nick_name" />
+		<result property="user_name" column="user_name" />
+		<result property="sex" column="sex" />
+		<result property="mobile" column="mobile" />
+		<result property="lev" column="lev" />
+		<result property="balance" column="balance" />
+		<result property="integral" column="integral" />
+		<result property="earnings" column="earnings" />
+		<result property="total_earnings" column="total_earnings" />
+		<result property="last_time" column="last_time" />
+		<result property="status" column="status" />
+		<result property="device_code" column="device_code" />
+		<result property="lon" column="lon" />
+		<result property="lat" column="lat" />
+		<result property="ip" column="ip" />
+		<result property="token" column="token" />
+		<result property="birthday" column="birthday" />
+		<result property="head_pic" column="head_pic" />
+		<result property="pay_pwd" column="pay_pwd" />
+		<result property="push_code" column="push_code" />
+		
+	</resultMap>
+
+	<!-- 新增数据区域 -->
+	<sql id="insertCommon">
+		INSERT INTO t_account
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null"> id,</if>
+			<if test="create_time != null"> create_time,</if>
+			<if test="login_name != null"> login_name,</if>
+			<if test="pwd != null"> pwd,</if>
+			<if test="nick_name != null"> nick_name,</if>
+			<if test="user_name != null"> user_name,</if>
+			<if test="sex != null"> sex,</if>
+			<if test="mobile != null"> mobile,</if>
+			<if test="lev != null"> lev,</if>
+			<if test="balance != null"> balance,</if>
+			<if test="integral != null"> integral,</if>
+			<if test="earnings != null"> earnings,</if>
+			<if test="total_earnings != null"> total_earnings,</if>
+			<if test="last_time != null"> last_time,</if>
+			<if test="status != null"> status,</if>
+			<if test="device_code != null"> device_code,</if>
+			<if test="lon != null"> lon,</if>
+			<if test="lat != null"> lat,</if>
+			<if test="ip != null"> ip,</if>
+			<if test="token != null"> token,</if>
+			<if test="birthday != null"> birthday,</if>
+			<if test="head_pic != null"> head_pic,</if>
+			<if test="pay_pwd != null"> pay_pwd,</if>
+			<if test="push_code != null"> push_code</if>
+			
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="id != null">#{id},</if>
+			<if test="create_time != null">#{create_time},</if>
+			<if test="login_name != null">#{login_name},</if>
+			<if test="pwd != null">#{pwd},</if>
+			<if test="nick_name != null">#{nick_name},</if>
+			<if test="user_name != null">#{user_name},</if>
+			<if test="sex != null">#{sex},</if>
+			<if test="mobile != null">#{mobile},</if>
+			<if test="lev != null">#{lev},</if>
+			<if test="balance != null">#{balance},</if>
+			<if test="integral != null">#{integral},</if>
+			<if test="earnings != null">#{earnings},</if>
+			<if test="total_earnings != null">#{total_earnings},</if>
+			<if test="last_time != null">#{last_time},</if>
+			<if test="status != null">#{status},</if>
+			<if test="device_code != null">#{device_code},</if>
+			<if test="lon != null">#{lon},</if>
+			<if test="lat != null">#{lat},</if>
+			<if test="ip != null">#{ip},</if>
+			<if test="token != null">#{token},</if>
+			<if test="birthday != null">#{birthday},</if>
+			<if test="head_pic != null">#{head_pic},</if>
+			<if test="pay_pwd != null">#{pay_pwd},</if>
+			<if test="push_code != null">#{push_code}</if>
+			
+		</trim>
+	</sql>
+	
+	<insert id="insert" parameterType="com.aten.model.orm.Member">
+		<include refid="insertCommon" />
+	</insert>
+
+	<insert id="insertGetPk" parameterType="com.aten.model.orm.Member" >
+		<include refid="insertCommon" />
+		<selectKey resultType="String" order="AFTER" keyProperty="id">  
+	       SELECT @@IDENTITY AS ID  
+	    </selectKey>  
+	</insert>
+	
+	<!-- 更新数据区域 -->
+	<sql id="update_clause">
+		<set>
+			<trim suffixOverrides=",">
+				<if test="id != null"> id = #{id}, </if>
+				<if test="create_time != null"> create_time = #{create_time}, </if>
+				<if test="login_name != null"> login_name = #{login_name}, </if>
+				<if test="pwd != null"> pwd = #{pwd}, </if>
+				<if test="nick_name != null"> nick_name = #{nick_name}, </if>
+				<if test="user_name != null"> user_name = #{user_name}, </if>
+				<if test="sex != null"> sex = #{sex}, </if>
+				<if test="mobile != null"> mobile = #{mobile}, </if>
+				<if test="lev != null"> lev = #{lev}, </if>
+				<if test="balance != null"> balance = #{balance}, </if>
+				<if test="integral != null"> integral = #{integral}, </if>
+				<if test="earnings != null"> earnings = #{earnings}, </if>
+				<if test="total_earnings != null"> total_earnings = #{total_earnings}, </if>
+				<if test="last_time != null"> last_time = #{last_time}, </if>
+				<if test="status != null"> status = #{status}, </if>
+				<if test="device_code != null"> device_code = #{device_code}, </if>
+				<if test="lon != null"> lon = #{lon}, </if>
+				<if test="lat != null"> lat = #{lat}, </if>
+				<if test="ip != null"> ip = #{ip}, </if>
+				<if test="token != null"> token = #{token}, </if>
+				<if test="birthday != null"> birthday = #{birthday}, </if>
+				<if test="head_pic != null"> head_pic = #{head_pic}, </if>
+				<if test="pay_pwd != null"> pay_pwd = #{pay_pwd}, </if>
+				<if test="push_code != null"> push_code = #{push_code} </if>
+				
+			</trim>
+		</set>
+	</sql>
+	
+	
+	
+	
+
+	<update id="update" parameterType="com.aten.model.orm.Member">
+		UPDATE t_account <include refid="update_clause" /> WHERE id = #{id}
+	</update>
+
+	<!-- 删除数据区域 -->
+	<delete id="delete" parameterType="String">
+		delete from t_account where id in
+		<foreach item="idItem" collection="array" index="index" open="(" separator="," close=")">
+			#{idItem}
+		</foreach>
+	</delete>
+
+	<!-- 获取对象数据区域 -->
+	<select id="get" parameterType="String"	resultMap="resultMember">
+		 SELECT
+		 t.id,t.create_time,t.login_name,t.pwd,t.nick_name,t.user_name,t.sex,t.mobile,t.lev,t.balance,t.integral,t.earnings,t.total_earnings,t.last_time,t.status,t.device_code,t.lon,t.lat,t.ip,t.token,t.birthday,t.head_pic,t.pay_pwd,t.push_code
+		 FROM t_account t WHERE id = #{id}
+	</select>
+	
+	<!-- 搜索数据区域 -->
+	<sql id="where_clause">
+		<where> 
+			1=1
+			<if test="id != null"> and t.id = #{id} </if>
+			<if test="id_vague != null"> and instr(t.id,#{id_vague})>0 </if>
+			<if test="create_time != null"> and t.create_time = #{create_time} </if>
+			<if test="create_time_vague != null"> and instr(t.create_time,#{create_time_vague})>0 </if>
+			<if test="login_name != null"> and t.login_name = #{login_name} </if>
+			<if test="login_name_vague != null"> and instr(t.login_name,#{login_name_vague})>0 </if>
+			<if test="pwd != null"> and t.pwd = #{pwd} </if>
+			<if test="pwd_vague != null"> and instr(t.pwd,#{pwd_vague})>0 </if>
+			<if test="nick_name != null"> and t.nick_name = #{nick_name} </if>
+			<if test="nick_name_vague != null"> and instr(t.nick_name,#{nick_name_vague})>0 </if>
+			<if test="user_name != null"> and t.user_name = #{user_name} </if>
+			<if test="user_name_vague != null"> and instr(t.user_name,#{user_name_vague})>0 </if>
+			<if test="sex != null"> and t.sex = #{sex} </if>
+			<if test="sex_vague != null"> and instr(t.sex,#{sex_vague})>0 </if>
+			<if test="mobile != null"> and t.mobile = #{mobile} </if>
+			<if test="mobile_vague != null"> and instr(t.mobile,#{mobile_vague})>0 </if>
+			<if test="lev != null"> and t.lev = #{lev} </if>
+			<if test="lev_vague != null"> and instr(t.lev,#{lev_vague})>0 </if>
+			<if test="balance != null"> and t.balance = #{balance} </if>
+			<if test="balance_vague != null"> and instr(t.balance,#{balance_vague})>0 </if>
+			<if test="integral != null"> and t.integral = #{integral} </if>
+			<if test="integral_vague != null"> and instr(t.integral,#{integral_vague})>0 </if>
+			<if test="earnings != null"> and t.earnings = #{earnings} </if>
+			<if test="earnings_vague != null"> and instr(t.earnings,#{earnings_vague})>0 </if>
+			<if test="total_earnings != null"> and t.total_earnings = #{total_earnings} </if>
+			<if test="total_earnings_vague != null"> and instr(t.total_earnings,#{total_earnings_vague})>0 </if>
+			<if test="last_time != null"> and t.last_time = #{last_time} </if>
+			<if test="last_time_vague != null"> and instr(t.last_time,#{last_time_vague})>0 </if>
+			<if test="status != null"> and t.status = #{status} </if>
+			<if test="status_vague != null"> and instr(t.status,#{status_vague})>0 </if>
+			<if test="device_code != null"> and t.device_code = #{device_code} </if>
+			<if test="device_code_vague != null"> and instr(t.device_code,#{device_code_vague})>0 </if>
+			<if test="lon != null"> and t.lon = #{lon} </if>
+			<if test="lon_vague != null"> and instr(t.lon,#{lon_vague})>0 </if>
+			<if test="lat != null"> and t.lat = #{lat} </if>
+			<if test="lat_vague != null"> and instr(t.lat,#{lat_vague})>0 </if>
+			<if test="ip != null"> and t.ip = #{ip} </if>
+			<if test="ip_vague != null"> and instr(t.ip,#{ip_vague})>0 </if>
+			<if test="token != null"> and t.token = #{token} </if>
+			<if test="token_vague != null"> and instr(t.token,#{token_vague})>0 </if>
+			<if test="birthday != null"> and t.birthday = #{birthday} </if>
+			<if test="birthday_vague != null"> and instr(t.birthday,#{birthday_vague})>0 </if>
+			<if test="head_pic != null"> and t.head_pic = #{head_pic} </if>
+			<if test="head_pic_vague != null"> and instr(t.head_pic,#{head_pic_vague})>0 </if>
+			<if test="pay_pwd != null"> and t.pay_pwd = #{pay_pwd} </if>
+			<if test="pay_pwd_vague != null"> and instr(t.pay_pwd,#{pay_pwd_vague})>0 </if>
+			<if test="push_code != null"> and t.push_code = #{push_code} </if>
+			<if test="push_code_vague != null"> and instr(t.push_code#{push_code_vague})>0 </if>
+			
+		</where>
+	</sql>
+	
+	<sql id="getCommon">
+		select  t.id,t.create_time,t.login_name,t.pwd,t.nick_name,t.user_name,t.sex,t.mobile,t.lev,t.balance,t.integral,t.earnings,t.total_earnings,t.last_time,t.status,t.device_code,t.lon,t.lat,t.ip,t.token,t.birthday,t.head_pic,t.pay_pwd,t.push_code
+		from t_account t
+		<include refid="where_clause" /> order by id desc
+	</sql>
+
+	
+
+	<select id="getList" parameterType="map" resultMap="resultMember">
+            <include refid="getCommon" />
+             <if test="start != null">
+         		LIMIT ${start},${limit}
+        	</if> 
+	</select>
+
+	<select id="getCount" parameterType="map" resultType="int">
+			select count(*) ct from t_account t <include refid="where_clause" />
+	</select>
+	
+	
+	<!-- 排序区域 -->
+	<update id="updateBatch" parameterType="java.util.List">
+	   <foreach collection="list" item="item" index="index" separator=";">  
+			update t_account 
+			<set>
+				sort_no = #{item.sort_no}
+			</set>
+			WHERE id = #{item.id}
+	   </foreach>
+	</update>
+	
+</mapper>
+

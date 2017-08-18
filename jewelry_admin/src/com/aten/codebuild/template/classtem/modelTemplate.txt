@@ -1,0 +1,24 @@
+package com.aten.model.orm;
+
+
+import java.io.Serializable;
+import java.util.Date;
+
+public class {CLASS_NAME} implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+	{fieldlist}
+	private String [field_name];{/fieldlist}
+
+	
+	
+	{fieldlist}
+	public String get[fieldName]() {
+		return [field_name];
+	}
+	public void set[fieldName](String [field_name]) {
+		this.[field_name] = [field_name];
+	}
+	{/fieldlist}
+	
+}

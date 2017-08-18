@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.AccountDao">
+
+	<!-- 数据库映射模型区域 -->
+	<resultMap id="resultAccount" type="com.aten.model.orm.Account">
+		<result property="id" column="id" />
+		<result property="create_time" column="create_time" />
+		<result property="login_name" column="login_name" />
+		<result property="pwd" column="pwd" />
+		<result property="nick_name" column="nick_name" />
+		<result property="user_name" column="user_name" />
+		<result property="sex" column="sex" />
+		<result property="mobile" column="mobile" />
+		<result property="lev" column="lev" />
+		<result property="balance" column="balance" />
+		<result property="integral" column="integral" />
+		<result property="earnings" column="earnings" />
+		<result property="total_earnings" column="total_earnings" />
+		<result property="last_time" column="last_time" />
+		<result property="status" column="status" />
+		<result property="device_code" column="device_code" />
+		<result property="lon" column="lon" />
+		<result property="lat" column="lat" />
+		<result property="ip" column="ip" />
+		<result property="token" column="token" />
+		<result property="birthday" column="birthday" />
+		<result property="head_pic" column="head_pic" />
+		<result property="pay_pwd" column="pay_pwd" />
+		<result property="push_code" column="push_code" />
+	</resultMap>
+
+	<select id="getById" parameterType="BigInteger" resultType="com.aten.model.orm.Account">
+		SELECT
+		`id`,
+		`create_time`,
+		`login_name`,
+		`pwd`,
+		`nick_name`,
+		`user_name`,
+		`sex`,
+		`mobile`,
+		`lev`,
+		`balance`,
+		`integral`,
+		`earnings`,
+		`total_earnings`,
+		`last_time`,
+		`status`,
+		`device_code`,
+		`lon`,
+		`lat`,
+		`ip`,
+		`token`,
+		`birthday`,
+		`head_pic`,
+		`pay_pwd`,
+		`push_code`
+		FROM
+		`t_account`
+		WHERE
+		`id`=#{id}
+		LIMIT 1
+	</select>
+
+
+	<select id="getByLoginname" parameterType="String"
+		resultType="com.aten.model.orm.Account">
+		SELECT
+		`id`,
+		`create_time`,
+		`login_name`,
+		`pwd`,
+		`nick_name`,
+		`user_name`,
+		`sex`,
+		`mobile`,
+		`lev`,
+		`balance`,
+		`integral`,
+		`earnings`,
+		`total_earnings`,
+		`last_time`,
+		`status`,
+		`device_code`,
+		`lon`,
+		`lat`,
+		`ip`,
+		`token`,
+		`birthday`,
+		`head_pic`,
+		`pay_pwd`,
+		`push_code`
+		FROM
+		`t_account`
+		WHERE
+		`login_name`=#{login_name}
+		LIMIT 1
+	</select>
+
+	<update id="updateAccountEarningsReduce" parameterType="com.aten.model.orm.AccountWithdrawBill">
+		UPDATE
+		t_account set earnings = earnings + #{amount} WHERE id = #{account_id}
+	</update>
+
+	<update id="updateBalance" parameterType="HashMap">
+		update t_account
+		<set>
+			balance = balance + #{amount}
+		</set>
+		WHERE login_name = #{account}
+		and balance + #{amount} >= 0
+	</update>
+
+	<update id="updateoneBalanceById" parameterType="map">
+		UPDATE
+		`t_account`
+		SET
+		`balance` = #{balance}
+		WHERE
+		`id` = #{id}
+		LIMIT 1
+	</update>
+
+	<update id="updateIntegral" parameterType="HashMap">
+		update t_account
+		<set>
+			integral = integral + #{integral}
+		</set>
+		WHERE login_name = #{account}
+		and integral + #{integral} >= 0
+	</update>
+</mapper>
+

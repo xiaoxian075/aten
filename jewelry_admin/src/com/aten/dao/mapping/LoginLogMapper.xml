@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.LoginLogDao">
+
+	<!-- 数据库映射模型区域 -->
+	<resultMap id="resultLoginlog" type="com.aten.model.orm.LoginLog">
+		<result property="log_id" column="log_id" />
+		<result property="back_id" column="back_id" />
+		<result property="back_name" column="back_name" />
+		<result property="back_type" column="back_type" />
+		<result property="login_ip" column="login_ip" />
+		<result property="login_time" column="login_time" />
+	</resultMap>
+
+	<!-- 新增数据区域 -->
+	<sql id="insertCommon">
+		insert into t_loginlog(
+		<if test="back_id != null"> back_id,</if>
+		<if test="back_name != null"> back_name,</if>
+		<if test="back_type != null"> back_type,</if>
+		<if test="login_ip != null"> login_ip,</if>
+		login_time
+		)
+		values(
+		<if test="back_id != null">#{back_id},</if>
+		<if test="back_name != null">#{back_name},</if>
+		<if test="back_type != null">#{back_type},</if>
+		<if test="login_ip != null">#{login_ip},</if>
+		now()
+		)
+	</sql>
+
+	<insert id="insert" parameterType="com.aten.model.orm.LoginLog">
+		<include refid="insertCommon" />
+	</insert>
+
+	<insert id="insertGetPk" parameterType="com.aten.model.orm.LoginLog">
+		<include refid="insertCommon" />
+		<selectKey resultType="java.lang.String" order="AFTER"
+			keyProperty="log_id">
+			select @@IDENTITY AS ID
+		</selectKey>
+	</insert>
+
+
+	<!-- 更新数据区域 -->
+	<sql id="update_clause">
+		<set>
+			<if test="log_id != null"> log_id = #{log_id}, </if>
+			<if test="back_id != null"> back_id = #{back_id}, </if>
+			<if test="back_name != null"> back_name = #{back_name}, </if>
+			<if test="back_type != null"> back_type = #{back_type}, </if>
+			<if test="login_ip != null"> login_ip = #{login_ip}, </if>
+			<if test="login_time != null"> login_time = #{login_time} </if>
+		</set>
+	</sql>
+
+
+	<update id="update" parameterType="com.aten.model.orm.LoginLog">
+		update t_loginlog
+		<include refid="update_clause" />
+		where log_id = #{log_id}
+	</update>
+
+	<!-- 删除数据区域 -->
+	<delete id="delete" parameterType="String">
+		delete from t_loginlog where log_id in
+		<foreach item="idItem" collection="array" index="index" open="("
+			separator="," close=")">
+			#{idItem}
+		</foreach>
+	</delete>
+
+	<!-- 获取对象数据区域 -->
+	<select id="get" parameterType="String" resultMap="resultLoginlog">
+		select
+		log_id,back_id,back_name,back_type,login_ip,login_time
+		from t_loginlog where log_id = #{log_id}
+	</select>
+
+	<!-- 搜索数据区域 -->
+	<sql id="where_clause">
+		<if test="log_id != null"> and log_id = #{log_id} </if>
+		<if test="back_id != null"> and back_id = #{back_id} </if>
+		<if test="back_name != null"> and instr(back_name,#{back_name})>0</if>
+		<if test="back_type != null"> and back_type = #{back_type} </if>
+		<if test="login_ip != null"> and login_ip = #{login_ip} </if>
+		<if test="login_time != null"> and login_time = #{login_time} </if>
+	</sql>
+
+	<sql id="getCommon">
+		select * from t_loginlog
+		where 1 = 1
+		<include refid="where_clause" />
+		order by log_id desc
+	</sql>
+
+
+
+	<select id="getList" parameterType="map" resultMap="resultLoginlog">
+		<choose>
+			<when test="start != null">
+				select * from
+				( select T.*, rownum rn from
+				(
+				<include refid="getCommon" />)
+				T where 1=1 and rownum &lt;= #{top}
+				)
+				where rn >= #{start}
+			</when>
+			<otherwise>
+				<include refid="getCommon" />
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="getCount" parameterType="map" resultType="int">
+		select count(*) ct from (
+		<include refid="getCommon" />
+		)
+	</select>
+
+
+	<!-- 排序区域 -->
+	<update id="updateBatch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" open="begin"
+			close=";end;" separator=";">
+			update t_loginlog
+			<set>
+				sort_no = #{item.sort_no}
+			</set>
+			where log_id = #{item.id}
+		</foreach>
+	</update>
+
+</mapper>
+

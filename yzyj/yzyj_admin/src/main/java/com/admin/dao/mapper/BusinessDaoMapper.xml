@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.admin.dao.BusinessDaoMapper">
+    <resultMap id="BaseResultMap" type="com.admin.model.Business">
+        <result column="ID" property="id" jdbcType="DECIMAL" />
+        <result column="MERCHANT_NAME" property="merchantName" jdbcType="VARCHAR" />
+        <result column="MERCHANT_ADDRESS" property="merchantAddress" jdbcType="VARCHAR" />
+        <result column="MERCHANT_LEGAL_PERSON" property="merchantLegalPerson" jdbcType="VARCHAR" />
+        <result column="MERCHANT_IDENTITY_CARD" property="merchantIdentityCard" jdbcType="VARCHAR" />
+        <result column="BUSINESS_LICENSE" property="businessLicense" jdbcType="VARCHAR" />
+        <result column="MERCHANT_PERSON_NAME" property="merchantPersonName" jdbcType="VARCHAR" />
+        <result column="MERCHANT_PERSON_PHONE" property="merchantPersonPhone" jdbcType="VARCHAR" />
+        <result column="EMAIL" property="email" jdbcType="VARCHAR" />
+        <result column="ACCOUNT_NUMBER" property="accountNumber" jdbcType="VARCHAR" />
+        <result column="ACCOUNT_NAME" property="accountName" jdbcType="VARCHAR" />
+        <result column="OPEN_BANK" property="openBank" jdbcType="VARCHAR" />
+        <result column="YUN_PAY_ACCOUNT" property="yunPayAccount" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="DECIMAL" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="VARCHAR" />
+        <result column="FOLLOW_UP_NAME" property="followUpName" jdbcType="VARCHAR" />
+        <result column="AGENT_UNIQUE" property="agentUnique" jdbcType="VARCHAR" />
+        <result column="MERCHANT_NO" property="merchantNo" jdbcType="VARCHAR" />
+        <result column="AGENCY_NAME" property="agencyName" jdbcType="VARCHAR" />
+        <result column="IS_MERCHANT" property="isMerchant" jdbcType="VARCHAR" />
+        <result column="LEV" property="lev" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <sql id="Example_Where_Clause" >
+        <where >
+            <foreach collection="oredCriteria" item="criteria" separator="or" >
+                <if test="criteria.valid" >
+                    <trim prefix="(" suffix=")" prefixOverrides="and" >
+                        <foreach collection="criteria.criteria" item="criterion" >
+                            <choose >
+                                <when test="criterion.noValue" >
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue" >
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue" >
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue" >
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+
+    <select id="selectByExampleAndPage" parameterType="com.admin.model.BaseExample"  resultMap="BaseResultMap">
+        select
+        *
+        from T_BUSINESS_INFO
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+
+    <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.admin.model.BaseExample">
+        select
+        *
+        from T_BUSINESS_INFO
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+
+    <insert id="insertBusiness" parameterType="com.admin.model.Business" >
+        insert into T_BUSINESS_INFO
+        <selectKey keyProperty="id" resultType="java.lang.Integer" order="BEFORE">
+            select T_BUSINESS_INFO_SEQUENCE.nextval from dual
+        </selectKey>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="merchantName != null">
+                MERCHANT_NAME,
+            </if>
+            <if test="merchantAddress != null">
+                MERCHANT_ADDRESS,
+            </if>
+            <if test="merchantLegalPerson != null">
+                MERCHANT_LEGAL_PERSON,
+            </if>
+            <if test="merchantIdentityCard != null">
+                MERCHANT_IDENTITY_CARD,
+            </if>
+            <if test="businessLicense != null">
+                BUSINESS_LICENSE,
+            </if>
+            <if test="merchantPersonName != null">
+                MERCHANT_PERSON_NAME,
+            </if>
+            <if test="merchantPersonPhone != null">
+                MERCHANT_PERSON_PHONE,
+            </if>
+            <if test="email != null">
+                EMAIL,
+            </if>
+            <if test="accountNumber != null">
+                ACCOUNT_NUMBER,
+            </if>
+            <if test="accountName != null">
+                ACCOUNT_NAME,
+            </if>
+            <if test="openBank != null">
+                OPEN_BANK,
+            </if>
+            <if test="yunPayAccount != null">
+                YUN_PAY_ACCOUNT,
+            </if>
+            <if test="status != null">
+                STATUS,
+            </if>
+            <if test="createTime != null">
+                CREATE_TIME,
+            </if>
+            <if test="followUpName != null">
+                FOLLOW_UP_NAME,
+            </if>
+            <if test="agentUnique != null">
+                AGENT_UNIQUE,
+            </if>
+            <if test="merchantNo != null">
+                MERCHANT_NO,
+            </if>
+            <if test="agencyName != null">
+                AGENCY_NAME,
+            </if>
+            <if test="isMerchant != null">
+                IS_MERCHANT,
+            </if>
+            <if test="lev != null">
+                LEV,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="merchantName != null">
+                #{merchantName,jdbcType=VARCHAR},
+            </if>
+            <if test="merchantAddress != null">
+                #{merchantAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="merchantLegalPerson != null">
+                #{merchantLegalPerson,jdbcType=VARCHAR},
+            </if>
+            <if test="merchantIdentityCard != null">
+                #{merchantIdentityCard,jdbcType=VARCHAR},
+            </if>
+            <if test="businessLicense != null">
+                #{businessLicense,jdbcType=VARCHAR},
+            </if>
+            <if test="merchantPersonName != null">
+                #{merchantPersonName,jdbcType=VARCHAR},
+            </if>
+            <if test="merchantPersonPhone != null">
+                #{merchantPersonPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="accountNumber != null">
+                #{accountNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="accountName != null">
+                #{accountName,jdbcType=VARCHAR},
+            </if>
+            <if test="openBank != null">
+                #{openBank,jdbcType=DECIMAL},
+            </if>
+            <if test="yunPayAccount != null">
+                #{yunPayAccount,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=VARCHAR},
+            </if>
+            <if test="followUpName != null">
+                #{followUpName,jdbcType=VARCHAR},
+            </if>
+            <if test="agentUnique != null">
+                #{agentUnique,jdbcType=VARCHAR},
+            </if>
+            <if test="merchantNo != null">
+                #{merchantNo,jdbcType=VARCHAR},
+            </if>
+            <if test="agencyName != null">
+                #{agencyName,jdbcType=VARCHAR},
+            </if>
+            <if test="isMerchant != null">
+                #{isMerchant,jdbcType=VARCHAR},
+            </if>
+            <if test="lev != null">
+                #{lev,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <insert id="insertBusinessPicture" parameterType="com.admin.model.BusinessPicture">
+        INSERT INTO T_BUSINESS_PICTURE
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            ID,
+            <if test="bid != null">BID,</if>
+            <if test="type != null">TYPE,</if>
+            <if test="picturePath != null">PICTURE_PATH</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            T_BUSINESS_PICTURE_SEQUENCE.Nextval,
+            <if test="bid != null">#{bid},</if>
+            <if test="type != null">#{type},</if>
+            <if test="picturePath != null">#{picturePath}</if>
+        </trim>
+    </insert>
+
+    <update id="updateApproval" parameterType="java.lang.Integer">
+        update T_BUSINESS_INFO set STATUS = #{status} where id = #{id}
+    </update>
+
+    <select id="getBusinessInfo" resultMap="BaseResultMap">
+        select ACCOUNT_NUMBER,YUN_PAY_ACCOUNT FROM T_BUSINESS_INFO
+    </select>
+
+    <select id="selectByBId" resultType="com.admin.model.Business">
+        select * FROM T_BUSINESS_INFO where ID = #{id}
+    </select>
+
+    <select id="selectByPId" resultType="com.admin.model.BusinessPicture">
+        select * FROM T_BUSINESS_PICTURE where BID = #{id}
+    </select>
+
+    <insert id="inserBatchBusiness" parameterType="java.util.List">
+        insert into T_BUSINESS_INFO
+        select T_BUSINESS_INFO_SEQUENCE.NEXTVAL,A.* from(
+        <foreach collection="list" item="item" index="index" separator="UNION">
+            select
+            #{item.merchantName},
+            #{item.merchantAddress},
+            #{item.merchantLegalPerson},
+            #{item.merchantIdentityCard},
+            #{item.businessLicense},
+            #{item.merchantPersonName},
+            #{item.merchantPersonPhone},
+            #{item.email},
+            #{item.accountNumber},
+            #{item.openBank},
+            #{item.yunPayAccount},
+            #{item.status},
+            #{item.createTime},
+            #{item.accountName},
+            #{item.followUpName},
+            #{item.agentUnique,jdbcType=VARCHAR},
+            #{item.merchantNo,jdbcType=VARCHAR},
+            #{item.agencyName,jdbcType=VARCHAR}
+            from dual
+        </foreach>
+        ) A
+    </insert>
+
+    <select id="selectMaxId" resultType="java.lang.Integer" >
+        select max(id) as maxId  from T_BUSINESS_INFO
+    </select>
+
+    <delete id="deletePic" parameterType="java.lang.Integer">
+        delete T_BUSINESS_PICTURE  where id = #{id}
+    </delete>
+
+    <update id="updateBusiness" parameterType="Business">
+        update T_BUSINESS_INFO
+        <set>
+            <if test="merchantName != null">
+                MERCHANT_NAME= #{merchantName,jdbcType=VARCHAR},
+            </if>
+            <if test="merchantAddress != null">
+                MERCHANT_ADDRESS= #{merchantAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="merchantLegalPerson != null">
+                MERCHANT_LEGAL_PERSON= #{merchantLegalPerson,jdbcType=VARCHAR},
+            </if>
+            <if test="merchantIdentityCard != null">
+                MERCHANT_IDENTITY_CARD= #{merchantIdentityCard,jdbcType=VARCHAR},
+            </if>
+            <if test="businessLicense != null">
+                BUSINESS_LICENSE= #{businessLicense,jdbcType=VARCHAR},
+            </if>
+            <if test="merchantPersonName != null">
+                MERCHANT_PERSON_NAME= #{merchantPersonName,jdbcType=VARCHAR},
+            </if>
+            <if test="merchantPersonPhone != null">
+                MERCHANT_PERSON_PHONE= #{merchantPersonPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                EMAIL= #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="accountNumber != null">
+                ACCOUNT_NUMBER= #{accountNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="accountName != null">
+                ACCOUNT_NAME= #{accountName,jdbcType=VARCHAR},
+            </if>
+            <if test="openBank != null">
+                OPEN_BANK= #{openBank,jdbcType=VARCHAR},
+            </if>
+            <if test="yunPayAccount != null">
+                YUN_PAY_ACCOUNT= #{yunPayAccount,jdbcType=VARCHAR},
+            </if>
+            <if test="followUpName != null">
+                FOLLOW_UP_NAME= #{followUpName,jdbcType=VARCHAR},
+            </if>
+            <if test="agentUnique != null">
+                AGENT_UNIQUE= #{agentUnique,jdbcType=VARCHAR},
+            </if>
+            <if test="agencyName != null">
+                AGENCY_NAME= #{agencyName,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=DECIMAL}
+    </update>
+
+    <select id="getBusinessNameByAgentUnique" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select ID,MERCHANT_NAME,MERCHANT_PERSON_PHONE,YUN_PAY_ACCOUNT from T_BUSINESS_INFO where AGENT_UNIQUE = #{agentUnique,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getBusinessNameById" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select MERCHANT_PERSON_PHONE,YUN_PAY_ACCOUNT from T_BUSINESS_INFO where ID = #{id,jdbcType=VARCHAR}
+    </select>
+
+    <update id="updateBusAnegcy" parameterType="java.lang.String">
+        update T_BUSINESS_INFO t set t.AGENT_UNIQUE = null,t.AGENCY_NAME = null where t.AGENT_UNIQUE = #{agentUnique,jdbcType=VARCHAR}
+    </update>
+
+    <select id="getBusinessInfoByYId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select * from T_BUSINESS_INFO t where t.YUN_PAY_ACCOUNT = #{loginName,jdbcType=VARCHAR}
+    </select>
+</mapper>

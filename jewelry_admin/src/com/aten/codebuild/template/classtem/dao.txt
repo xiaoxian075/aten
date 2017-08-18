@@ -1,0 +1,7 @@
+package com.aten.dao;
+import com.aten.model.orm.{CLASS_NAME};
+
+public interface {CLASS_NAME}Dao extends CommonDao<{CLASS_NAME}, String>{
+	
+}
+

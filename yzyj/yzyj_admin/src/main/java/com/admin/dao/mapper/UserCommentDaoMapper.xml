@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.admin.dao.UserCommentDaoMapper">
+    <resultMap id="BaseResultMap" type="com.admin.model.UserComment">
+        <result column="sysId" jdbcType="VARCHAR" property="sysId"/>
+        <result column="model_id" jdbcType="VARCHAR" property="modelId"/>
+        <result column="account_id" jdbcType="VARCHAR" property="accountId"/>
+        <result column="content" jdbcType="VARCHAR" property="content"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="nick_name" jdbcType="VARCHAR" property="accountName"/>
+        <association property="modelName" column="model_id" javaType="String" select="selectModelName"/>
+        <association property="accountName" column="account_id" javaType="String" select="selectAccountName"/>
+        <association property="accountPic" column="account_id" javaType="String" select="selectAccountPic"/>
+    </resultMap>
+    <select id="selectModelName" resultType="String">
+        select name from t_mt_info   where model_id = #{id}
+    </select>
+    <select id="selectAccountName" resultType="String">
+        select nick_name from t_account   where account_id = #{id}
+    </select>
+    <sql id="Example_Where_Clause" >
+        <where >
+            <foreach collection="oredCriteria" item="criteria" separator="or" >
+                <if test="criteria.valid" >
+                    <trim prefix="(" suffix=")" prefixOverrides="and" >
+                        <foreach collection="criteria.criteria" item="criterion" >
+                            <choose >
+                                <when test="criterion.noValue" >
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue" >
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue" >
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue" >
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.admin.model.BaseExample">
+        select
+        *
+        from t_mt_user_comment
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+    <select id="selectByExampleAndPage" parameterType="com.admin.model.BaseExample"  resultMap="BaseResultMap">
+        select
+        *
+        from t_mt_user_comment
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        *
+        from t_mt_user_comment
+        where sys_id = #{id,jdbcType=VARCHAR}
+    </select>
+    <insert id="insertSelective" parameterType="com.admin.model.BaseExample" >
+        insert into t_mt_user_comment
+        <selectKey keyProperty="id" resultType="String" order="BEFORE">
+            select t_mt_user_comment_SEQUENCE.nextval from dual
+        </selectKey>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="modelId != null">
+                model_id,
+            </if>
+            <if test="accountId != null">
+                account_id,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+            <if test="createDate != null">
+                create_date,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="modelId != null">
+                #{modelId,jdbcType=VARCHAR},
+            </if>
+            <if test="accountId != null">
+                #{accountId,jdbcType=VARCHAR},
+            </if>
+            <if test="content != null">
+                #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="createDate != null">
+                #{createDate,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.admin.model.BaseExample">
+        update t_mt_user_comment
+        <set>
+            <if test="modelId != null">
+                model_id = #{modelId,jdbcType=VARCHAR},
+            </if>
+            <if test="accountId != null">
+                account_id = #{accountId,jdbcType=VARCHAR},
+            </if>
+            <if test="content != null">
+                content = #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="createDate != null">
+                create_date = #{createDate,jdbcType=VARCHAR},
+            </if>
+
+        </set>
+        where sys_id = #{sysId,jdbcType=VARCHAR}
+    </update>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from t_mt_user_comment
+        where sys_id = #{sysId,jdbcType=VARCHAR}
+    </delete>
+    <select id="selectAccountPic" resultType="String">
+        select HEAD_PIC from t_account   where account_id = #{id}
+    </select>
+</mapper>

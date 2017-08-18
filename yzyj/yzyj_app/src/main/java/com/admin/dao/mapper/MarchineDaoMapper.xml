@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.admin.dao.AgencyPersonDaoMapper">
+    <resultMap id="BaseResultMap" type="com.admin.model.AgencyPerson">
+        <result column="id" property="id" jdbcType="VARCHAR" />
+        <result column="machinecode" property="machineCode" jdbcType="VARCHAR" />
+        <result column="theirapid" property="theirapId" jdbcType="DECIMAL" />
+        <result column="theirmid" property="theirmId" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="VARCHAR" />
+        <result column="province" property="province" jdbcType="VARCHAR" />
+        <result column="city" property="city" jdbcType="VARCHAR" />
+        <result column="theirmname" property="theirmName" jdbcType="VARCHAR" />
+        <result column="theiryunno" property="theirYunNo" jdbcType="VARCHAR" />
+        <result column="theiryunid" property="theirYunId" jdbcType="VARCHAR" />
+        <result column="theiryunpayloginname" property="theirYunPayLoginName" jdbcType="VARCHAR" />
+        <result column="theirmaddress" property="theirmAddress" jdbcType="VARCHAR" />
+        <result column="theirjointime" property="theirJoinTime" jdbcType="VARCHAR" />
+        <result column="mtype" property="mType" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <sql id="Example_Where_Clause" >
+        <where >
+            <foreach collection="oredCriteria" item="criteria" separator="or" >
+                <if test="criteria.valid" >
+                    <trim prefix="(" suffix=")" prefixOverrides="and" >
+                        <foreach collection="criteria.criteria" item="criterion" >
+                            <choose >
+                                <when test="criterion.noValue" >
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue" >
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue" >
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue" >
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.admin.model.BaseExample">
+        select
+        *
+        from z_marchine
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+    <select id="selectByExampleAndPage" parameterType="com.admin.model.BaseExample"  resultMap="BaseResultMap">
+        select
+        *
+        from z_marchine
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        *
+        from z_marchine
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+    <insert id="insertSelective" parameterType="com.admin.model.BaseExample" >
+        insert into z_marchine
+        <selectKey keyProperty="id" resultType="String" order="BEFORE">
+            select z_marchine_SEQUENCE.nextval from dual
+        </selectKey>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="machineCode != null">
+                machinecode,
+            </if>
+            <if test="theirapId != null">
+                theirapid,
+            </if>
+            <if test="theirmId != null">
+                theirmid,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="province != null">
+                province,
+            </if>
+            <if test="city != null">
+                city,
+            </if>
+            <if test="theirmName != null">
+                theirmname,
+            </if>
+            <if test="theirYunNo != null">
+                theiryunno,
+            </if>
+            <if test="theirYunId != null">
+                theiryunid,
+            </if>
+            <if test="theirYunPayLoginName != null">
+                theiryunpayloginname,
+            </if>
+            <if test="theirmAddress != null">
+                theirmaddress,
+            </if>
+            <if test="theirJoinTime != null">
+                theirjointime,
+            </if>
+            <if test="mType != null">
+                mtype,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="machineCode != null">
+                #{machineCode,jdbcType=VARCHAR},
+            </if>
+            <if test="theirapId != null">
+                #{theirapId,jdbcType=DECIMAL},
+            </if>
+            <if test="theirmId != null">
+                #{theirmId,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="province != null">
+                #{province,jdbcType=VARCHAR},
+            </if>
+            <if test="city != null">
+                #{city,jdbcType=VARCHAR},
+            </if>
+            <if test="theirmName != null">
+                #{theirmName,jdbcType=VARCHAR},
+            </if>
+            <if test="theirYunNo != null">
+                #{theirYunNo,jdbcType=VARCHAR},
+            </if>
+            <if test="theirYunId != null">
+                #{theirYunId,jdbcType=VARCHAR},
+            </if>
+            <if test="theirYunPayLoginName != null">
+                #{theirYunPayLoginName,jdbcType=VARCHAR},
+            </if>
+            <if test="theirmAddress != null">
+                #{theirmAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="theirJoinTime != null">
+                #{theirJoinTime,jdbcType=VARCHAR},
+            </if>
+            <if test="mType != null">
+                #{mType,jdbcType=VARCHAR},
+            </if>
+
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.admin.model.BaseExample">
+        update z_marchine
+        <set>
+            <if test="machineCode != null">
+                machinecode= #{machineCode,jdbcType=VARCHAR},
+            </if>
+            <if test="theirapId != null">
+                theirapid= #{theirapId,jdbcType=DECIMAL},
+            </if>
+            <if test="theirmId != null">
+                theirmid= #{theirmId,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status= #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="province != null">
+                province= #{province,jdbcType=VARCHAR},
+            </if>
+            <if test="city != null">
+                city= #{city,jdbcType=VARCHAR},
+            </if>
+            <if test="theirmName != null">
+                theirmname= #{theirmName,jdbcType=VARCHAR},
+            </if>
+            <if test="theirYunNo != null">
+                theiryunno= #{theirYunNo,jdbcType=VARCHAR},
+            </if>
+            <if test="theirYunId != null">
+                theiryunid= #{theirYunId,jdbcType=VARCHAR},
+            </if>
+            <if test="theirYunPayLoginName != null">
+                theiryunpayloginname= #{theirYunPayLoginName,jdbcType=VARCHAR},
+            </if>
+            <if test="theirmAddress != null">
+                theirmaddress= #{theirmAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="theirJoinTime != null">
+                theirjointime= #{theirJoinTime,jdbcType=VARCHAR},
+            </if>
+            <if test="mType != null">
+                mtype= #{mType,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from z_marchine
+        where id = #{sysIid,jdbcType=VARCHAR}
+    </delete>
+</mapper>

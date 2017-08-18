@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.LogitempDao">
+
+	<!-- t_ship_template -->
+	<resultMap id="resultShipTemplate" type="com.aten.model.orm.ShipTemplate">
+		<result property="ship_id" column="ship_id" />
+		<result property="com_id" column="com_id" />
+		<result property="goods_id" column="goods_id" />
+		<result property="ship_name" column="ship_name" />
+		<result property="start_area" column="start_area" />
+		<result property="send_time_id" column="send_time_id" />
+		<result property="send_time" column="send_time" />
+		<result property="valuation_mode" column="valuation_mode" />
+		<result property="express_id_str" column="express_id_str" />
+		<result property="free_ship" column="free_ship" />
+		<result property="state" column="state" />
+		<result property="tem_modify_time" column="tem_modify_time" />
+	</resultMap>
+
+	<!-- t_areaset -->
+	<resultMap id="resultAreaset" type="com.aten.model.orm.Areaset">
+		<result property="as_id" column="as_id" />
+		<result property="ship_id" column="ship_id" />
+		<result property="express_start" column="express_start" />
+		<result property="express_price" column="express_price" />
+		<result property="express_plus" column="express_plus" />
+		<result property="express_priceplus" column="express_priceplus" />
+		<result property="express_id" column="express_id" />
+		<result property="default_ship" column="default_ship" />
+		<result property="arrive_city" column="arrive_city" />
+	</resultMap>
+
+	<!-- t_reach_area -->
+	<resultMap id="resultReachArea" type="com.aten.model.orm.ReachArea">
+		<result property="rea_id" column="rea_id" />
+		<result property="as_id" column="as_id" />
+		<result property="end_area" column="end_area" />
+	</resultMap>
+
+	<select id="selectcountShipTemplateByShipname" parameterType="map"
+		resultType="int">
+		SELECT
+		count(ship_id)
+		FROM
+		`t_ship_template`
+		WHERE
+		1 = 1
+		<if test="ship_name != null">
+			AND `ship_name` like #{ship_name}
+		</if>
+	</select>
+
+	<select id="selectlistShipTemplateByShipname" parameterType="map"
+		resultMap="resultShipTemplate">
+		SELECT
+		`ship_id`,
+		`com_id`,
+		`goods_id`,
+		`ship_name`,
+		`start_area`,
+		`send_time_id`,
+		`send_time`,
+		`valuation_mode`,
+		`express_id_str`,
+		`free_ship`,
+		`state`,
+		`tem_modify_time`
+		FROM
+		`t_ship_template`
+		WHERE
+		1=1
+		<if test="state != null">
+			AND `state`=#{state}
+		</if>
+		<if test="com_id != null">
+			AND `com_id`=#{com_id}
+		</if>
+		<if test="ship_name != null">
+			AND `ship_name` like #{ship_name}
+		</if>
+		ORDER BY `ship_id` DESC
+		<if test="start != null">
+			LIMIT ${start},${limit}
+		</if>
+	</select>
+
+	<select id="selectlistShipTemplateByComId" parameterType="BigInteger"
+		resultMap="resultShipTemplate">
+		SELECT
+		`ship_id`,
+		`com_id`,
+		`goods_id`,
+		`ship_name`,
+		`start_area`,
+		`send_time_id`,
+		`send_time`,
+		`valuation_mode`,
+		`express_id_str`,
+		`free_ship`,
+		`state`,
+		`tem_modify_time`
+		FROM
+		`t_ship_template`
+		WHERE
+		`com_id`=#{com_id}
+	</select>
+
+	<select id="selectlistAreasetByShipId" parameterType="BigInteger"
+		resultMap="resultAreaset">
+		SELECT
+		`as_id`,
+		`ship_id`,
+		`express_start`,
+		`express_price`,
+		`express_plus`,
+		`express_priceplus`,
+		`express_id`,
+		`default_ship`,
+		`arrive_city`
+		FROM
+		`t_areaset`
+		WHERE
+		`ship_id`=#{ship_id}
+	</select>
+
+	<select id="selectlistReachAreaByAsId" parameterType="BigInteger"
+		resultMap="resultReachArea">
+		SELECT
+		`rea_id`,
+		`as_id`,
+		`end_area`
+		FROM
+		`t_reach_area`
+		WHERE
+		`as_id`=#{as_id}
+	</select>
+
+	<select id="selectShipTemplate" parameterType="BigInteger"
+		resultType="com.aten.model.orm.ShipTemplate">
+		SELECT
+		`ship_id`,
+		`com_id`,
+		`goods_id`,
+		`ship_name`,
+		`start_area`,
+		`send_time_id`,
+		`send_time`,
+		`valuation_mode`,
+		`express_id_str`,
+		`free_ship`,
+		`state`,
+		`tem_modify_time`
+		FROM
+		`t_ship_template`
+		WHERE
+		`ship_id`=#{ship_id}
+		LIMIT 1
+	</select>
+
+	<select id="selectAreaset" parameterType="BigInteger"
+		resultType="com.aten.model.orm.Areaset">
+		SELECT
+		`as_id`,
+		`ship_id`,
+		`express_start`,
+		`express_price`,
+		`express_plus`,
+		`express_priceplus`,
+		`express_id`,
+		`default_ship`,
+		`arrive_city`
+		FROM
+		`t_areaset`
+		WHERE
+		`as_id`=#{as_id}
+		LIMIT 1;
+	</select>
+
+	<select id="selectReachArea" parameterType="BigInteger"
+		resultType="com.aten.model.orm.ReachArea">
+		SELECT
+		`rea_id`,
+		`as_id`,
+		`end_area`
+		FROM
+		`t_reach_area`
+		WHERE
+		`rea_id`=#{rea_id}
+		LIMIT 1
+	</select>
+
+
+	<select id="selectMaxIdShipTemplate" resultType="BigInteger">
+		SELECT
+		MAX(`ship_id`)
+		FROM
+		`t_ship_template`
+	</select>
+
+	<select id="selectMaxIdReachArea" resultType="BigInteger">
+		SELECT
+		Max(`as_id`)
+		FROM
+		`t_areaset`
+	</select>
+
+	<select id="selectMaxIdAreaset" resultType="BigInteger">
+		SELECT
+		MAX(`rea_id`)
+		FROM
+		`t_reach_area`
+	</select>
+
+	<insert id="insertShipTemplate" parameterType="com.aten.model.orm.ShipTemplate">
+		INSERT INTO
+		`t_ship_template`
+		(
+		`ship_id`,
+		`com_id`,
+		`goods_id`,
+		`ship_name`,
+		`start_area`,
+		`send_time_id`,
+		`send_time`,
+		`valuation_mode`,
+		`express_id_str`,
+		`free_ship`,
+		`state`,
+		`tem_modify_time`
+		)
+		VALUES
+		(
+		#{ship_id},
+		#{com_id},
+		#{goods_id},
+		#{ship_name},
+		#{start_area},
+		#{send_time_id},
+		#{send_time},
+		#{valuation_mode},
+		#{express_id_str},
+		#{free_ship},
+		#{state},
+		#{tem_modify_time}
+		)
+	</insert>
+
+
+	<insert id="insertAreaset" parameterType="com.aten.model.orm.Areaset">
+		INSERT INTO
+		`t_areaset`
+		(
+		`as_id`,
+		`ship_id`,
+		`express_start`,
+		`express_price`,
+		`express_plus`,
+		`express_priceplus`,
+		`express_id`,
+		`default_ship`,
+		`arrive_city`
+		)
+		VALUES
+		(
+		#{as_id},
+		#{ship_id},
+		#{express_start},
+		#{express_price},
+		#{express_plus},
+		#{express_priceplus},
+		#{express_id},
+		#{default_ship},
+		#{arrive_city}
+		)
+	</insert>
+
+	<insert id="insertReachArea" parameterType="com.aten.model.orm.ReachArea">
+		INSERT INTO
+		`t_reach_area`
+		(
+		`rea_id`,
+		`as_id`,
+		`end_area`
+		)
+		VALUES
+		(
+		#{rea_id},
+		#{as_id},
+		#{end_area}
+		)
+	</insert>
+
+
+	<update id="updateShipTemplate" parameterType="com.aten.model.orm.ShipTemplate">
+		UPDATE
+		`t_ship_template`
+		SET
+		`com_id`=#{com_id},
+		`goods_id`=#{goods_id},
+		`ship_name`=#{ship_name},
+		`start_area`=#{start_area},
+		`send_time_id`=#{send_time_id},
+		`send_time`=#{send_time},
+		`valuation_mode`=#{valuation_mode},
+		`express_id_str`=#{express_id_str},
+		`free_ship`=#{free_ship},
+		`tem_modify_time`=#{tem_modify_time}
+		WHERE
+		`ship_id`=#{ship_id}
+		LIMIT 1
+	</update>
+
+	<update id="updateAreaset" parameterType="com.aten.model.orm.Areaset">
+		UPDATE
+		`t_areaset`
+		SET
+		`ship_id`=#{ship_id},
+		`express_start`=#{express_start},
+		`express_price`=#{express_price},
+		`express_plus`=#{express_plus},
+		`express_priceplus`=#{express_priceplus},
+		`default_ship`=#{default_ship},
+		`arrive_city`=#{arrive_city}
+		WHERE
+		`as_id`=#{as_id}
+		LIMIT 1
+	</update>
+
+	<update id="updateReachArea" parameterType="com.aten.model.orm.ReachArea">
+		UPDATE
+		`t_reach_area`
+		SET
+		`as_id`=#{as_id},
+		`end_area`=#{end_area}
+		WHERE
+		`rea_id`=#{rea_id}
+		LIMIT 1
+	</update>
+	<select id="selectByComId" parameterType="java.lang.String"
+		resultType="com.aten.model.orm.ShipTemplate">
+		select * from t_ship_template where com_id=#{id}
+	</select>
+
+
+	<update id="updateShipTemplateState" parameterType="map">
+		UPDATE
+		`t_ship_template`
+		SET
+		`state`=#{state}
+		WHERE
+		`ship_id`=#{ship_id}
+		LIMIT 1
+	</update>
+
+	<delete id="deleteShipTemplateStatus" parameterType="BigInteger">
+		DELETE FROM
+		`t_ship_template`
+		WHERE
+		`ship_id`=#{ship_id}
+		LIMIT 1
+	</delete>
+
+	<delete id="deleteReachArea" parameterType="BigInteger">
+		DELETE FROM
+		`t_reach_area`
+		WHERE
+		`rea_id`=#{rea_id}
+		LIMIT 1
+	</delete>
+
+	<delete id="deleteAreaset" parameterType="BigInteger">
+		DELETE FROM
+		`t_areaset`
+		WHERE
+		`as_id`=#{as_id}
+		LIMIT 1
+	</delete>
+
+	<delete id="deleteReachAreaByAsid" parameterType="BigInteger">
+		DELETE FROM
+		`t_reach_area`
+		WHERE
+		`as_id`=#{as_id}
+	</delete>
+
+</mapper>
+

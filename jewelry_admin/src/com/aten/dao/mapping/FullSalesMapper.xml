@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.FullSalesDao">
+
+	<!-- 数据库映射模型区域 -->
+	<resultMap id="resultFullSales" type="com.aten.model.orm.FullSales">
+		<result property="full_id" column="full_id" />
+		<result property="goods_id" column="goods_id" />
+		<result property="full_presale_endtime" column="full_presale_endtime" />
+		<result property="full_send_time_type" column="full_send_time_type" />
+		<result property="full_send_day_num" column="full_send_day_num" />
+		<result property="full_send_time" column="full_send_time" />
+		<result property="full_limit_buy_num" column="full_limit_buy_num" />
+
+	</resultMap>
+
+	<!-- 新增数据区域 -->
+	<sql id="insertCommon">
+		INSERT INTO t_full_sales
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="goods_id != null"> goods_id,</if>
+			<if test="full_presale_endtime != null"> full_presale_endtime,</if>
+			<if test="full_send_time_type != null"> full_send_time_type,</if>
+			<if test="full_send_day_num != null"> full_send_day_num,</if>
+			<if test="full_send_time != null"> full_send_time,</if>
+			<if test="full_limit_buy_num != null"> full_limit_buy_num</if>
+
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="goods_id != null">#{goods_id},</if>
+			<if test="full_presale_endtime != null">#{full_presale_endtime},</if>
+			<if test="full_send_time_type != null">#{full_send_time_type},</if>
+			<if test="full_send_day_num != null">#{full_send_day_num},</if>
+			<if test="full_send_time != null">#{full_send_time},</if>
+			<if test="full_limit_buy_num != null">#{full_limit_buy_num}</if>
+
+		</trim>
+	</sql>
+
+	<insert id="insert" parameterType="com.aten.model.orm.FullSales">
+		<include refid="insertCommon" />
+	</insert>
+
+	<insert id="insertGetPk" parameterType="com.aten.model.orm.FullSales"
+		useGeneratedKeys="true" keyProperty="full_id">
+		<include refid="insertCommon" />
+	</insert>
+
+	<!-- 更新数据区域 -->
+	<sql id="update_clause">
+		<set>
+			<trim suffixOverrides=",">
+				<if test="full_id != null"> full_id = #{full_id}, </if>
+				<if test="goods_id != null"> goods_id = #{goods_id}, </if>
+				<if test="full_presale_endtime != null"> full_presale_endtime = #{full_presale_endtime}, </if>
+				<if test="full_send_time_type != null"> full_send_time_type = #{full_send_time_type}, </if>
+				<if test="full_send_day_num != null"> full_send_day_num = #{full_send_day_num}, </if>
+				<if test="full_send_time != null"> full_send_time = #{full_send_time}, </if>
+				<if test="full_limit_buy_num != null"> full_limit_buy_num = #{full_limit_buy_num} </if>
+
+			</trim>
+		</set>
+	</sql>
+
+
+
+
+
+	<update id="update" parameterType="com.aten.model.orm.FullSales">
+		UPDATE t_full_sales
+		<include refid="update_clause" />
+		WHERE full_id = #{full_id}
+	</update>
+
+	<!-- 删除数据区域 -->
+	<delete id="delete" parameterType="String">
+		delete from t_full_sales where full_id in
+		<foreach item="idItem" collection="array" index="index" open="("
+			separator="," close=")">
+			#{idItem}
+		</foreach>
+	</delete>
+
+	<!-- 获取对象数据区域 -->
+	<select id="get" parameterType="String" resultMap="resultFullSales">
+		SELECT
+		t.full_id,t.goods_id,t.full_presale_endtime,t.full_send_time_type,t.full_send_day_num,t.full_send_time,t.full_limit_buy_num
+		FROM t_full_sales t WHERE full_id = #{full_id}
+	</select>
+
+	<!-- 搜索数据区域 -->
+	<sql id="where_clause">
+		<where>
+			1=1
+			<if test="full_id != null"> and t.full_id = #{full_id} </if>
+			<if test="full_id_vague != null"> and instr(t.full_id,#{full_id_vague})>0 </if>
+			<if test="goods_id != null"> and t.goods_id = #{goods_id} </if>
+			<if test="goods_id_vague != null"> and instr(t.goods_id,#{goods_id_vague})>0 </if>
+			<if test="full_presale_endtime != null"> and t.full_presale_endtime = #{full_presale_endtime}
+			</if>
+			<if test="full_presale_endtime_vague != null"> and
+				instr(t.full_presale_endtime,#{full_presale_endtime_vague})>0 </if>
+			<if test="full_send_time_type != null"> and t.full_send_time_type = #{full_send_time_type} </if>
+			<if test="full_send_time_type_vague != null"> and
+				instr(t.full_send_time_type,#{full_send_time_type_vague})>0 </if>
+			<if test="full_send_day_num != null"> and t.full_send_day_num = #{full_send_day_num} </if>
+			<if test="full_send_day_num_vague != null"> and
+				instr(t.full_send_day_num,#{full_send_day_num_vague})>0 </if>
+			<if test="full_send_time != null"> and t.full_send_time = #{full_send_time} </if>
+			<if test="full_send_time_vague != null"> and instr(t.full_send_time,#{full_send_time_vague})>0
+			</if>
+			<if test="full_limit_buy_num != null"> and t.full_limit_buy_num = #{full_limit_buy_num} </if>
+			<if test="full_limit_buy_num_vague != null"> and
+				instr(t.full_limit_buy_num#{full_limit_buy_num_vague})>0 </if>
+
+		</where>
+	</sql>
+
+	<sql id="getCommon">
+		select
+		t.full_id,t.goods_id,t.full_presale_endtime,t.full_send_time_type,t.full_send_day_num,t.full_send_time,t.full_limit_buy_num
+		from t_full_sales t
+		<include refid="where_clause" />
+		order by full_id desc
+	</sql>
+
+
+
+	<select id="getList" parameterType="map" resultMap="resultFullSales">
+		<include refid="getCommon" />
+		<if test="start != null">
+			LIMIT ${start},${limit}
+		</if>
+	</select>
+
+	<select id="getCount" parameterType="map" resultType="int">
+		select count(*) ct from t_full_sales t
+		<include refid="where_clause" />
+	</select>
+
+
+	<!-- 排序区域 -->
+	<update id="updateBatch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index"
+			separator=";">
+			update t_full_sales
+			<set>
+				sort_no = #{item.sort_no}
+			</set>
+			WHERE full_id = #{item.id}
+		</foreach>
+	</update>
+
+	<select id="getByGoodsid" parameterType="String"
+		resultType="com.aten.model.orm.FullSales">
+		SELECT
+		`full_id`,
+		`goods_id`,
+		`full_presale_endtime`,
+		`full_send_time_type`,
+		`full_send_day_num`,
+		`full_send_time`,
+		`full_limit_buy_num`
+		FROM
+		`t_full_sales`
+		WHERE
+		`goods_id`=#{goods_id}
+		LIMIT 1
+	</select>
+
+	<update id="updateInfoByGoodsId" parameterType="com.aten.model.orm.FullSales">
+		update t_full_sales
+		<set>
+			<if test="full_presale_endtime != null"> full_presale_endtime = #{full_presale_endtime}, </if>
+			<if test="full_send_time_type != null"> full_send_time_type = #{full_send_time_type}, </if>
+			<if test="full_send_day_num != null"> full_send_day_num = #{full_send_day_num}, </if>
+			<if test="full_send_time != null"> full_send_time = #{full_send_time}, </if>
+			<if test="full_limit_buy_num != null"> full_limit_buy_num = #{full_limit_buy_num} </if>
+		</set>
+		where goods_id = #{goods_id}
+	</update>
+	
+	<delete id="deleteByGoodsId" parameterType="String">
+		delete from t_full_sales where goods_id = #{goods_id}
+	</delete>
+
+</mapper>
+

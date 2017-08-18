@@ -1,0 +1,99 @@
+.main_top {
+	background: none repeat scroll 0 0 #FFFFFF;
+	height: 880px;
+}
+
+.treediv {
+	margin-left: 15px;
+}
+
+.contentDiv {
+	border: 1px solid #D3D3D3;
+	float: left;
+	height: 388px;
+	margin-top: 30px;
+	width: 300px;
+	margin-right: 25px;
+}
+
+.contentDiv h3 {
+	background: none repeat scroll 0 0 #F7F7F7;
+	border-bottom: 1px dotted #D3D3D3;
+	height: 36px;
+	line-height: 36px;
+	margin: 0;
+	padding: 0 4px;
+}
+
+.licontent {
+	height: 315px;
+	overflow: auto;
+}
+
+.licontent li {
+	border-bottom: 1px dashed #999999;
+	cursor: pointer;
+	line-height: 32px;
+	vertical-align: middle;
+	float: left;
+	width: 100%
+}
+
+.contxt {
+	float: left;
+	font-size: 14px;
+	overflow: hidden;
+	padding-left: 6px;
+	padding-right: 8px;
+}
+
+.sortno {
+	float: left;
+	margin-left: 5px;
+	margin-top: 6px;
+	width: 28px;
+}
+
+.operbt {
+	float: right;
+}
+
+.operimg {
+	cursor: pointer;
+	margin-right: 8px;
+	margin-top: 8px;
+}
+
+.libackground {
+	background-color: #E2EFEB;
+}
+
+div, ul, li, p, h2 {
+	border: medium none;
+	margin: 0px;
+	padding: 0px;
+}
+
+.ta {
+	width: 70%;
+	height: 67px;
+}
+
+.divbottom {
+	background: none repeat scroll 0 0 #F3F3F3;
+	border: 1px solid #CFCFCF;
+	height: 32px;
+	margin-top: 10px;
+	padding: 6px 0 0;
+	text-align: center;
+}
+
+.divbottom input {
+	background: url("../images/m-btn.png") repeat-x scroll 0 0 transparent;
+	border: medium none;
+	color: #FFFFFF;
+	cursor: pointer;
+	font-weight: bold;
+	height: 24px;
+	width: 76px;
+}

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.NavDao">
+
+	<!-- 数据库映射模型区域 -->
+	<resultMap id="resultNav" type="com.aten.model.orm.Nav">
+		<result property="nav_name" column="nav_name" />
+		<result property="nav_ico" column="nav_ico" />
+		<result property="nav_id" column="nav_id" />
+		<result property="nav_post" column="nav_post" />
+		<result property="link_url" column="link_url" />
+		<result property="state" column="state" />
+		<result property="sort_no" column="sort_no" />
+
+	</resultMap>
+
+	<!-- 新增数据区域 -->
+	<sql id="insertCommon">
+		insert into t_nav(
+		<if test="nav_name != null"> nav_name,</if>
+		<if test="nav_ico != null"> nav_ico,</if>
+		<if test="nav_id != null"> nav_id,</if>
+		<if test="nav_post != null"> nav_post,</if>
+		<if test="link_url != null"> link_url,</if>
+		<if test="state != null"> state,</if>
+		<if test="sort_no != null"> sort_no</if>
+		)
+		values(
+		<if test="nav_name != null">#{nav_name},</if>
+		<if test="nav_ico != null">#{nav_ico},</if>
+		<if test="nav_id != null">#{nav_id},</if>
+		<if test="nav_post != null">#{nav_post},</if>
+		<if test="link_url != null">#{link_url},</if>
+		<if test="state != null">#{state},</if>
+		<if test="sort_no != null">#{sort_no}</if>
+		)
+	</sql>
+
+	<insert id="insert" parameterType="com.aten.model.orm.Nav">
+		<include refid="insertCommon" />
+	</insert>
+
+	<insert id="insertGetPk" parameterType="com.aten.model.orm.Nav">
+		<selectKey resultType="String" order="BEFORE" keyProperty="nav_id">
+			select hotel_nav_sequence.Nextval from DUAL
+		</selectKey>
+		<include refid="insertCommon" />
+	</insert>
+
+	<!-- 更新数据区域 -->
+	<sql id="update_clause">
+		<set>
+			<if test="nav_name != null"> nav_name = #{nav_name}, </if>
+			<if test="nav_ico != null"> nav_ico = #{nav_ico}, </if>
+			<if test="nav_id != null"> nav_id = #{nav_id}, </if>
+			<if test="nav_post != null"> nav_post = #{nav_post}, </if>
+			<if test="link_url != null"> link_url = #{link_url}, </if>
+			<if test="state != null"> state = #{state}, </if>
+			<if test="sort_no != null"> sort_no = #{sort_no} </if>
+
+		</set>
+	</sql>
+
+
+	<update id="update" parameterType="com.aten.model.orm.Nav">
+		update t_nav
+		<include refid="update_clause" />
+		where nav_id = #{nav_id}
+	</update>
+
+	<!-- 删除数据区域 -->
+	<delete id="delete" parameterType="String">
+		delete from t_nav where nav_id in
+		<foreach item="idItem" collection="array" index="index" open="("
+			separator="," close=")">
+			#{idItem}
+		</foreach>
+	</delete>
+
+	<!-- 获取对象数据区域 -->
+	<select id="get" parameterType="String" resultMap="resultNav">
+		select
+		nav_name,nav_ico,nav_id,nav_post,link_url,state,sort_no
+		from t_nav where nav_id = #{nav_id}
+	</select>
+
+	<!-- 搜索数据区域 -->
+	<sql id="where_clause">
+		<if test="nav_name != null"> and t.nav_name = #{nav_name} </if>
+		<if test="nav_ico != null"> and t.nav_ico = #{nav_ico} </if>
+		<if test="nav_id != null"> and t.nav_id = #{nav_id} </if>
+		<if test="nav_post != null"> and t.nav_post = #{nav_post} </if>
+		<if test="link_url != null"> and t.link_url = #{link_url} </if>
+		<if test="state != null"> and t.state = #{state} </if>
+		<if test="sort_no != null"> and t.sort_no = #{sort_no} </if>
+
+	</sql>
+
+	<sql id="getCommon">
+		select * from t_nav t
+		where 1 = 1
+		<include refid="where_clause" />
+		order by t.nav_post asc,t.sort_no desc
+	</sql>
+
+
+
+	<select id="getList" parameterType="map" resultMap="resultNav">
+		<include refid="getCommon" />
+	</select>
+
+	<select id="getCount" parameterType="map" resultType="int">
+		select count(*) ct from t_nav
+	</select>
+
+
+	<!-- 排序区域 -->
+	<update id="updateBatch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" open="begin"
+			close=";end;" separator=";">
+			update t_nav
+			<set>
+				sort_no = #{item.sort_no}
+			</set>
+			where nav_id = #{item.id}
+		</foreach>
+	</update>
+
+
+	<select id="getMapList" parameterType="map" resultType="map">
+		select ${sqlField} from t_nav t
+		where 1 = 1
+		<include refid="where_clause" />
+	</select>
+
+</mapper>
+

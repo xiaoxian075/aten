@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.FastmailDao">
+	
+	<cache type="org.mybatis.caches.ehcache.EhcacheCache"/> 
+
+	<!-- 数据库映射模型区域 -->
+	<resultMap id="resultFastmail" type="com.aten.model.orm.Fastmail">
+		<result property="fast_id" column="fast_id" />
+		<result property="fast_code" column="fast_code" />
+		<result property="fast_name" column="fast_name" />
+		<result property="fast_logo" column="fast_logo" />
+		<result property="sort_no" column="sort_no" />
+		<result property="is_insured" column="is_insured" />
+		<result property="fast_desc" column="fast_desc" />
+		<result property="rate" column="rate" />
+		<result property="mix_insured" column="mix_insured" />
+		<result property="max_insured" column="max_insured" />
+		<result property="is_reach_pay" column="is_reach_pay" />
+		<result property="default_temp" column="default_temp" />
+		<result property="waybill_rule" column="waybill_rule" />
+		<result property="state" column="state" />
+
+	</resultMap>
+
+	<!-- 新增数据区域 -->
+	<sql id="insertCommon">
+		INSERT INTO t_fastmail
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="fast_id != null"> fast_id,</if>
+			<if test="fast_code != null"> fast_code,</if>
+			<if test="fast_name != null"> fast_name,</if>
+			<if test="fast_logo != null"> fast_logo,</if>
+			<if test="sort_no != null"> sort_no,</if>
+			<if test="is_insured != null"> is_insured,</if>
+			<if test="fast_desc != null"> fast_desc,</if>
+			<if test="rate != null"> rate,</if>
+			<if test="mix_insured != null"> mix_insured,</if>
+			<if test="max_insured != null"> max_insured,</if>
+			<if test="is_reach_pay != null"> is_reach_pay,</if>
+			<if test="default_temp != null"> default_temp,</if>
+			<if test="waybill_rule != null"> waybill_rule,</if>
+			<if test="state != null"> state</if>
+
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="fast_id != null">#{fast_id},</if>
+			<if test="fast_code != null">#{fast_code},</if>
+			<if test="fast_name != null">#{fast_name},</if>
+			<if test="fast_logo != null">#{fast_logo},</if>
+			<if test="sort_no != null">#{sort_no},</if>
+			<if test="is_insured != null">#{is_insured},</if>
+			<if test="fast_desc != null">#{fast_desc},</if>
+			<if test="rate != null">#{rate},</if>
+			<if test="mix_insured != null">#{mix_insured},</if>
+			<if test="max_insured != null">#{max_insured},</if>
+			<if test="is_reach_pay != null">#{is_reach_pay},</if>
+			<if test="default_temp != null">#{default_temp},</if>
+			<if test="waybill_rule != null">#{waybill_rule},</if>
+			<if test="state != null">#{state}</if>
+
+		</trim>
+	</sql>
+
+	<insert id="insert" parameterType="com.aten.model.orm.Fastmail">
+		<include refid="insertCommon" />
+	</insert>
+
+	<insert id="insertGetPk" parameterType="com.aten.model.orm.Fastmail">
+		<include refid="insertCommon" />
+		<selectKey resultType="String" order="AFTER" keyProperty="fast_id">
+			SELECT @@IDENTITY AS ID
+		</selectKey>
+	</insert>
+
+	<!-- 更新数据区域 -->
+	<sql id="update_clause">
+		<set>
+			<trim suffixOverrides=",">
+				<if test="fast_id != null"> fast_id = #{fast_id}, </if>
+				<if test="fast_code != null"> fast_code = #{fast_code}, </if>
+				<if test="fast_name != null"> fast_name = #{fast_name}, </if>
+				<if test="fast_logo != null"> fast_logo = #{fast_logo}, </if>
+				<if test="sort_no != null"> sort_no = #{sort_no}, </if>
+				<if test="is_insured != null"> is_insured = #{is_insured}, </if>
+				<if test="fast_desc != null"> fast_desc = #{fast_desc}, </if>
+				<if test="rate != null"> rate = #{rate}, </if>
+				<if test="mix_insured != null"> mix_insured = #{mix_insured}, </if>
+				<if test="max_insured != null"> max_insured = #{max_insured}, </if>
+				<if test="is_reach_pay != null"> is_reach_pay = #{is_reach_pay}, </if>
+				<if test="default_temp != null"> default_temp = #{default_temp}, </if>
+				<if test="waybill_rule != null"> waybill_rule = #{waybill_rule}, </if>
+				<if test="state != null"> state = #{state} </if>
+
+			</trim>
+		</set>
+	</sql>
+
+
+
+
+
+	<update id="update" parameterType="com.aten.model.orm.Fastmail">
+		UPDATE t_fastmail
+		<include refid="update_clause" />
+		WHERE fast_id = #{fast_id}
+	</update>
+
+	<!-- 删除数据区域 -->
+	<delete id="delete" parameterType="String">
+		delete from t_fastmail where fast_id in
+		<foreach item="idItem" collection="array" index="index" open="("
+			separator="," close=")">
+			#{idItem}
+		</foreach>
+	</delete>
+
+	<!-- 获取对象数据区域 -->
+	<select id="get" parameterType="String" resultMap="resultFastmail">
+		SELECT
+		t.fast_id,t.fast_code,t.fast_name,t.fast_logo,t.sort_no,t.is_insured,t.fast_desc,t.rate,t.mix_insured,t.max_insured,t.is_reach_pay,t.default_temp,t.waybill_rule,t.state
+		FROM t_fastmail t WHERE fast_id = #{fast_id}
+	</select>
+
+	<!-- 搜索数据区域 -->
+	<sql id="where_clause">
+		<where>
+			1=1
+			<if test="fast_id != null"> and t.fast_id = #{fast_id} </if>
+			<if test="fast_id_vague != null"> and instr(t.fast_id,#{fast_id_vague})>0 </if>
+			<if test="fast_code != null"> and t.fast_code = #{fast_code} </if>
+			<if test="fast_code_vague != null"> and instr(t.fast_code,#{fast_code_vague})>0 </if>
+			<if test="fast_name != null"> and t.fast_name = #{fast_name} </if>
+			<if test="fast_name_vague != null"> and instr(t.fast_name,#{fast_name_vague})>0 </if>
+			<if test="fast_logo != null"> and t.fast_logo = #{fast_logo} </if>
+			<if test="fast_logo_vague != null"> and instr(t.fast_logo,#{fast_logo_vague})>0 </if>
+			<if test="sort_no != null"> and t.sort_no = #{sort_no} </if>
+			<if test="sort_no_vague != null"> and instr(t.sort_no,#{sort_no_vague})>0 </if>
+			<if test="is_insured != null"> and t.is_insured = #{is_insured} </if>
+			<if test="is_insured_vague != null"> and instr(t.is_insured,#{is_insured_vague})>0 </if>
+			<if test="fast_desc != null"> and t.fast_desc = #{fast_desc} </if>
+			<if test="fast_desc_vague != null"> and instr(t.fast_desc,#{fast_desc_vague})>0 </if>
+			<if test="rate != null"> and t.rate = #{rate} </if>
+			<if test="rate_vague != null"> and instr(t.rate,#{rate_vague})>0 </if>
+			<if test="mix_insured != null"> and t.mix_insured = #{mix_insured} </if>
+			<if test="mix_insured_vague != null"> and instr(t.mix_insured,#{mix_insured_vague})>0 </if>
+			<if test="max_insured != null"> and t.max_insured = #{max_insured} </if>
+			<if test="max_insured_vague != null"> and instr(t.max_insured,#{max_insured_vague})>0 </if>
+			<if test="is_reach_pay != null"> and t.is_reach_pay = #{is_reach_pay} </if>
+			<if test="is_reach_pay_vague != null"> and instr(t.is_reach_pay,#{is_reach_pay_vague})>0 </if>
+			<if test="default_temp != null"> and t.default_temp = #{default_temp} </if>
+			<if test="default_temp_vague != null"> and instr(t.default_temp,#{default_temp_vague})>0 </if>
+			<if test="waybill_rule != null"> and t.waybill_rule = #{waybill_rule} </if>
+			<if test="waybill_rule_vague != null"> and instr(t.waybill_rule,#{waybill_rule_vague})>0 </if>
+			<if test="state != null"> and t.state = #{state} </if>
+			<if test="state_vague != null"> and instr(t.state#{state_vague})>0 </if>
+		</where>
+	</sql>
+
+	<sql id="getCommon">
+		select
+		t.fast_id,t.fast_code,t.fast_name,t.fast_logo,t.sort_no,t.is_insured,t.fast_desc,t.rate,t.mix_insured,t.max_insured,t.is_reach_pay,t.default_temp,t.waybill_rule,t.state
+		from t_fastmail t
+		<include refid="where_clause" />
+		order by sort_no desc, fast_id desc
+	</sql>
+
+
+
+	<select id="getList" parameterType="map" resultMap="resultFastmail">
+		<include refid="getCommon" />
+		<if test="start != null">
+			LIMIT ${start},${limit}
+		</if>
+	</select>
+
+
+
+	<select id="getCount" parameterType="map" resultType="int">
+		select count(*) ct from t_fastmail t
+		<include refid="where_clause" />
+	</select>
+
+
+	<!-- 排序区域 -->
+	<update id="updateBatch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index"
+			separator=";">
+			update t_fastmail
+			<set>
+				sort_no = #{item.sort_no}
+			</set>
+			WHERE fast_id = #{item.id}
+		</foreach>
+	</update>
+
+	<select id="getAllList" resultMap="resultFastmail">
+		<include refid="getCommon" />
+	</select>
+
+
+	<select id="getcountByPage" parameterType="map" resultType="int">
+		SELECT
+		COUNT(`fast_id`)
+		FROM
+		`t_fastmail`
+		WHERE
+		1=1
+		<if test="fast_name != null">
+			AND `fast_name` like #{fast_name}
+		</if>
+		<if test="state != null">
+			AND `state` = #{state}
+		</if>
+	</select>
+
+	<select id="getlistByPage" parameterType="map" resultMap="resultFastmail">
+		SELECT
+		`fast_id`,
+		`fast_code`,
+		`fast_name`,
+		`fast_logo`,
+		`sort_no`,
+		`is_insured`,
+		`fast_desc`,
+		`rate`,
+		`mix_insured`,
+		`max_insured`,
+		`is_reach_pay`,
+		`default_temp`,
+		`waybill_rule`,
+		`state`
+		FROM
+		`t_fastmail`
+		WHERE
+		1=1
+		<if test="fast_name != null">
+			AND `fast_name` like #{fast_name}
+		</if>
+		<if test="state != null">
+			AND `state` = #{state}
+		</if>
+		ORDER BY `sort_no` desc, `fast_id` desc
+		<if test="start != null">
+			LIMIT ${start},${limit}
+		</if>
+	</select>
+
+	<select id="selectoneByFastname" parameterType="String"
+		resultType="com.aten.model.orm.Fastmail">
+		SELECT
+		`fast_id`,
+		`fast_code`,
+		`fast_name`,
+		`fast_logo`,
+		`sort_no`,
+		`is_insured`,
+		`fast_desc`,
+		`rate`,
+		`mix_insured`,
+		`max_insured`,
+		`is_reach_pay`,
+		`default_temp`,
+		`waybill_rule`,
+		`state`
+		FROM
+		`t_fastmail`
+		WHERE
+		`fast_name` = #{fast_name}
+		LIMIT 1
+	</select>
+
+
+	<select id="selectoneByFastcode" parameterType="String"
+		resultType="com.aten.model.orm.Fastmail">
+		SELECT
+		`fast_id`,
+		`fast_code`,
+		`fast_name`,
+		`fast_logo`,
+		`sort_no`,
+		`is_insured`,
+		`fast_desc`,
+		`rate`,
+		`mix_insured`,
+		`max_insured`,
+		`is_reach_pay`,
+		`default_temp`,
+		`waybill_rule`,
+		`state`
+		FROM
+		`t_fastmail`
+		WHERE
+		`fast_code` = #{fast_code}
+		LIMIT 1
+	</select>
+</mapper>
+

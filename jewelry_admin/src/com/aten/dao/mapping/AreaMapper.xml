@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.AreaDao">
+
+	<cache type="org.mybatis.caches.ehcache.EhcacheCache" />
+
+	<!-- 数据库映射模型区域 -->
+	<resultMap id="resultAreaShort" type="com.aten.model.AreaShort">
+		<result property="area_id" column="area_id" />
+		<result property="area_name" column="area_name" />
+	</resultMap>
+
+	<!-- 数据库映射模型区域 -->
+	<resultMap id="resultArea" type="com.aten.model.orm.Area">
+		<result property="area_id" column="area_id" />
+		<result property="area_name" column="area_name" />
+		<result property="en_name" column="en_name" />
+		<result property="word_index" column="word_index" />
+		<result property="parent_area_id" column="parent_area_id" />
+		<result property="sort_no" column="sort_no" />
+		<result property="area_level" column="area_level" />
+		<result property="is_city" column="is_city" />
+		<result property="region" column="region" />
+		<result property="level_area" column="level_area" />
+		<result property="parent_area_name" column="parent_area_name" />
+		<result property="area_level_name" column="area_level_name" />
+		<result property="xz_code" column="xz_code" />
+		<result property="post_code" column="post_code" />
+		<result property="state" column="state" />
+	</resultMap>
+
+	<!-- 新增数据区域 -->
+	<sql id="insertCommon">
+		insert into t_area(
+		<if test="area_id != null"> area_id,</if>
+		<if test="area_name != null"> area_name,</if>
+		<if test="en_name != null"> en_name,</if>
+		<if test="word_index != null"> word_index,</if>
+		<if test="parent_area_id != null"> parent_area_id,</if>
+		<if test="sort_no != null"> sort_no,</if>
+		<if test="area_level != null"> area_level,</if>
+		<if test="state != null"> state,</if>
+		<if test="xz_code != null"> xz_code,</if>
+		<if test="post_code != null"> post_code,</if>
+		<if test="region != null"> region,</if>
+		<if test="level_area != null"> level_area,</if>
+		<if test="is_city != null"> is_city</if>
+		)
+		values(
+		<if test="area_id != null">#{area_id},</if>
+		<if test="area_name != null">#{area_name},</if>
+		<if test="en_name != null">#{en_name},</if>
+		<if test="word_index != null">#{word_index},</if>
+		<if test="parent_area_id != null">#{parent_area_id},</if>
+		<if test="sort_no != null">#{sort_no},</if>
+		<if test="area_level != null">#{area_level},</if>
+		<if test="state != null">#{state},</if>
+		<if test="xz_code != null"> #{xz_code},</if>
+		<if test="post_code != null"> #{post_code},</if>
+		<if test="region != null">#{region},</if>
+		<if test="level_area != null">#{level_area},</if>
+		<if test="is_city != null">#{is_city}</if>
+		)
+	</sql>
+
+	<insert id="insert" parameterType="com.aten.model.orm.Area">
+		<include refid="insertCommon" />
+	</insert>
+
+	<!-- 更新数据区域 -->
+	<sql id="update_clause">
+		<set>
+			<if test="area_id != null"> area_id = #{area_id}, </if>
+			<if test="area_name != null"> area_name = #{area_name}, </if>
+			<if test="en_name != null"> en_name = #{en_name}, </if>
+			<if test="word_index != null"> word_index = #{word_index}, </if>
+			<if test="parent_area_id != null"> parent_area_id = #{parent_area_id}, </if>
+			<if test="sort_no != null"> sort_no = #{sort_no}, </if>
+			<if test="xz_code != null"> xz_code = #{xz_code}, </if>
+			<if test="post_code != null"> post_code = #{post_code}, </if>
+			<if test="area_level != null"> area_level = #{area_level}, </if>
+			<if test="is_city != null"> is_city = #{is_city}, </if>
+			<if test="region != null"> region = #{region}, </if>
+			<if test="level_area != null"> level_area = #{level_area}, </if>
+			<if test="state != null"> state = #{state} </if>
+		</set>
+	</sql>
+
+
+	<update id="update" parameterType="com.aten.model.orm.Area">
+		update t_area
+		<include refid="update_clause" />
+		where area_id = #{area_id}
+	</update>
+
+	<!-- 删除数据区域 -->
+	<delete id="delete" parameterType="String">
+		delete from t_area where area_id in
+		<foreach item="idItem" collection="array" index="index" open="("
+			separator="," close=")">
+			#{idItem}
+		</foreach>
+	</delete>
+
+	<!--<select id="getAllArea" parameterType="String" resultMap="resultArea"> -->
+	<!--select distinct t.area_level,c.para_name as area_level_name from t_area 
+		t left join t_commpara c on c.para_code='cfg_area_level' and t.area_level=c.para_key -->
+	<!--</select> -->
+
+	<!-- 获取对象数据区域 -->
+	<select id="get" parameterType="String" resultMap="resultArea">
+		select
+		t.area_id,t.area_name,t.en_name,t.word_index,t.parent_area_id,t.sort_no,t.area_level,t.state,xz_code,post_code,
+		t.is_city,t.region,t.level_area,t.parent_area_id as
+		parent_area_name,c.para_name as area_level_name
+		from t_area t
+		left join t_commpara c on c.para_code='cfg_area_level' and
+		t.area_level=c.para_key
+		where area_id = #{area_id}
+	</select>
+
+	<!-- 获取下级地区 -->
+	<select id="getSon" parameterType="String" resultMap="resultArea">
+		select *
+		from t_area where parent_area_id = #{pId}
+	</select>
+
+	<!-- 获取所有地区 -->
+	<select id="getAllArea" parameterType="String" resultMap="resultArea">
+		select
+		* from t_area
+	</select>
+
+
+	<select id="autoLimitParent" parameterType="String" resultMap="resultArea">
+		select * from t_area where parent_area_id = #{pId} and state='1'
+	</select>
+
+	<!-- 获取上级地区 -->
+	<select id="getParent" parameterType="String" resultMap="resultArea">
+		select *
+		from t_area where area_id = #{area_id}
+	</select>
+
+	<!-- 搜索数据区域 -->
+	<sql id="where_clause">
+		<if test="area_id != null"> and area_id = #{area_id} </if>
+		<if test="area_name != null"> and area_name = #{area_name} </if>
+		<if test="area_name_vague != null"> and instr(area_name,#{area_name_vague}) > 0 </if>
+		<if test="en_name != null"> and instr(en_name,#{en_name}) > 0 </if>
+		<if test="word_index != null"> and word_index = #{word_index} </if>
+		<if test="parent_area_id != null"> and parent_area_id =substr(#{parent_area_id},-10)  </if>
+		<if test="sort_no != null"> and sort_no = #{sort_no} </if>
+		<if test="area_level != null"> and area_level = #{area_level} </if>
+		<if test="area_level_in != null"> and area_level in ${area_level_in} </if>
+		<if test="is_city != null"> and is_city = #{is_city} </if>
+		<if test="region != null"> and region = #{region} </if>
+		<if test="state != null"> and t.state = #{state} </if>
+		<if test="level_area != null"> and level_area = #{level_area} </if>
+		<if test="area_id != null"> and area_id = #{area_id} </if>
+		<if test="xz_code != null"> and xz_code = #{xz_code} </if>
+		<if test="xz_code_vague != null"> and instr(xz_code,#{xz_code_vague})>0</if>
+		<if test="post_code != null"> and post_code = #{post_code} </if>
+	</sql>
+
+	<select id="getList" parameterType="map" resultMap="resultArea">
+		select
+		t.area_id,t.area_name,t.en_name,t.word_index,t.parent_area_id,t.sort_no,t.area_level,t.state,xz_code,post_code,
+		t.is_city,t.region,t.level_area,t.parent_area_id as
+		parent_area_name,c.para_name as area_level_name
+		from t_area t
+		left join t_commpara c on c.para_code='cfg_area_level' and
+		t.area_level=c.para_key
+		where 1 = 1
+		<include refid="where_clause" />
+		<if test="state != null">and t.state = #{state} </if>
+		order by sort_no desc,area_id desc
+		<if test="start != null">
+			LIMIT ${start},${limit}
+		</if>
+	</select>
+
+	<select id="getMapList" parameterType="map" resultType="map">
+		select ${sqlField} from t_area
+		where 1 = 1
+		<include refid="where_clause" />
+		order by sort_no desc,area_id desc
+	</select>
+
+	<select id="getCount" parameterType="map" resultType="int">
+		select count(*) ct from t_area t
+		where 1 = 1
+		<include refid="where_clause" />
+	</select>
+
+
+	<!-- 排序区域 -->
+	<update id="updateBatch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" open="begin"
+			close=";end;" separator=";">
+			update t_area
+			<set>
+				sort_no = #{item.sort_no}
+			</set>
+			where area_id = #{item.id}
+		</foreach>
+	</update>
+
+	<select id="getParentArea" parameterType="String" resultMap="resultAreaShort">
+		select
+		area_id,
+		area_name
+		from
+		t_area
+		where parent_area_id = #{parent_area_id}
+	</select>
+
+
+	<select id="getCityArea" resultMap="resultArea">
+		select
+		area_id,
+		area_name,
+		en_name,
+		word_index,
+		parent_area_id,
+		sort_no,
+		area_level,
+		is_city,
+		region,
+		level_area,
+		state,
+		xz_code,
+		post_code
+		from
+		t_area
+		where
+		area_level in(1,2)
+		AND state='1'
+	</select>
+
+
+</mapper>
+

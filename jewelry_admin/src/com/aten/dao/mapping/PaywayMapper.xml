@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.PaywayDao">
+
+	<!-- 数据库映射模型区域 -->
+	<resultMap id="resultPayway" type="com.aten.model.orm.Payway">
+		<result property="pay_id" column="pay_id" />
+		<result property="pay_name" column="pay_name" />
+		<result property="pay_key" column="pay_key" />
+		<result property="pay_secret" column="pay_secret" />
+		<result property="pay_img" column="pay_img" />
+		<result property="pay_url" column="pay_url" />
+		<result property="is_ios_pay" column="is_ios_pay" />
+		<result property="is_android_pay" column="is_android_pay" />
+		<result property="is_web_pay" column="is_web_pay" />
+		<result property="sort_no" column="sort_no" />
+	</resultMap>
+
+	<!-- 新增数据区域 -->
+	<sql id="insertCommon">
+		insert into t_payway(
+		<if test="pay_id != null"> pay_id,</if>
+		<if test="pay_name != null"> pay_name,</if>
+		<if test="pay_key != null"> pay_key,</if>
+		<if test="pay_secret != null"> pay_secret,</if>
+		<if test="pay_img != null"> pay_img,</if>
+		<if test="pay_url != null"> pay_url,</if>
+		<if test="is_ios_pay != null"> is_ios_pay,</if>
+		<if test="is_android_pay != null"> is_android_pay,</if>
+		<if test="is_web_pay != null"> is_web_pay,</if>
+		<if test="sort_no != null"> sort_no</if>
+		)
+		values(
+		<if test="pay_id != null">#{pay_id},</if>
+		<if test="pay_name != null">#{pay_name},</if>
+		<if test="pay_key != null">#{pay_key},</if>
+		<if test="pay_secret != null">#{pay_secret},</if>
+		<if test="pay_img != null">#{pay_img},</if>
+		<if test="pay_url != null">#{pay_url},</if>
+		<if test="is_ios_pay != null">#{is_ios_pay},</if>
+		<if test="is_android_pay != null">#{is_android_pay},</if>
+		<if test="is_web_pay != null">#{is_web_pay},</if>
+		<if test="sort_no != null">#{sort_no}</if>
+		)
+	</sql>
+
+	<insert id="insert" parameterType="com.aten.model.orm.Payway">
+		<include refid="insertCommon" />
+	</insert>
+
+	<insert id="insertGetPk" parameterType="com.aten.model.orm.Payway">
+		<selectKey resultType="String" order="BEFORE" keyProperty="pay_id">
+			SELECT hotel_payway_sequence.Nextval from DUAL
+		</selectKey>
+		<include refid="insertCommon" />
+	</insert>
+
+	<!-- 更新数据区域 -->
+	<sql id="update_clause">
+		<set>
+			<if test="pay_id != null"> pay_id = #{pay_id}, </if>
+			<if test="pay_name != null"> pay_name = #{pay_name}, </if>
+			<if test="pay_key != null"> pay_key = #{pay_key}, </if>
+			<if test="pay_secret != null"> pay_secret = #{pay_secret}, </if>
+			<if test="pay_img != null"> pay_img = #{pay_img}, </if>
+			<if test="pay_url != null"> pay_url = #{pay_url}, </if>
+			<if test="is_ios_pay != null"> is_ios_pay = #{is_ios_pay}, </if>
+			<if test="is_android_pay != null"> is_android_pay = #{is_android_pay}, </if>
+			<if test="is_web_pay != null"> is_web_pay = #{is_web_pay},</if>
+			<if test="sort_no != null"> sort_no = #{sort_no} </if>
+		</set>
+	</sql>
+
+
+	<update id="update" parameterType="com.aten.model.orm.Payway">
+		update t_payway
+		<include refid="update_clause" />
+		where pay_id = #{pay_id}
+	</update>
+
+	<!-- 删除数据区域 -->
+	<delete id="delete" parameterType="String">
+		delete from t_payway where pay_id in
+		<foreach item="idItem" collection="array" index="index" open="("
+			separator="," close=")">
+			#{idItem}
+		</foreach>
+	</delete>
+
+	<!-- 获取对象数据区域 -->
+	<select id="get" parameterType="String" resultMap="resultPayway">
+		SELECT
+		t.pay_id, t.pay_name, t.pay_key, t.pay_secret, t.pay_img, t.pay_url,
+		t.is_ios_pay, t.is_android_pay, t.is_web_pay,t.sort_no
+		FROM t_payway t WHERE pay_id = #{pay_id}
+	</select>
+
+	<select id="getObjByMap" parameterType="map" resultMap="resultPayway">
+		SELECT
+		t.pay_id, t.pay_name, t.pay_key, t.pay_secret, t.pay_img, t.pay_url,
+		t.is_ios_pay, t.is_android_pay, t.is_web_pay
+		FROM t_payway t
+		<include refid="where_clause" />
+	</select>
+
+	<!-- 搜索数据区域 -->
+	<sql id="where_clause">
+		<where>
+			1=1
+			<if test="pay_id != null"> and t.pay_id = #{pay_id} </if>
+			<if test="pay_name != null"> and t.pay_name = #{pay_name} </if>
+			<if test="pay_name_vange != null"> and instr(pay_name,#{pay_name_vange}) > 0 </if>
+			<if test="pay_key != null"> and t.pay_key = #{pay_key} </if>
+			<if test="pay_secret != null"> and t.pay_secret = #{pay_secret} </if>
+			<if test="pay_img != null"> and t.pay_img = #{pay_img} </if>
+			<if test="pay_url != null"> and t.pay_url = #{pay_url} </if>
+			<if test="is_ios_pay != null"> and t.is_ios_pay = #{is_ios_pay} </if>
+			<if test="is_android_pay != null"> and t.is_android_pay = #{is_android_pay} </if>
+			<if test="is_web_pay != null"> and t.is_web_pay = #{is_web_pay} </if>
+
+		</where>
+	</sql>
+
+	<sql id="getCommon">
+		select t.pay_id, t.pay_name, t.pay_key, t.pay_secret, t.pay_img,
+		t.pay_url, t.is_ios_pay, t.is_android_pay, t.is_web_pay,t.sort_no
+		from
+		t_payway t
+		<include refid="where_clause" />
+		order by t.sort_no desc
+	</sql>
+
+	<select id="getList" parameterType="map" resultMap="resultPayway">
+		<include refid="getCommon" />
+		<if test="start != null">
+			LIMIT ${start},${limit}
+		</if>
+	</select>
+
+	<select id="getCount" parameterType="map" resultType="int">
+		select count(*) ct from t_payway
+		<include refid="where_clause" />
+	</select>
+
+
+	<!-- 排序区域 -->
+	<update id="updateBatch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";">
+			update t_payway
+			<set>
+				sort_no = #{item.sort_no}
+			</set>
+			WHERE pay_id = #{item.id}
+		</foreach>
+	</update>
+
+</mapper>
+

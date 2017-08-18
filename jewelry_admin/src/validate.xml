@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- name:字段名称 type:数据类型-email,int,phone required:是否必填 true maxlen:字段最大长度 
+	minlen:字段最小长度 tip:提示信息 -->
+<showfields>
+	<!-- 用户注册参数的验证 -->
+	<!-- <model id="userRigister"> <field name="account" type="phone" required="true" 
+		maxlen="20"/> <field name="user_name" required="true" maxlen="10"/> <field 
+		name="password" required="true" minlen="6" maxlen="20" /> <field name="validatecode" 
+		required="true" type="int" minlen="6" maxlen="6" /> </model> 用户登录参数的验证 <model 
+		id="userLogin"> <field name="account" type="phone" required="true" maxlen="20"/> 
+		<field name="password" required="true" length="20" /> </model> 注册发送手机验证码的验证 
+		<model id="validatecode"> <field name="mobile" type="phone" required="true"/> 
+		<field name="type" type="int" required="true" minlen="1" maxlen="1" /> </model> 
+		汽车搜索的参数验证 <model id="queryCar"> <field name="car_name" required="true" minlen="1" 
+		maxlen="20"/> </model> 通过汽车品牌搜索汽车验证 <model id="queryCarByBrand"> <field name="brand_id" 
+		required="true" type="int" minlen="1" maxlen="20"/> </model> 汽车详情参数的验证 <model 
+		id="carDetail"> <field name="car_id" required="true" type="int" minlen="1" 
+		maxlen="20"/> </model> 汽车分享标题的验证 <model id="carShareTitle"> <field name="model_id" 
+		required="true" type="int" minlen="1" maxlen="20"/> </model> 汽车详情内容参数的验证 
+		<model id="carDetailMsg"> <field name="car_id" required="true" type="int" 
+		minlen="1" maxlen="20"/> </model> 汽车更换汽车车款的验证 <model id="replaceCarModel"> 
+		<field name="car_id" required="true" type="int" minlen="1" maxlen="20"/> 
+		</model> 获取车型详情汽车参数的验证 <model id="modelPara"> <field name="model_id" required="true" 
+		type="int" minlen="1" maxlen="20"/> </model> 汽车主打车款的验证 <model id="mainCarDetail"> 
+		<field name="main_id" required="true" type="int" minlen="1" maxlen="20"/> 
+		</model> 汽车主打车款详情内容的验证 <model id="mainCarDetailMsg"> <field name="main_id" 
+		required="true" type="int" minlen="1" maxlen="20"/> </model> 汽车更换汽车车款的验证 
+		<model id="collect"> <field name="car_id" required="true" type="int" minlen="1" 
+		maxlen="20"/> <field name="coll_ident" required="true" type="int" minlen="1" 
+		maxlen="1"/> </model> 用户反馈接口验证 <model id="feedback"> <field name="feedmsg" 
+		required="true" minlen="1" maxlen="200"/> <field name="phone"/> </model> 
+		用户找回密码数据验证 <model id="findpwd"> <field name="account" required="true" minlen="1" 
+		maxlen="20"/> <field name="validatecode" required="true" type="int" minlen="6" 
+		maxlen="6" /> <field name="password" required="true" minlen="6" maxlen="20" 
+		/> </model> 获取资讯详情的接口 <model id="newsDetail"> <field name="news_id" required="true" 
+		type="int" minlen="1" maxlen="20"/> </model> 获取分享资讯详情的接口 <model id="shareNewsTitle"> 
+		<field name="news_id" required="true" type="int" minlen="1" maxlen="20"/> 
+		</model> 获取分享资讯详情的接口 <model id="shareNewsTitle"> <field name="news_id" required="true" 
+		type="int" minlen="1" maxlen="20"/> </model> 资讯留言的接口 <model id="message"> 
+		<field name="news_id" required="true" type="int" minlen="1" maxlen="20"/> 
+		<field name="content" required="true" minlen="1" maxlen="255"/> </model> 
+		个人信息的资料修改接口 <model id="person"> <field name="user_name" minlen="1" maxlen="10"/> 
+		<field name="sex" type="int" minlen="1" maxlen="10"/> <field name="area"/> 
+		<field name="signature" maxlen="20"/> </model> 获取城市的数据列表 <model id="cityList"> 
+		<field name="up_area_id" required="true" minlen="10" maxlen="10"/> </model> 
+		点赞量更新接口数据验证 <model id="praise"> <field name="news_id" required="true" minlen="1" 
+		maxlen="12"/> </model> 常见问题详情接口验证 <model id="problemDetail"> <field name="news_id" 
+		required="true" minlen="1" maxlen="12"/> </model> 更换车款详情接口验证 <model id="replaceModelDetail"> 
+		<field name="model_id" required="true" minlen="1" maxlen="12"/> </model> 
+		付订金接口参数验证 <model id="payOrder"> <field name="order_id" required="true" minlen="1" 
+		maxlen="100"/> <field name="pay_way" required="true" minlen="1" maxlen="1"/> 
+		<field name="payPwd" required="true"/> <field name="imei" required="true"/> 
+		<field name="lng" required="true"/> <field name="lat" required="true"/> </model> 
+		提交订单接口参数验证 <model id="showPay"> <field name="order_id" required="true" type="int" 
+		minlen="1" maxlen="50"/> </model> 提交订单接口参数验证 <model id="showCancelOrder"> 
+		<field name="order_id" required="true" type="int" minlen="1" maxlen="50"/> 
+		</model> 订单详情接口参数验证 <model id="orderDetail"> <field name="order_id" required="true" 
+		type="int" minlen="1" maxlen="50"/> </model> 订单详情接口参数验证 <model id="delayOrderTime"> 
+		<field name="order_id" required="true" type="int" minlen="1" maxlen="50"/> 
+		</model> 看车满意,完成订单接口参数验证 <model id="completeOrder"> <field name="order_id" 
+		required="true" type="int" minlen="1" maxlen="50"/> </model> 申请退款订单接口参数验证 
+		<model id="applyRefund"> <field name="order_id" required="true" type="int" 
+		minlen="1" maxlen="50"/> <field name="re_fc" required="true" minlen="1" maxlen="200"/> 
+		</model> 提交订单接口参数验证 <model id="submitOrder"> <field name="car_id" required="true" 
+		type="int" minlen="1" maxlen="100"/> <field name="model_id" required="true" 
+		type="int" minlen="1" maxlen="100"/>. <field name="branch_id" required="true" 
+		type="int" minlen="1" maxlen="100"/> <field name="car_colour" required="true" 
+		minlen="1" maxlen="100"/> <field name="buy_way" required="true" minlen="1" 
+		maxlen="100"/> <field name="buy_city" required="true" minlen="1" maxlen="100"/> 
+		<field name="licence_city" required="false" minlen="1" maxlen="100"/> <field 
+		name="note" required="true" maxlen="100"/> <field name="style_year" required="true" 
+		maxlen="50"/> </model> 跳转提交页面接口参数验证 <model id="turnOrder"> <field name="car_id" 
+		required="true" type="int" minlen="1" maxlen="16"/> <field name="model_id" 
+		required="true" type="int" minlen="1" maxlen="16"/> </model> 取消订单接口参数验证 <model 
+		id="cancelOrder"> <field name="order_id" required="true" type="int" minlen="1" 
+		maxlen="100"/> </model> 删除订单接口参数验证 <model id="delOrder"> <field name="order_id" 
+		required="true" type="int" minlen="1" maxlen="100"/> </model> 我的订单接口参数验证 
+		<model id="myOrderList"> <field name="type" required="true" type="int" minlen="1" 
+		maxlen="1"/> </model> 添加违章查询查看是否支持的城市 <model id="supportIllegal"> <field 
+		name="city" required="true" minlen="1" maxlen="100"/> <field name="license" 
+		required="true" minlen="1" maxlen="100"/> <field name="engine_no" required="true" 
+		minlen="1" maxlen="100"/> <field name="province" required="true" minlen="1" 
+		maxlen="100"/> <field name="frame_num" required="true" minlen="1" maxlen="100"/> 
+		</model> 根据用户的违章表标识查询查看汽车是否违章 <model id="queryIllegal"> <field name="illegal_id" 
+		required="true" minlen="1" maxlen="16"/> </model> 根据用户的违章表的绑定车辆 <model id="delIllegal"> 
+		<field name="illegal_id" required="true" minlen="1" maxlen="16"/> </model> 
+		用车页面接口参数 <model id="queryUseCar"> <field name="city" minlen="1" maxlen="16"/> 
+		</model> 获取天气接口参数 <model id="queryWeather"> <field name="city" minlen="1" 
+		maxlen="16"/> </model> 用户推送信息的数据 <model id="pushMsgList"> <field name="start" 
+		required="true" type="int" /> <field name="top" required="true" type="int" 
+		/> </model> 资讯留言信息列表 <model id="leavemsgList"> <field name="news_id" required="true" 
+		type="int" /> <field name="start" required="true" type="int" /> <field name="top" 
+		required="true" type="int" /> </model> 资讯列表列表 <model id="newsList"> <field 
+		name="start" required="true" type="int" /> <field name="top" required="true" 
+		type="int" /> </model> -->
+</showfields> 

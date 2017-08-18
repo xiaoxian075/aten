@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.DividedDao">
+
+    <!-- 数据库映射模型区域 -->
+    <resultMap id="resultDivided" type="com.aten.model.orm.Divided">
+        <result property="divided_id" column="divided_id"/>
+        <result property="divided_date" column="divided_date"/>
+        <result property="order_number" column="order_number"/>
+        <result property="order_time" column="order_time"/>
+        <result property="account_id" column="account_id"/>
+        <result property="login_name" column="login_name"/>
+        <result property="account_level" column="account_level"/>
+        <result property="order_amount" column="order_amount"/>
+        <result property="divided_amount" column="divided_amount"/>
+        <result property="create_time" column="create_time"/>
+        <result property="start_date" column="start_date"/>
+        <result property="end_date" column="end_date"/>
+
+    </resultMap>
+
+    <!-- 新增数据区域 -->
+    <sql id="insertCommon">
+        INSERT INTO t_divided
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="divided_id != null">divided_id,</if>
+            <if test="divided_date != null">divided_date,</if>
+            <if test="order_number != null">order_number,</if>
+            <if test="order_time != null">order_time,</if>
+            <if test="account_id != null">account_id,</if>
+            <if test="login_name != null">login_name,</if>
+            <if test="account_level != null">account_level,</if>
+            <if test="order_amount != null">order_amount,</if>
+            <if test="divided_amount != null">divided_amount,</if>
+            <if test="create_time != null">create_time</if>
+
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="divided_id != null">#{divided_id},</if>
+            <if test="divided_date != null">#{divided_date},</if>
+            <if test="order_number != null">#{order_number},</if>
+            <if test="order_time != null">#{order_time},</if>
+            <if test="account_id != null">#{account_id},</if>
+            <if test="login_name != null">#{login_name},</if>
+            <if test="account_level != null">#{account_level},</if>
+            <if test="order_amount != null">#{order_amount},</if>
+            <if test="divided_amount != null">#{divided_amount},</if>
+            <if test="create_time != null">#{create_time}</if>
+
+        </trim>
+    </sql>
+
+    <insert id="insert" parameterType="com.aten.model.orm.Divided">
+        <include refid="insertCommon"/>
+    </insert>
+
+    <insert id="insertGetPk" parameterType="com.aten.model.orm.Divided">
+        <include refid="insertCommon"/>
+        <selectKey resultType="String" order="AFTER" keyProperty="divided_id">
+            SELECT @@IDENTITY AS ID
+        </selectKey>
+    </insert>
+
+    <!-- 更新数据区域 -->
+    <sql id="update_clause">
+        <set>
+            <trim suffixOverrides=",">
+                <if test="divided_id != null">divided_id = #{divided_id},</if>
+                <if test="divided_date != null">divided_date = #{divided_date},</if>
+                <if test="order_number != null">order_number = #{order_number},</if>
+                <if test="order_time != null">order_time = #{order_time},</if>
+                <if test="account_id != null">account_id = #{account_id},</if>
+                <if test="login_name != null">login_name = #{login_name},</if>
+                <if test="account_level != null">account_level = #{account_level},</if>
+                <if test="order_amount != null">order_amount = #{order_amount},</if>
+                <if test="divided_amount != null">divided_amount = #{divided_amount},</if>
+                <if test="create_time != null">create_time = #{create_time}</if>
+
+            </trim>
+        </set>
+    </sql>
+
+
+    <update id="update" parameterType="com.aten.model.orm.Divided">
+        UPDATE t_divided
+        <include refid="update_clause"/>
+        WHERE divided_id = #{divided_id}
+    </update>
+
+    <!-- 删除数据区域 -->
+    <delete id="delete" parameterType="String">
+        delete from t_divided where divided_id in
+        <foreach item="idItem" collection="array" index="index" open="(" separator="," close=")">
+            #{idItem}
+        </foreach>
+    </delete>
+
+    <!-- 获取对象数据区域 -->
+    <select id="get" parameterType="String" resultMap="resultDivided">
+		 SELECT
+		 t.divided_id,t.divided_date,t.order_number,t.order_time,t.account_id,t.login_name,t.account_level,t.order_amount,t.divided_amount,t.create_time
+		 FROM t_divided t WHERE divided_id = #{divided_id}
+	</select>
+
+    <!-- 搜索数据区域 -->
+    <sql id="where_clause">
+        <where>
+            1=1
+            <if test="divided_id != null">and t.divided_id = #{divided_id}</if>
+            <if test="divided_id_vague != null">and instr(t.divided_id,#{divided_id_vague})>0</if>
+            <if test="divided_date != null">and t.divided_date = #{divided_date}</if>
+            <if test="divided_date_vague != null">and instr(t.divided_date,#{divided_date_vague})>0</if>
+            <if test="order_number != null">and t.order_number = #{order_number}</if>
+            <if test="order_number_vague != null">and instr(t.order_number,#{order_number_vague})>0</if>
+            <if test="order_time != null">and t.order_time = #{order_time}</if>
+            <if test="order_time_vague != null">and instr(t.order_time,#{order_time_vague})>0</if>
+            <if test="account_id != null">and t.account_id = #{account_id}</if>
+            <if test="account_id_vague != null">and instr(t.account_id,#{account_id_vague})>0</if>
+            <if test="login_name != null">and t.login_name = #{login_name}</if>
+            <if test="login_name_vague != null">and instr(t.login_name,#{login_name_vague})>0</if>
+            <if test="account_level != null">and t.account_level = #{account_level}</if>
+            <if test="account_level_vague != null">and instr(t.account_level,#{account_level_vague})>0</if>
+            <if test="order_amount != null">and t.order_amount = #{order_amount}</if>
+            <if test="order_amount_vague != null">and instr(t.order_amount,#{order_amount_vague})>0</if>
+            <if test="divided_amount != null">and t.divided_amount = #{divided_amount}</if>
+            <if test="divided_amount_vague != null">and instr(t.divided_amount,#{divided_amount_vague})>0</if>
+            <if test="create_time != null">and t.create_time = #{create_time}</if>
+            <if test="create_time_vague != null">and instr(t.create_time#{create_time_vague})>0</if>
+
+            <if test="start_date != null"> and DATE_FORMAT(t.order_time,'%Y-%m-%d') &gt;=
+                DATE_FORMAT(#{start_date},'%Y-%m-%d') </if>
+            <if test="end_date != null"> and DATE_FORMAT(t.order_time,'%Y-%m-%d') &lt;=
+                DATE_FORMAT(#{end_date},'%Y-%m-%d') </if>
+        </where>
+    </sql>
+
+    <sql id="getCommon">
+		select t.login_name,sum(divided_amount) as divided_amount,a.lev as account_level from t_divided  t
+        LEFT JOIN t_account a on t.account_id=a.id   <include refid="where_clause"/>
+        GROUP BY t.login_name
+	</sql>
+
+    <select id="findByAccountId" parameterType="map" resultMap="resultDivided">
+        select t.order_number,t.order_time,t.login_name,t.order_amount,t.divided_amount,a.lev as account_level from t_divided t
+        LEFT JOIN t_account a on t.account_id=a.id
+        <include refid="where_clause"/>
+        <if test="start != null">
+            LIMIT ${start},${limit}
+        </if>
+    </select>
+
+    <select id="getList" parameterType="map" resultMap="resultDivided">
+        <include refid="getCommon"/>
+        <if test="start != null">
+            LIMIT ${start},${limit}
+        </if>
+    </select>
+
+    <select id="getCount" parameterType="map" resultType="int">
+        select count(*) ct from( <include refid="getCommon"/>) as count
+
+    </select>
+    <select id="getDetailCount" parameterType="map" resultType="int">
+       select count(*) ct from(
+        select t.order_number,t.order_time,t.login_name,t.order_amount,t.divided_amount,a.lev as account_level from t_divided t
+        LEFT JOIN t_account a on t.account_id=a.id
+        <include refid="where_clause"/>)
+        as count
+
+    </select>
+
+    <!-- 排序区域 -->
+    <update id="updateBatch" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" separator=";">
+            update t_divided
+            <set>
+                sort_no = #{item.sort_no}
+            </set>
+            WHERE divided_id = #{item.id}
+        </foreach>
+    </update>
+
+</mapper>
+

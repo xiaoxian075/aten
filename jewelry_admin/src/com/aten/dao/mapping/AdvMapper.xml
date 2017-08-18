@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.AdvDao">
+
+	<!-- 数据库映射模型区域 -->
+	<resultMap id="resultAdv" type="com.aten.model.orm.Adv">
+		<result property="adv_id" column="adv_id" />
+		<result property="adv_code" column="adv_code" />
+		<result property="adv_name" column="adv_name" />
+		<result property="adv_introduce" column="adv_introduce" />
+		<result property="the_terminal" column="the_terminal" />
+		<result property="adv_type" column="adv_type" />
+		<result property="is_add_ads" column="is_add_ads" />
+		<result property="state" column="state" />
+
+	</resultMap>
+
+	<!-- 新增数据区域 -->
+	<sql id="insertCommon">
+		INSERT INTO t_adv
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="adv_code != null"> adv_code,</if>
+			<if test="adv_name != null"> adv_name,</if>
+			<if test="adv_introduce != null"> adv_introduce,</if>
+			<if test="the_terminal != null"> the_terminal,</if>
+			<if test="adv_type != null"> adv_type,</if>
+			<if test="is_add_ads != null"> is_add_ads,</if>
+			<if test="state != null"> state</if>
+
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="adv_code != null">#{adv_code},</if>
+			<if test="adv_name != null">#{adv_name},</if>
+			<if test="adv_introduce != null">#{adv_introduce},</if>
+			<if test="the_terminal != null">#{the_terminal},</if>
+			<if test="adv_type != null">#{adv_type},</if>
+			<if test="is_add_ads != null">#{is_add_ads},</if>
+			<if test="state != null">#{state}</if>
+
+		</trim>
+	</sql>
+
+	<insert id="insert" parameterType="com.aten.model.orm.Adv">
+		<include refid="insertCommon" />
+	</insert>
+
+	<insert id="insertGetPk" parameterType="com.aten.model.orm.Adv">
+		<include refid="insertCommon" />
+		<selectKey resultType="String" order="AFTER" keyProperty="adv_code">
+			SELECT @@IDENTITY AS ID
+		</selectKey>
+	</insert>
+
+	<!-- 更新数据区域 -->
+	<sql id="update_clause">
+		<set>
+			<trim suffixOverrides=",">
+				<if test="adv_code != null"> adv_code = #{adv_code}, </if>
+				<if test="adv_name != null"> adv_name = #{adv_name}, </if>
+				<if test="adv_introduce != null"> adv_introduce = #{adv_introduce}, </if>
+				<if test="the_terminal != null"> the_terminal = #{the_terminal}, </if>
+				<if test="adv_type != null"> adv_type = #{adv_type}, </if>
+				<if test="is_add_ads != null"> is_add_ads = #{is_add_ads}, </if>
+				<if test="state != null"> state = #{state} </if>
+
+			</trim>
+		</set>
+	</sql>
+
+
+
+
+
+	<update id="update" parameterType="com.aten.model.orm.Adv">
+		UPDATE t_adv
+		<include refid="update_clause" />
+		WHERE adv_id = #{adv_id}
+	</update>
+
+	<!-- 删除数据区域 -->
+	<delete id="delete" parameterType="String">
+		delete from t_adv where adv_id in
+		<foreach item="idItem" collection="array" index="index" open="("
+			separator="," close=")">
+			#{idItem}
+		</foreach>
+	</delete>
+
+	<!-- 获取对象数据区域 -->
+	<select id="get" parameterType="String" resultMap="resultAdv">
+		SELECT
+		t.adv_id,
+		t.adv_code,t.adv_name,t.adv_introduce,t.the_terminal,t.adv_type,t.is_add_ads,t.state
+		FROM t_adv t WHERE adv_id = #{adv_id}
+	</select>
+
+	<!-- 搜索数据区域 -->
+	<sql id="where_clause">
+		<where>
+			1=1
+			<if test="adv_id != null"> and t.adv_id = #{adv_id} </if>
+			<if test="adv_code != null"> and t.adv_code = #{adv_code} </if>
+			<if test="adv_code_vague != null"> and instr(t.adv_code,#{adv_code_vague})>0 </if>
+			<if test="adv_name != null"> and t.adv_name = #{adv_name} </if>
+			<if test="adv_name_vague != null"> and instr(t.adv_name,#{adv_name_vague})>0 </if>
+			<if test="adv_introduce != null"> and t.adv_introduce = #{adv_introduce} </if>
+			<if test="adv_introduce_vague != null"> and instr(t.adv_introduce,#{adv_introduce_vague})>0 </if>
+			<if test="the_terminal != null"> and t.the_terminal = #{the_terminal} </if>
+			<if test="the_terminal_vague != null"> and instr(t.the_terminal,#{the_terminal_vague})>0 </if>
+			<if test="adv_type != null"> and t.adv_type = #{adv_type} </if>
+			<if test="adv_type_vague != null"> and instr(t.adv_type,#{adv_type_vague})>0 </if>
+			<if test="is_add_ads != null"> and t.is_add_ads = #{is_add_ads} </if>
+			<if test="is_add_ads_vague != null"> and instr(t.is_add_ads,#{is_add_ads_vague})>0 </if>
+			<if test="state != null"> and t.state = #{state} </if>
+			<if test="state_vague != null"> and instr(t.state#{state_vague})>0 </if>
+
+		</where>
+	</sql>
+
+	<sql id="getCommon">
+		select
+		t.adv_id,t.adv_code,t.adv_name,t.adv_introduce,t.the_terminal,t.adv_type,t.is_add_ads,t.state
+		from t_adv t
+		<include refid="where_clause" />
+		order by adv_code desc
+	</sql>
+
+
+
+	<select id="getList" parameterType="map" resultMap="resultAdv">
+		<include refid="getCommon" />
+		<if test="start != null">
+			LIMIT ${start},${limit}
+		</if>
+	</select>
+
+	<select id="getCount" parameterType="map" resultType="int">
+		select count(*) ct from t_adv t
+		<include refid="where_clause" />
+	</select>
+
+
+	<!-- 排序区域 -->
+	<update id="updateBatch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index"
+			separator=";">
+			update t_adv
+			<set>
+				sort_no = #{item.sort_no}
+			</set>
+			WHERE adv_code = #{item.id}
+		</foreach>
+	</update>
+
+</mapper>
+

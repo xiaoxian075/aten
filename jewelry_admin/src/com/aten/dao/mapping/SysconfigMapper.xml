@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.SysconfigDao">
+
+	<cache type="org.mybatis.caches.ehcache.EhcacheCache"/> 
+
+	<!-- 数据库映射模型区域 -->
+	<resultMap id="resultSysconfig" type="com.aten.model.orm.Sysconfig">
+		<result property="var_id" column="var_id" />
+		<result property="var_name" column="var_name" />
+		<result property="var_value" column="var_value" />
+		<result property="var_desc" column="var_desc" />
+		<result property="var_group" column="var_group" />
+		<result property="var_type" column="var_type" />
+		<result property="sort_no" column="sort_no" />
+	</resultMap>
+	
+	<resultMap type="com.aten.model.vo.GoodsUpdateVo" id="resultGoodsUpdateVo">
+		<result property="goods_id" column="goods_id" />
+		<result property="level_cat" column="level_cat" />
+		<result property="custom_attr_value" column="custom_attr_value" />
+	</resultMap>
+
+	<!-- 新增数据区域 -->
+	<sql id="insertCommon">
+		insert into t_sysconfig(
+		<if test="var_name != null"> var_name,</if>
+		<if test="var_value != null"> var_value,</if>
+		<if test="var_desc != null"> var_desc,</if>
+		<if test="var_group != null"> var_group,</if>
+		<if test="var_type != null"> var_type,</if>
+		<if test="sort_no != null"> sort_no</if>
+		)
+		values(
+		<if test="var_name != null">#{var_name},</if>
+		<if test="var_value != null">#{var_value},</if>
+		<if test="var_desc != null">#{var_desc},</if>
+		<if test="var_group != null">#{var_group},</if>
+		<if test="var_type != null">#{var_type},</if>
+		<if test="sort_no != null">#{sort_no}</if>
+		)
+	</sql>
+
+	<insert id="insert" parameterType="com.aten.model.orm.Sysconfig">
+		<include refid="insertCommon" />
+	</insert>
+
+	<!-- 更新数据区域 -->
+	<sql id="update_clause">
+		<set>
+			<if test="var_id != null"> var_id = #{var_id}, </if>
+			<if test="var_name != null"> var_name = #{var_name}, </if>
+			<if test="var_value != null"> var_value = #{var_value}, </if>
+			<if test="var_desc != null"> var_desc = #{var_desc}, </if>
+			<if test="var_group != null"> var_group = #{var_group}, </if>
+			<if test="var_type != null"> var_type = #{var_type}, </if>
+			<if test="sort_no != null"> sort_no = #{sort_no} </if>
+		</set>
+	</sql>
+
+
+	<update id="update" parameterType="com.aten.model.orm.Sysconfig">
+		update t_sysconfig
+		<include refid="update_clause" />
+		where var_id = #{var_id}
+	</update>
+
+	<!-- 删除数据区域 -->
+	<delete id="delete" parameterType="String">
+		delete from t_sysconfig where var_id in
+		<foreach item="idItem" collection="array" index="index" open="("
+			separator="," close=")">
+			#{idItem}
+		</foreach>
+	</delete>
+
+	<!-- 获取对象数据区域 -->
+	<select id="get" parameterType="String" resultMap="resultSysconfig">
+		select
+		var_id,var_name,var_value,var_desc,var_group,var_type,sort_no
+		from t_sysconfig where var_id = #{var_id}
+	</select>
+
+	<!-- 搜索数据区域 -->
+	<sql id="where_clause">
+		<if test="var_id != null"> and var_id = #{var_id} </if>
+		<if test="var_name != null"> and var_name = #{var_name} </if>
+		<if test="var_value != null"> and var_value = #{var_value} </if>
+		<if test="var_desc != null"> and var_desc = #{var_desc} </if>
+		<if test="var_group != null"> and var_group = #{var_group} </if>
+		<if test="var_type != null"> and var_type = #{var_type} </if>
+		<if test="sort_no != null"> and sort_no = #{sort_no} </if>
+	</sql>
+
+	<select id="getList" parameterType="map" resultMap="resultSysconfig">
+		select * from t_sysconfig
+		where 1 = 1
+		<include refid="where_clause" />
+		order by sort_no desc, var_id desc
+		<if test="start != null">
+			LIMIT ${start},${limit}
+		</if>
+	</select>
+
+	<select id="getCount" parameterType="map" resultType="int">
+		select count(*) ct from t_sysconfig
+		where 1 = 1
+		<include refid="where_clause" />
+	</select>
+
+	<!-- 排序区域 -->
+	<update id="updateBatch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" open="" close=";" separator=";">
+			update t_sysconfig
+			<set>
+				sort_no = #{item.sort_no}
+			</set>
+			where var_id = #{item.id}
+		</foreach>
+	</update>
+
+	<update id="updateByName" parameterType="map">
+		update
+		t_sysconfig
+		<set>
+			var_value = #{var_value}
+		</set>
+		WHERE
+		var_name = #{var_name}
+	</update>
+	
+	<select id="getGoldValueList" resultMap="resultGoodsUpdateVo">
+		select 
+			g.goods_id,
+			c.level_cat from t_goods g 
+			left join t_cat c on g.cat_id = c.cat_id 
+			where instr(level_cat,'${goldValue}')>0 
+			order by g.goods_id desc 
+	</select> 
+	
+	<select id="getCustomValue"  resultMap="resultGoodsUpdateVo">
+		select 
+			z.custom_attr_value,
+			x.goods_id
+			from t_custom_attr_value z LEFT JOIN 
+			t_custom_attr x on z.custom_attr_id = x.custom_attr_id 
+			WHERE x.goods_id = #{goods_id} and x.attr_type = 1 and x.custom_alias = '重量'
+	</select>
+	
+	<update id="updateGoldsPrice"> 
+		update  t_sku f set f.price = #{result_value},f.sale_price = #{result_value} + f.manual_fee where instr(sku_name,'${custom_attr_value}')>0 and f.goods_id = #{goods_id}
+	</update>
+</mapper>
+

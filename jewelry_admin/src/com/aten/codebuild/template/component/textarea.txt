@@ -1,0 +1,7 @@
+		<tr>
+			<td class="td_left">[field_note][is_must_span]</td>
+			<td class="td_right_two">
+				<textarea class="[validate]" name="[field_name]" type="[field_type]" rows="3" cols="40"   [is_must]  tipmsg="[field_note]" 
+		 		  [field_length]  [data_type]  >${{DEFINE_CLASS_NAME}.[field_name]}</textarea>
+			</td>
+		</tr>

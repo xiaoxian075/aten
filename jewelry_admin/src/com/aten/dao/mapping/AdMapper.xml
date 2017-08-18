@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.AdDao">
+
+	<!-- 数据库映射模型区域 -->
+	<resultMap id="resultAd" type="com.aten.model.orm.Ad">
+		<result property="ad_id" column="ad_id" />
+		<result property="adv_code" column="adv_code" />
+		<result property="ad_name" column="ad_name" />
+		<result property="img_path" column="img_path" />
+		<result property="link_url" column="link_url" />
+		<result property="start_time" column="start_time" />
+		<result property="end_time" column="end_time" />
+		<result property="note" column="note" />
+		<result property="state" column="state" />
+		<result property="sort_no" column="sort_no" />
+		<result property="ad_type" column="ad_type" />
+		<result property="the_area" column="the_area" />
+		<result property="region" column="region" />
+		<result property="the_cat" column="the_cat" />
+		<result property="adv_id" column="adv_id" />
+	</resultMap>
+
+	<!-- 新增数据区域 -->
+	<sql id="insertCommon">
+		insert into t_ad(
+		<if test="adv_id != null"> adv_id,</if>
+		<if test="adv_code != null"> adv_code,</if>
+		<if test="ad_name != null"> ad_name,</if>
+		<if test="img_path != null"> img_path,</if>
+		<if test="link_url != null"> link_url,</if>
+		<if test="start_time != null and start_time.trim() != ''"> start_time,</if>
+		<if test="end_time != null and end_time.trim() != ''"> end_time,</if>
+		<if test="note != null"> note,</if>
+		<if test="state != null"> state,</if>
+		<if test="ad_type != null"> ad_type,</if>
+		<if test="the_area != null"> the_area,</if>
+		<if test="region != null"> region,</if>
+		<if test="the_cat != null"> the_cat,</if>
+		<if test="sort_no != null"> sort_no</if>
+		)
+		values(
+		<if test="adv_id != null">#{adv_id},</if>
+		<if test="adv_code != null">#{adv_code},</if>
+		<if test="ad_name != null">#{ad_name},</if>
+		<if test="img_path != null">#{img_path},</if>
+		<if test="link_url != null">#{link_url},</if>
+		<if test="start_time != null  and start_time.trim() != ''"> #{start_time},</if>
+		<if test="end_time != null  and end_time.trim() != ''">#{end_time},</if>
+		<if test="note != null">#{note},</if>
+		<if test="state != null">#{state},</if>
+		<if test="ad_type != null">#{ad_type},</if>
+		<if test="the_area != null">#{the_area},</if>
+		<if test="region != null">#{region},</if>
+		<if test="the_cat != null">#{the_cat},</if>
+		<if test="sort_no != null">#{sort_no}</if>
+		)
+	</sql>
+
+	<insert id="insert" parameterType="com.aten.model.orm.Ad">
+		<include refid="insertCommon" />
+	</insert>
+
+	<!-- 更新数据区域 -->
+	<sql id="update_clause">
+		<set>
+			<if test="adv_code != null"> adv_code = #{adv_code}, </if>
+			<if test="ad_id != null"> ad_id = #{ad_id}, </if>
+			<if test="adv_code != null"> adv_code = #{adv_code}, </if>
+			<if test="ad_name != null"> ad_name = #{ad_name}, </if>
+			<if test="img_path != null"> img_path = #{img_path}, </if>
+			<if test="link_url != null"> link_url = #{link_url}, </if>
+			<if test="start_time != null and start_time.trim() != ''"> start_time = #{start_time}, </if>
+			<if test="end_time != null and end_time.trim() != ''"> end_time = #{end_time}, </if>
+			<if test="note != null"> note = #{note}, </if>
+			<if test="state != null"> state = #{state}, </if>
+			<if test="ad_type != null"> ad_type = #{ad_type}, </if>
+			<if test="the_area != null"> the_area = #{the_area}, </if>
+			<if test="region != null"> region = #{region}, </if>
+			<if test="the_cat != null"> the_cat = #{the_cat}, </if>
+			<if test="sort_no != null"> sort_no = #{sort_no} </if>
+		</set>
+	</sql>
+
+
+	<update id="update" parameterType="com.aten.model.orm.Ad">
+		update t_ad
+		<include refid="update_clause" />
+		where ad_id = #{ad_id}
+	</update>
+
+	<!-- 删除数据区域 -->
+	<delete id="delete" parameterType="String">
+		delete from t_ad where ad_id in
+		<foreach item="idItem" collection="array" index="index" open="("
+			separator="," close=")">
+			#{idItem}
+		</foreach>
+	</delete>
+
+	<!-- 获取对象数据区域 -->
+	<select id="get" parameterType="String" resultMap="resultAd">
+		select
+		ad_id,adv_id,adv_code,ad_name,img_path,link_url,start_time,end_time,note,state,sort_no,ad_type
+		from t_ad where ad_id = #{ad_id}
+	</select>
+
+	<!-- 搜索数据区域 -->
+	<sql id="where_clause">
+		<if test="adv_id != null"> and t.adv_id = #{adv_id} </if>
+		<if test="ad_id != null"> and t.ad_id = #{ad_id} </if>
+		<if test="adv_code != null"> and t.adv_code = #{adv_code} </if>
+		<if test="ad_name != null"> and t.ad_name = #{ad_name} </if>
+		<if test="img_path != null"> and t.img_path = #{img_path} </if>
+		<if test="link_url != null"> and t.link_url = #{link_url} </if>
+		<if test="start_time != null  and start_time.trim() != ''"> and t.start_time = #{start_time} </if>
+		<if test="end_time != null  and end_time.trim() != ''"> and t.end_time = #{end_time} </if>
+		<if test="note != null"> and t.note = #{note} </if>
+		<if test="state != null"> and t.state = #{state} </if>
+		<if test="sort_no != null"> and t.sort_no = #{sort_no} </if>
+		<if test="the_area != null"> and t.the_area = #{the_area} </if>
+		<if test="region != null"> and t.region = #{region} </if>
+		<if test="the_cat != null"> and t.the_cat = #{the_cat} </if>
+		<if test="ad_type != null"> and t.ad_type = #{ad_type} </if>
+	</sql>
+
+	<select id="getList" parameterType="map" resultMap="resultAd">
+		select * from t_ad t
+		where 1 = 1
+		<include refid="where_clause" />
+		order by t.sort_no desc , ad_id desc
+		<if test="start != null">
+			LIMIT ${start},${limit}
+		</if>
+	</select>
+
+	<select id="getCount" parameterType="map" resultType="int">
+		select count(*) ct from t_ad t where 1 = 1
+		<include refid="where_clause" />
+	</select>
+
+	<!-- 排序区域 -->
+	<update id="updateBatch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index"
+			separator=";">
+			update t_ad
+			<set>
+				sort_no = ${item.sort_no}
+			</set>
+			where ad_id = ${item.id}
+		</foreach>
+	</update>
+
+</mapper>
+

@@ -1,0 +1,48 @@
+.one_menu_div {
+	border: 1px solid #efefef;
+	margin: 8px 0px 5px 0px;
+}
+
+.two_menu_div {
+	margin: 6px 0px 0px 35px;
+}
+
+.two_menu_div ul {
+	border-left: 1px solid #efefef;
+	border-bottom: 1px solid #efefef;
+}
+
+.three_menu_div {
+	margin: 0px 0px 0px 35px;
+}
+
+.three_menu_div li {
+	padding: 6px 0px 3px 0px;
+}
+
+.menu_name_div {
+	background-color: #efefef;
+	padding: 5px 10px;
+}
+
+.three_left {
+	float: left;
+	width: 110px;
+}
+
+.three_right {
+	float: left;
+	width: 700px;
+}
+
+.power_li {
+	width: 120px;
+	display: block;
+	float: left;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	margin-right: 6px;
+	margin-top: 3px;
+	cursor: pointer;
+}

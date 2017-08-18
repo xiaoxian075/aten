@@ -1,0 +1,96 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<html>
+  <head>
+    <title>{MODEL}管理</title>
+  </head>
+  <body>
+  <form action="/admin/{URL_NAME}/list" method="post" >
+	  <div class="list_oper_div">
+	  		<input class="btn ol_btn" type="button" value="新增{MODEL}" onclick="addInfo('/admin/{URL_NAME}/add');"/>
+	  		<input class="btn ol_btn" type="button" value="排序" onclick="sortInfo('/admin/{URL_NAME}/sort');"/>
+	  </div>
+  	  <div class="searchDiv">
+  	  		<table class="searchTable">
+  	  			<tr>
+		  	  		<td>品牌名称:</td>
+		  	  		<td><input type="text" name="brand_name_s" value="${brand_name_s}"/></td>
+		  	  		<td>状态:</td>
+		  	  		<td>
+		  	  			<select name="state_s" type="select" >
+							<option value="">请选择</option>
+							<option value="1" <c:if test="${state_s==1}"> selected</c:if>>启用</option>
+							<option value="0" <c:if test="${state_s==0}"> selected</c:if>>禁用</option>
+						</select>
+		  	  		</td>
+		  	  		<td>
+		  	  			 <input class="btn ol_colorbtn ol_greenbtn" type="button" value="查询" onclick="searchInfo('/admin/{URL_NAME}/list');"/>
+			  	  		 <input class="btn ol_colorbtn ol_bredbtn" type="button" value="清空" onclick="clearSearch('/admin/{URL_NAME}/list');"/>
+		  	  		</td>
+	  	  		</tr>
+	  	  	</table>
+  	  </div>	
+  	  <div class="show_line">
+  	  		<%@ include file="/WEB-INF/common/pageshowrow.jsp"%>
+  	  </div> 
+	  <div class="list_div">
+	  		<table  id="list_table"  border="0" cellspacing="0" cellpadding="0">
+	  			<tr>
+	  				<th width="5%">ID</th>
+	  				<th width="3%">
+	  					<input class="all" type="checkbox" />
+	  				</th>
+	  				
+	  				<th width="10%">排序</th>
+	  				{listpage_field}
+		  				<th width="10%">[field_note]</th>
+		  			{/listpage_field}	
+		  			<th width="5%">操作</th>
+	  			</tr>
+	  			<c:if test="${!empty {DEFINE_CLASS_NAME}List}">
+	  				<c:forEach items="${{DEFINE_CLASS_NAME}List}" var="item" varStatus="status">
+	  					<tr>
+	  						<td>${status.count}</td>
+	  						<td>
+		  						<input class="ids" type="checkbox" value="${item.{TABLEKEY}}"/>
+		  					</td>
+							
+		  					<td>
+		  						<input class="sort_id" type="hidden" value="${item.{TABLEKEY}}"/>
+	  							<input class="sort_val" type="text" value="0" maxlength="6" />
+		  					</td>
+							{listpage_field}
+		  						<td>${item.[field_name]}</td>
+		  					{/listpage_field}
+		  						
+		  					<td>
+		  						<input class="btn ol_colorbtn ol_bluebtn" type="button" value="查看" onclick="goInfo('/admin/{URL_NAME}/view','${item.{TABLEKEY}}');"/>
+		  						<!-- 状态操作 -->
+		  						<c:if test="${item.state==1}">
+		  							<input class="btn ol_colorbtn ol_redbtn" type="button" value="禁用" onclick="commonInfo('/admin/{URL_NAME}/limitState','${item.{TABLEKEY}}','确定禁用该{MODEL}？');"/>
+		  						</c:if>
+								<c:if test="${item.state==0}">
+									<input class="btn ol_colorbtn ol_greenbtn" type="button" value="启用" onclick="commonInfo('/admin/{URL_NAME}/enableState','${item.{TABLEKEY}}','确定启用该{MODEL}？');"/>
+								</c:if>
+		  						<input class="btn ol_colorbtn ol_bluebtn" type="button" value="修改" onclick="editInfo('/admin/{URL_NAME}/edit','${item.{TABLEKEY}}');"/>
+								<input class="btn ol_colorbtn ol_redbtn" type="button" value="删除" onclick="delInfo('/admin/{URL_NAME}/delete','${item.{TABLEKEY}}');"/>
+		  					</td>
+	  					</tr>
+	  				</c:forEach>
+	  			</c:if>
+	  			<c:if test="${empty {DEFINE_CLASS_NAME}List}"><td colspan="6">暂无数据</td></c:if>
+	  		</table>
+	  </div>
+	  <div class="batchDiv">
+	  		<span class="batch_span"><input class="all" type="checkbox" />全选</span>
+	  		<input class="btn ol_colorbtn ol_redbtn" type="button" value="批量删除" onclick="commonBatchInfo('/admin/{URL_NAME}/batchDelete','确定删除{MODEL}？');"/>
+			<input class="btn ol_colorbtn ol_greenbtn" type="button" value="批量启用" onclick="commonBatchInfo('/admin/{URL_NAME}/batchEnableState','确定启用{MODEL}？');"/>
+			<input class="btn ol_colorbtn ol_bluebtn" type="button" value="批量禁用" onclick="commonBatchInfo('/admin/{URL_NAME}/batchLimitState','确定禁用{MODEL}？');"/>
+	  </div>
+	  <div class="page_contain">
+	  		<%@ include file="/WEB-INF/common/pagelist.jsp"%>
+	  </div>
+	  <%@ include file="/WEB-INF/common/list_hidden_value.jsp"%>
+  </form>		
+  </body>
+ </html> 

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.admin.dao.UserDaoMapper">
+
+	<!-- 映射实体 -->
+    <resultMap id="BaseResultMap" type="com.admin.model.Message">
+        <id column="msg_id"  property="msg_id"/>
+        <result column="title"  property="title"/>
+        <result column="content" property="content"/>
+        <result column="sort_no"  property="sort_no"/>
+        <result column="in_date"  property="in_date"/>
+        <result column="is_push"  property="is_push"/>
+        <result column="img_path"  property="img_path"/>
+    </resultMap>
+   
+	<!-- 搜索数据区域 -->
+	<sql id="where_clause">
+		<if test="msg_id != null"> and msg_id = #{msg_id} </if>
+		<if test="title != null"> and title=#{title}</if>
+		<if test="content != null"> and content = #{content} </if>
+		<if test="sort_no != null"> and sort_no = #{sort_no} </if>
+		<if test="in_date != null"> and in_date = #{in_date} </if>
+		<if test="is_push != null"> and is_push = #{is_push} </if>
+		<if test="img_path != null"> and img_path = #{img_path} </if>
+	</sql>
+    
+    <!-- 分页搜索 -->
+    <select id="selectMessageListByMap" parameterType="map"
+            resultMap="BaseResultMap">
+        select  * from T_MESSAGE
+        where 1 = 1 <include refid="where_clause" />
+    </select>
+    
+    
+    <select id="selectByExampleAndPage" parameterType="com.admin.model.BaseExample"  resultMap="BaseResultMap">
+        select
+        *
+        from T_MESSAGE
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </select>
+    
+    <sql id="Example_Where_Clause" >
+        <where >
+            <foreach collection="oredCriteria" item="criteria" separator="or" >
+                <if test="criteria.valid" >
+                    <trim prefix="(" suffix=")" prefixOverrides="and" >
+                        <foreach collection="criteria.criteria" item="criterion" >
+                            <choose >
+                                <when test="criterion.noValue" >
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue" >
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue" >
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue" >
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    
+    <!-- 新增系统消息 -->
+    <insert id="insertSelective" parameterType="com.admin.model.Message">
+        INSERT INTO T_MESSAGE(
+			 <if test="msg_id != null"> msg_id,</if>
+			 <if test="title != null"> title,</if>
+			 <if test="content != null"> content,</if>
+			 <if test="sort_no != null"> sort_no,</if>
+			 <if test="is_push != null"> is_push,</if>
+			 <if test="img_path != null"> img_path,</if>
+			 add_time
+		)
+		VALUES(
+			<if test="msg_id != null">#{msg_id},</if>
+			<if test="title != null">#{title},</if>
+			<if test="content != null">#{content},</if>
+			<if test="sort_no != null">#{sort_no},</if>
+			<if test="is_push != null">#{is_push},</if>
+			<if test="img_path != null">#{img_path},</if>
+			sysdate
+		)
+    </insert>
+	
+	<!-- 主键获取对象 -->
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select * from T_MESSAGE
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+
+	<!-- 更新对象 -->
+    <update id="updateByPrimaryKeySelective" parameterType="com.admin.model.BaseExample">
+		UPDATE T_MESSAGE 
+		<set>
+			<if test="msg_id != null"> msg_id = #{msg_id}, </if>
+			<if test="title != null"> title = #{title},</if>
+			<if test="content != null"> content = #{content}, </if>
+			<if test="sort_no != null"> sort_no = #{sort_no}, </if>
+			<if test="is_push != null"> is_push = #{is_push} </if>
+			<if test="img_path != null"> img_path = #{img_path} </if>
+		</set>
+		WHERE msg_id = #{msg_id}
+    </update>
+
+	<!-- 删除对象 -->
+    <delete id="deleteMessage" parameterType="java.lang.String" >
+        delete from T_MESSAGE where msg_id=#{msg_id}
+    </delete>
+ 
+</mapper>

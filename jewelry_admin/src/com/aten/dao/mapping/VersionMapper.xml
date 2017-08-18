@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.VersionDao">
+
+	<!-- 数据库映射模型区域 -->
+	<resultMap id="resultVersion" type="com.aten.model.orm.Version" >
+		<result property="version_id" column="version_id" />
+		<result property="sys_type" column="sys_type" />
+		<result property="update_version" column="update_version" />
+		<result property="update_apk_url" column="update_apk_url" />
+		<result property="digital_version" column="digital_version" />
+		<result property="is_update" column="is_update" />
+		<result property="update_logs" column="update_logs" />
+		<result property="update_time" column="update_time" />
+		<result property="force_update" column="force_update" />
+		
+	</resultMap>
+
+	<!-- 新增数据区域 -->
+	<sql id="insertCommon">
+		INSERT INTO t_version
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="version_id != null"> version_id,</if>
+			<if test="sys_type != null"> sys_type,</if>
+			<if test="update_version != null"> update_version,</if>
+			<if test="update_apk_url != null"> update_apk_url,</if>
+			<if test="digital_version != null"> digital_version,</if>
+			<if test="is_update != null"> is_update,</if>
+			<if test="update_logs != null"> update_logs,</if>
+			<if test="update_time != null"> update_time,</if>
+			<if test="force_update != null"> force_update</if>
+			
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="version_id != null">#{version_id},</if>
+			<if test="sys_type != null">#{sys_type},</if>
+			<if test="update_version != null">#{update_version},</if>
+			<if test="update_apk_url != null">#{update_apk_url},</if>
+			<if test="digital_version != null">#{digital_version},</if>
+			<if test="is_update != null">#{is_update},</if>
+			<if test="update_logs != null">#{update_logs},</if>
+			<if test="update_time != null">#{update_time},</if>
+			<if test="force_update != null">#{force_update}</if>
+			
+		</trim>
+	</sql>
+	
+	<insert id="insert" parameterType="com.aten.model.orm.Version">
+		<include refid="insertCommon" />
+	</insert>
+
+	<insert id="insertGetPk" parameterType="com.aten.model.orm.Version" >
+		<include refid="insertCommon" />
+		<selectKey resultType="String" order="AFTER" keyProperty="version_id">  
+	       SELECT @@IDENTITY AS ID  
+	    </selectKey>  
+	</insert>
+	
+	<!-- 更新数据区域 -->
+	<sql id="update_clause">
+		<set>
+			<trim suffixOverrides=",">
+				<if test="version_id != null"> version_id = #{version_id}, </if>
+				<if test="sys_type != null"> sys_type = #{sys_type}, </if>
+				<if test="update_version != null"> update_version = #{update_version}, </if>
+				<if test="update_apk_url != null"> update_apk_url = #{update_apk_url}, </if>
+				<if test="digital_version != null"> digital_version = #{digital_version}, </if>
+				<if test="is_update != null"> is_update = #{is_update}, </if>
+				<if test="update_logs != null"> update_logs = #{update_logs}, </if>
+				<if test="update_time != null"> update_time = #{update_time}, </if>
+				<if test="force_update != null"> force_update = #{force_update} </if>
+				
+			</trim>
+		</set>
+	</sql>
+	
+	
+	
+	
+
+	<update id="update" parameterType="com.aten.model.orm.Version">
+		UPDATE t_version <include refid="update_clause" /> WHERE version_id = #{version_id}
+	</update>
+
+	<!-- 删除数据区域 -->
+	<delete id="delete" parameterType="String">
+		delete from t_version where version_id in
+		<foreach item="idItem" collection="array" index="index" open="(" separator="," close=")">
+			#{idItem}
+		</foreach>
+	</delete>
+
+	<!-- 获取对象数据区域 -->
+	<select id="get" parameterType="String"	resultMap="resultVersion">
+		 SELECT
+		 t.version_id,t.sys_type,t.update_version,t.update_apk_url,t.digital_version,t.is_update,t.update_logs,t.update_time,t.force_update
+		 FROM t_version t WHERE version_id = #{version_id}
+	</select>
+	
+	<!-- 搜索数据区域 -->
+	<sql id="where_clause">
+		<where> 
+			1=1
+			<if test="version_id != null"> and t.version_id = #{version_id} </if>
+			<if test="version_id_vague != null"> and instr(t.version_id,#{version_id_vague})>0 </if>
+			<if test="sys_type != null"> and t.sys_type = #{sys_type} </if>
+			<if test="sys_type_vague != null"> and instr(t.sys_type,#{sys_type_vague})>0 </if>
+			<if test="update_version != null"> and t.update_version = #{update_version} </if>
+			<if test="update_version_vague != null"> and instr(t.update_version,#{update_version_vague})>0 </if>
+			<if test="update_apk_url != null"> and t.update_apk_url = #{update_apk_url} </if>
+			<if test="update_apk_url_vague != null"> and instr(t.update_apk_url,#{update_apk_url_vague})>0 </if>
+			<if test="digital_version != null"> and t.digital_version = #{digital_version} </if>
+			<if test="digital_version_vague != null"> and instr(t.digital_version,#{digital_version_vague})>0 </if>
+			<if test="is_update != null"> and t.is_update = #{is_update} </if>
+			<if test="is_update_vague != null"> and instr(t.is_update,#{is_update_vague})>0 </if>
+			<if test="update_logs != null"> and t.update_logs = #{update_logs} </if>
+			<if test="update_logs_vague != null"> and instr(t.update_logs,#{update_logs_vague})>0 </if>
+			<if test="update_time != null"> and t.update_time = #{update_time} </if>
+			<if test="update_time_vague != null"> and instr(t.update_time,#{update_time_vague})>0 </if>
+			<if test="force_update != null"> and t.force_update = #{force_update} </if>
+			<if test="force_update_vague != null"> and instr(t.force_update#{force_update_vague})>0 </if>
+			
+		</where>
+	</sql>
+	
+	<sql id="getCommon">
+		select  t.version_id,t.sys_type,t.update_version,t.update_apk_url,t.digital_version,t.is_update,t.update_logs,t.update_time,t.force_update
+		from t_version t
+		<include refid="where_clause" /> order by version_id desc
+	</sql>
+
+	
+
+	<select id="getList" parameterType="map" resultMap="resultVersion">
+            <include refid="getCommon" />
+             <if test="start != null">
+         		LIMIT ${start},${limit}
+        	</if> 
+	</select>
+
+	<select id="getCount" parameterType="map" resultType="int">
+			select count(*) ct from t_version t <include refid="where_clause" />
+	</select>
+	
+	
+	<!-- 排序区域 -->
+	<update id="updateBatch" parameterType="java.util.List">
+	   <foreach collection="list" item="item" index="index" separator=";">  
+			update t_version 
+			<set>
+				sort_no = #{item.sort_no}
+			</set>
+			WHERE version_id = #{item.id}
+	   </foreach>
+	</update>
+	
+</mapper>
+

@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.admin.dao.StatisticsDaoMapper">
+    <resultMap id="BaseResultMap" type="com.admin.model.Statistics">
+        <result column="YZ_COUNT" property="yzCount" jdbcType="BIGINT" />
+        <result column="YZ_COUNT_QFZY" property="yzCountQFZY" jdbcType="BIGINT" />
+        <result column="AGENT_COUNT" property="agentCount" jdbcType="BIGINT" />
+        <result column="SK_COUNT" property="skCount" jdbcType="BIGINT" />
+        <result column="SK_COUNT_BS" property="skCountBS" jdbcType="DECIMAL" />
+        <result column="SM_COUNT" property="smCount" jdbcType="BIGINT" />
+        <result column="SM_COUNT_BS" property="smCountBS" jdbcType="DECIMAL" />
+        <result column="MONEYCOUNT" property="moneyCount" jdbcType="BIGINT"/>
+        <result column="TYPECOUNT" property="typeCount" jdbcType="DECIMAL"/>
+        <result column="BSCOUNT" property="bsCount" jdbcType="DECIMAL"/>
+        <result column="AGENT_DEVICE_ALL_COUNT_MONEY" property="agentDeviceAllCountMoney" jdbcType="BIGINT"/>
+        <result column="AGENT_DEVICE_MONTH_COUNT_MONEY" property="agentDeviceMonthCountMoney" jdbcType="BIGINT"/>
+        <result column="AGENT_DEVICE_COUNT" property="agentDeviceCount" jdbcType="DECIMAL"/>
+        <result column="AGENT_DEVICE_MONTH_COUNT" property="agentDeviceMonthCount" jdbcType="DECIMAL"/>
+        <result column="AGENT_UNIQUE" property="agentUnique" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="getCountByType1"  parameterType="java.util.HashMap" resultMap="BaseResultMap">
+        select NVL(sum(t.total_fee),0) as AMOUNT,count(t.sys_id) as COUNT,t.MACHINECODE as DEVICE_CODE,
+        <if test="day != null">
+            to_char(sysdate -${day},'yyyy-mm-dd') as DAY_COUNT_AMOUNT
+        </if>
+        from t_order t where 1=1 and pay_state =1
+        <if test="payType != null">
+            and PAY_TYPE = #{payType}
+        </if>
+        <if test="day != null">
+            and to_char(t.pay_time,'yyyy-mm-dd') = to_char(sysdate -${day},'yyyy-mm-dd')
+        </if>
+        group by t.MACHINECODE
+    </select>
+
+    <select id="getCountByDay" parameterType="String"  resultMap="BaseResultMap">
+        select NVL(sum(a.TOTAL_FEE),0) as DAYCOUNT from T_ORDER a where 1=1
+        <if test="day != null">
+           and to_char(a.CREATE_TIME,'yyyy-mm-dd hh24:mi:ss') &gt;='${day} 00:00:00' and to_char(a.CREATE_TIME,'yyyy-mm-dd hh24:mi:ss') &lt;='${day} 23:59:59'
+        </if>
+        and a.PAY_STATE = 1
+    </select>
+
+    <select id="getAmountByHistory"  parameterType="java.util.HashMap" resultMap="BaseResultMap">
+        select NVL(sum(t.AMOUNT),0) as AMOUNT,NVL(sum(t.COUNT),0) as COUNT,t.DEVICE_CODE from T_AMOUNT t GROUP BY t.DEVICE_CODE
+    </select>
+
+    <select id="getCountByTypeAndDay" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        NVL(sum(t.YZ_COUNT),0) as YZ_COUNT,
+        NVL(sum(t.YZ_COUNT_QFZY),0) as YZ_COUNT_QFZY,
+        NVL(sum(t.AGENT_COUNT),0) as AGENT_COUNT,
+        NVL(sum(t.SK_COUNT),0) as SK_COUNT,
+        NVL(sum(t.SK_COUNT_BS),0) as SK_COUNT_BS,
+        NVL(sum(t.SM_COUNT),0) as SM_COUNT,
+        NVL(sum(t.SM_COUNT_BS),0) as SM_COUNT_BS
+        from T_STATISTICS t
+        where t.STATISTICS_TIME = '${day}'
+    </select>
+
+    <select id="getCountByTypeAndMonth" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        NVL(sum(t.YZ_COUNT),0) as YZ_COUNT,
+        NVL(sum(t.YZ_COUNT_QFZY),0) as YZ_COUNT_QFZY,
+        NVL(sum(t.AGENT_COUNT),0) as AGENT_COUNT,
+        NVL(sum(t.SK_COUNT),0) as SK_COUNT,
+        NVL(sum(t.SK_COUNT_BS),0) as SK_COUNT_BS,
+        NVL(sum(t.SM_COUNT),0) as SM_COUNT,
+        NVL(sum(t.SM_COUNT_BS),0) as SM_COUNT_BS
+        from T_STATISTICS t
+        where substr(t.STATISTICS_TIME,1,7) = '${day}'
+    </select>
+
+    <select id="getCount" resultMap="BaseResultMap">
+        select
+        NVL(sum(t.YZ_COUNT),0) as YZ_COUNT,
+        NVL(sum(t.YZ_COUNT_QFZY),0) as YZ_COUNT_QFZY,
+        NVL(sum(t.AGENT_COUNT),0) as AGENT_COUNT,
+        NVL(sum(t.SK_COUNT),0) as SK_COUNT,
+        NVL(sum(t.SK_COUNT_BS),0) as SK_COUNT_BS,
+        NVL(sum(t.SM_COUNT),0) as SM_COUNT,
+        NVL(sum(t.SM_COUNT_BS),0) as SM_COUNT_BS
+        from T_STATISTICS t
+        where 1=1
+    </select>
+
+    <select id="getYesterdayStatistics" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select NVL(sum(a.TOTAL_FEE),0) as YZCOUNT from T_ORDER a where 1=1
+        and to_char(a.CREATE_TIME,'yyyy-mm-dd hh24:mi:ss') &gt;='${day} 00:00:00' and to_char(a.CREATE_TIME,'yyyy-mm-dd hh24:mi:ss') &lt;='${day} 23:59:59'
+        and a.PAY_STATE = 1
+    </select>
+
+    <select id="getYesterdayCount" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT sum(a.TOTAL_FEE) as MONEYCOUNT,count(*) as BSCOUNT,a.ORDER_TYPE as TYPECOUNT from T_ORDER a where 1= 1
+        and to_char(a.CREATE_TIME,'yyyy-mm-dd hh24:mi:ss') &gt;='${day} 00:00:00' and to_char(a.CREATE_TIME,'yyyy-mm-dd hh24:mi:ss') &lt;='${day} 23:59:59'
+        and a.PAY_STATE = 1 GROUP BY a.ORDER_TYPE
+    </select>
+
+    <insert id="insertSelective" parameterType="com.admin.model.Statistics">
+        insert into T_STATISTICS
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            ID,
+            <if test="yzCount != null">YZ_COUNT,</if>
+            <if test="yzCountQFZY != null">YZ_COUNT_QFZY,</if>
+            <if test="agentCount != null">AGENT_COUNT,</if>
+            <if test="skCount != null">SK_COUNT,</if>
+            <if test="skCountBS != null">SK_COUNT_BS,</if>
+            <if test="smCount != null">SM_COUNT,</if>
+            <if test="smCountBS != null">SM_COUNT_BS,</if>
+            <if test="addTime != null">ADDTIME,</if>
+            <if test="statisticsTime != null">STATISTICS_TIME,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            T_STATISTICS_SEQUENCE.Nextval,
+            <if test="yzCount != null">#{yzCount,jdbcType=DECIMAL},</if>
+            <if test="yzCountQFZY != null">#{yzCountQFZY,jdbcType=DECIMAL},</if>
+            <if test="agentCount != null">#{agentCount,jdbcType=DECIMAL},</if>
+            <if test="skCount != null">#{skCount,jdbcType=DECIMAL},</if>
+            <if test="skCountBS != null">#{skCountBS,jdbcType=DECIMAL},</if>
+            <if test="smCount != null">#{smCount,jdbcType=DECIMAL},</if>
+            <if test="smCountBS != null">#{smCountBS,jdbcType=DECIMAL},</if>
+            <if test="addTime != null">#{addTime,jdbcType=TIMESTAMP},</if>
+            <if test="statisticsTime != null">#{statisticsTime,jdbcType=VARCHAR},</if>
+        </trim>
+    </insert>
+
+    <insert id="inserBatchAmount" parameterType="java.util.List">
+        insert into T_AMOUNT
+        select T_AMOUNT_SEQUENCE.NEXTVAL,A.* from(
+        <foreach collection="list" item="item" index="index" separator="UNION">
+            select
+            #{item.deviceCode},#{item.amount},#{item.scxkAmount},#{item.smAmount},#{item.dayCountAmount},#{item.smCount},#{item.sxykAmount},#{item.sxykCount},#{item.scxkCount},#{item.count}
+            from dual
+        </foreach>
+        ) A
+    </insert>
+
+    <select id="getAgentDeviceAllCountMoney" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+        select "NVL"(sum(t.TOTAL_FEE),0) as AGENT_DEVICE_ALL_COUNT_MONEY,t.AGENT_UNIQUE from T_ORDER t where 1=1
+        and t.PAY_STATE = 1
+        <if test="agentUnique != null">
+            and t.AGENT_UNIQUE = #{agentUnique}
+        </if>
+        GROUP BY t.AGENT_UNIQUE
+    </select>
+
+    <select id="getAgentDeviceMonthCountMoney" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+        select "NVL"(sum(t.TOTAL_FEE),0) as AGENT_DEVICE_MONTH_COUNT_MONEY,t.AGENT_UNIQUE from T_ORDER t where 1=1
+        and t.PAY_STATE = 1
+        <if test="month != null">
+            and to_char(t.pay_time,'yyyy-mm')= '${month}'
+        </if>
+        <if test="agentUnique != null">
+            and t.AGENT_UNIQUE = #{agentUnique}
+        </if>
+        GROUP BY t.AGENT_UNIQUE
+    </select>
+
+    <select id="getAgentDeviceCount" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+        select  count(t.DEVICE_UNIQUE) as AGENT_DEVICE_COUNT ,t.AGENT_UNIQUE from T_DEVICE_LIST t where 1=1
+        <if test="agentUnique != null">
+            and t.AGENT_UNIQUE = #{agentUnique}
+        </if>
+        GROUP BY t.AGENT_UNIQUE
+    </select>
+
+    <select id="getAgentDeviceMonthCount" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+        select count(t.DEVICE_UNIQUE) as AGENT_DEVICE_MONTH_COUNT,t.AGENT_UNIQUE from T_DEVICE_LIST t where 1=1
+        <if test="month != null">
+            and to_char(t.CREATE_TIME,'yyyy-mm')= '${month}'
+        </if>
+        <if test="agentUnique != null">
+            and t.AGENT_UNIQUE = #{agentUnique}
+        </if>
+        GROUP BY t.AGENT_UNIQUE
+    </select>
+</mapper>

@@ -1,0 +1,23 @@
+package com.aten.service.impl;
+
+import com.aten.model.orm.{CLASS_NAME};
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import com.aten.dao.{CLASS_NAME}Dao;
+import com.aten.service.{CLASS_NAME}Service;
+
+@Service("{DEFINE_CLASS_NAME}Service")
+public class {CLASS_NAME}ServiceImpl extends CommonServiceImpl<{CLASS_NAME},String> implements {CLASS_NAME}Service{
+
+	private {CLASS_NAME}Dao {DEFINE_CLASS_NAME}Dao;
+
+	@Autowired
+	public {CLASS_NAME}ServiceImpl({CLASS_NAME}Dao {DEFINE_CLASS_NAME}Dao) {
+		super({DEFINE_CLASS_NAME}Dao);
+		this.{DEFINE_CLASS_NAME}Dao={DEFINE_CLASS_NAME}Dao;
+	}
+
+}
+
+
+

@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.NewsDao">
+
+	<!-- 数据库映射模型区域 -->
+	<resultMap id="resultNews" type="com.aten.model.orm.News">
+		<result property="news_id" column="news_id" />
+		<result property="news_title" column="news_title" />
+		<result property="introduction" column="introduction" />
+		<result property="the_cat" column="the_cat" />
+		<result property="news_picture" column="news_picture" />
+		<result property="news_author" column="news_author" />
+		<result property="news_detail" column="news_detail" />
+		<result property="is_top" column="is_top" />
+		<result property="state" column="state" />
+		<result property="issue_time" column="issue_time" />
+		<result property="create_time" column="create_time" />
+		<result property="sort_no" column="sort_no" />
+
+	</resultMap>
+
+	<!-- 新增数据区域 -->
+	<sql id="insertCommon">
+		INSERT INTO t_news
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="news_id != null"> news_id,</if>
+			<if test="news_title != null"> news_title,</if>
+			<if test="introduction != null"> introduction,</if>
+			<if test="the_cat != null"> the_cat,</if>
+			<if test="news_picture != null"> news_picture,</if>
+			<if test="news_author != null"> news_author,</if>
+			<if test="news_detail != null"> news_detail,</if>
+			<if test="is_top != null"> is_top,</if>
+			<if test="state != null"> state,</if>
+			<if test="issue_time != null"> issue_time,</if>
+			create_time,
+			<if test="sort_no != null"> sort_no,</if>
+
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="news_id != null">#{news_id},</if>
+			<if test="news_title != null">#{news_title},</if>
+			<if test="introduction != null">#{introduction},</if>
+			<if test="the_cat != null">#{the_cat},</if>
+			<if test="news_picture != null">#{news_picture},</if>
+			<if test="news_author != null">#{news_author},</if>
+			<if test="news_detail != null">#{news_detail},</if>
+			<if test="is_top != null">#{is_top},</if>
+			<if test="state != null">#{state},</if>
+			<if test="issue_time != null">#{issue_time},</if>
+			now(),
+			<if test="sort_no != null">#{sort_no},</if>
+
+		</trim>
+	</sql>
+
+	<insert id="insert" parameterType="com.aten.model.orm.News">
+		<include refid="insertCommon" />
+	</insert>
+
+	<insert id="insertGetPk" parameterType="com.aten.model.orm.News">
+		<include refid="insertCommon" />
+		<selectKey resultType="String" order="AFTER" keyProperty="news_id">
+			SELECT @@IDENTITY AS ID
+		</selectKey>
+	</insert>
+
+	<!-- 更新数据区域 -->
+	<sql id="update_clause">
+		<set>
+			<trim suffixOverrides=",">
+				<if test="news_id != null"> news_id = #{news_id}, </if>
+				<if test="news_title != null"> news_title = #{news_title}, </if>
+				<if test="introduction != null"> introduction = #{introduction}, </if>
+				<if test="the_cat != null"> the_cat = #{the_cat}, </if>
+				<if test="news_picture != null"> news_picture = #{news_picture}, </if>
+				<if test="news_author != null"> news_author = #{news_author}, </if>
+				<if test="news_detail != null"> news_detail = #{news_detail}, </if>
+				<if test="is_top != null"> is_top = #{is_top}, </if>
+				<if test="state != null"> state = #{state}, </if>
+				<if test="issue_time != null"> issue_time = #{issue_time}, </if>
+				<if test="create_time != null"> create_time = #{create_time}, </if>
+				<if test="sort_no != null"> sort_no = #{sort_no}, </if>
+
+			</trim>
+		</set>
+	</sql>
+
+
+
+
+
+	<update id="update" parameterType="com.aten.model.orm.News">
+		UPDATE t_news
+		<include refid="update_clause" />
+		WHERE news_id = #{news_id}
+	</update>
+
+	<!-- 删除数据区域 -->
+	<delete id="delete" parameterType="String">
+		delete from t_news where news_id in
+		<foreach item="idItem" collection="array" index="index" open="("
+			separator="," close=")">
+			#{idItem}
+		</foreach>
+	</delete>
+
+	<!-- 获取对象数据区域 -->
+	<select id="get" parameterType="String" resultMap="resultNews">
+		SELECT
+		t.news_id,t.news_title,t.introduction,t.the_cat,t.news_picture,t.news_author,t.news_detail,t.is_top,t.state,t.issue_time,t.create_time,t.sort_no
+		FROM t_news t WHERE news_id = #{news_id}
+	</select>
+
+	<!-- 搜索数据区域 -->
+	<sql id="where_clause">
+		<where>
+			1=1
+			<if test="news_id != null"> and t.news_id = #{news_id} </if>
+			<if test="news_title != null"> and t.news_title = #{news_title} </if>
+			<if test="news_title_vague != null"> and instr(t.news_title,#{news_title_vague})>0 </if>
+			<if test="introduction != null"> and t.introduction = #{introduction} </if>
+			<if test="the_cat != null"> and t.the_cat = #{the_cat} </if>
+			<if test="news_picture != null"> and t.news_picture = #{news_picture} </if>
+			<if test="news_author != null"> and t.news_author = #{news_author} </if>
+			<if test="news_detail != null"> and t.news_detail = #{news_detail} </if>
+			<if test="is_top != null"> and t.is_top = #{is_top} </if>
+			<if test="state != null"> and t.state = #{state} </if>
+			<if test="issue_time != null"> and t.issue_time = #{issue_time} </if>
+			<if test="create_time != null"> and t.create_time = #{create_time} </if>
+			<if test="sort_no != null"> and t.sort_no = #{sort_no} </if>
+			<if test="push_time_start != null"> and DATE_FORMAT(t.issue_time,'%Y-%m-%d') &gt;=
+				DATE_FORMAT(#{push_time_start},'%Y-%m-%d') </if>
+			<if test="push_time_end != null"> and DATE_FORMAT(t.issue_time,'%Y-%m-%d') &lt;=
+				DATE_FORMAT(#{push_time_end},'%Y-%m-%d') </if>
+		</where>
+	</sql>
+
+	<sql id="getCommon">
+		select
+		t.news_id,t.news_title,t.introduction,t.the_cat,t.news_picture,t.news_author,t.news_detail,t.is_top,t.state,t.issue_time,t.create_time,t.sort_no
+		from t_news t
+		<include refid="where_clause" />
+		order by sort_no desc
+	</sql>
+
+
+
+	<select id="getList" parameterType="map" resultMap="resultNews">
+		<include refid="getCommon" />
+		<if test="start != null">
+			LIMIT ${start},${limit}
+		</if>
+	</select>
+
+	<select id="getCount" parameterType="map" resultType="int">
+		select count(*) ct from t_news t
+		<include refid="where_clause" />
+	</select>
+
+
+	<!-- 排序区域 -->
+	<update id="updateBatch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index"
+			separator=";">
+			update t_news
+			<set>
+				sort_no = #{item.sort_no}
+			</set>
+			WHERE news_id = #{item.id}
+		</foreach>
+	</update>
+
+	<select id="checkNewsClass" parameterType="String"
+		resultType="com.aten.model.orm.News">
+		select * from t_news t where 1=1 and
+		instr(t.the_cat,#{cat_id})>0
+	</select>
+</mapper>
+

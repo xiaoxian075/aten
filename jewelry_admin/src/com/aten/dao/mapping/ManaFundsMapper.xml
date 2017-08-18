@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.ManaFundsDao">
+
+	<select id="getBySellerid" parameterType="BigInteger"
+		resultType="com.aten.model.orm.ManaFunds">
+		SELECT
+		`fund_id`,
+		`seller_id`,
+		`total_assets`,
+		`balance`,
+		`frozen_amount`
+		FROM
+		`t_mana_funds`
+		WHERE
+		`seller_id`=#{seller_id}
+		LIMIT 1
+	</select>
+
+
+	<update id="updateoneBalanceById" parameterType="map">
+		UPDATE
+		`t_mana_funds`
+		SET
+		`total_assets` = #{total_assets},
+		`balance` = #{balance}
+		WHERE
+		`fund_id` = #{fund_id}
+		LIMIT 1
+	</update>
+	
+	<update id="updateBalance" parameterType="map">
+		UPDATE
+		`t_mana_funds`
+		SET
+		`total_assets` = `total_assets` + #{balance},
+		`balance` = `balance` + #{balance}
+		WHERE
+		`fund_id` = #{fund_id}
+		and `total_assets` + #{balance} >= 0
+		and `balance` + #{balance} >= 0
+		LIMIT 1
+	</update>
+	
+	<select id="get" parameterType="String" resultType="com.aten.model.orm.ManaFunds">
+		SELECT * from t_mana_funds where seller_id=#{seller_id}
+	</select>
+
+</mapper>
+

@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.SyslogDao">
+
+	<!-- 数据库映射模型区域 -->
+	<resultMap id="resultSyslog" type="com.aten.model.orm.Syslog">
+		<result property="syslog_id" column="syslog_id" />
+		<result property="back_id" column="back_id" />
+		<result property="back_name" column="back_name" />
+		<result property="back_type" column="back_type" />
+		<result property="method" column="method" />
+		<result property="content" column="content" />
+		<result property="error_code" column="error_code" />
+
+		<result property="paras" column="paras" />
+		<result property="error_content" column="error_content" />
+		<result property="sys_layer" column="sys_layer" />
+		<result property="ip" column="ip" />
+		<result property="in_date" column="in_date" />
+
+	</resultMap>
+
+	<!-- 新增数据区域 -->
+	<sql id="insertCommon">
+		insert into t_syslog(
+
+		<if test="syslog_id != null"> syslog_id,</if>
+
+		<if test="back_id != null"> back_id,</if>
+
+		<if test="back_name != null"> back_name,</if>
+
+		<if test="back_type != null"> back_type,</if>
+
+		<if test="method != null"> method,</if>
+
+		<if test="content != null"> content,</if>
+
+		<if test="error_code != null"> error_code,</if>
+
+
+		<if test="paras != null"> paras,</if>
+
+		<if test="error_content != null"> error_content,</if>
+
+		<if test="sys_layer != null"> sys_layer,</if>
+
+		<if test="ip != null"> ip,</if>
+		in_date
+		)
+		values(
+
+		<if test="syslog_id != null">#{syslog_id},</if>
+
+		<if test="back_id != null">#{back_id},</if>
+
+		<if test="back_name != null">#{back_name},</if>
+
+		<if test="back_type != null">#{back_type},</if>
+
+		<if test="method != null">#{method},</if>
+
+		<if test="content != null">#{content},</if>
+
+		<if test="error_code != null">#{error_code},</if>
+
+
+		<if test="paras != null">#{paras},</if>
+
+		<if test="error_content != null">#{error_content},</if>
+
+		<if test="sys_layer != null">#{sys_layer},</if>
+
+		<if test="ip != null">#{ip},</if>
+
+		now()
+		)
+	</sql>
+
+	<insert id="insert" parameterType="com.aten.model.orm.Syslog">
+		<include refid="insertCommon" />
+	</insert>
+
+	<!-- 更新数据区域 -->
+	<sql id="update_clause">
+		<set>
+			<if test="syslog_id != null"> syslog_id = #{syslog_id}, </if>
+			<if test="back_id != null"> back_id = #{back_id}, </if>
+			<if test="back_name != null"> back_name = #{back_name}, </if>
+			<if test="back_type != null"> back_type = #{back_type}, </if>
+			<if test="method != null"> method = #{method}, </if>
+			<if test="content != null"> content = #{content}, </if>
+			<if test="error_code != null"> error_code = #{error_code}, </if>
+
+			<if test="paras != null"> paras = #{paras}, </if>
+			<if test="error_content != null"> error_content = #{error_content}, </if>
+			<if test="sys_layer != null"> sys_layer = #{sys_layer}, </if>
+			<if test="ip != null"> ip = #{ip}, </if>
+			<if test="in_date != null"> in_date = #{in_date} </if>
+
+		</set>
+	</sql>
+
+
+	<update id="update" parameterType="com.aten.model.orm.Syslog">
+		update t_syslog
+		<include refid="update_clause" />
+		where syslog_id = #{syslog_id}
+	</update>
+
+	<!-- 删除数据区域 -->
+	<delete id="delete" parameterType="String">
+		delete from t_syslog where syslog_id in
+		<foreach item="idItem" collection="array" index="index" open="("
+			separator="," close=")">
+			#{idItem}
+		</foreach>
+	</delete>
+
+	<!-- 获取对象数据区域 -->
+	<select id="get" parameterType="String" resultMap="resultSyslog">
+		select
+		syslog_id,back_id,back_name,back_type,method,content,error_code,
+		paras,error_content,sys_layer,ip,in_date
+		from t_syslog where syslog_id = #{syslog_id}
+	</select>
+
+	<!-- 搜索数据区域 -->
+	<sql id="where_clause">
+		<if test="syslog_id != null"> and syslog_id = #{syslog_id} </if>
+		<if test="back_id != null"> and back_id = #{back_id} </if>
+		<if test="back_name != null"> and back_name = #{back_name} </if>
+		<if test="back_name_vague != null"> and back_name LIKE
+			concat(concat('%',#{back_name_vague}),'%') </if>
+		<if test="back_type != null"> and back_type = #{back_type} </if>
+		<if test="method != null"> and method = #{method} </if>
+		<if test="content != null"> and content = #{content} </if>
+		<if test="error_code != null"> and error_code = #{error_code} </if>
+
+		<if test="paras != null"> and paras = #{paras} </if>
+		<if test="error_content != null"> and error_content = #{error_content} </if>
+		<if test="sys_layer != null"> and sys_layer = #{sys_layer} </if>
+		<if test="ip != null"> and ip = #{ip} </if>
+		<if test="in_date != null"> and in_date = #{in_date} </if>
+		<if test="start_time != null"> and t.in_date &gt;= #{start_time}   </if>
+		<if test="end_time != null"> and t.in_date &lt;= #{end_time} </if>
+	</sql>
+
+
+	<select id="getList" parameterType="map" resultMap="resultSyslog">
+		select * from t_syslog t
+		where 1 = 1
+		<include refid="where_clause" />
+		order by syslog_id desc
+		<if test="start != null">
+			LIMIT ${start},${limit}
+		</if>
+	</select>
+
+
+	<select id="getCount" parameterType="map" resultType="int">
+		select count(*) ct from t_syslog t
+		where 1 = 1
+		<include refid="where_clause" />
+	</select>
+
+	<!-- 排序区域 -->
+	<update id="updateBatch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" open="begin"
+			close=";end;" separator=";">
+			update t_syslog
+			<set>
+				sort_no = #{item.sort_no}
+			</set>
+			where syslog_id = #{item.id}
+		</foreach>
+	</update>
+
+</mapper>
+

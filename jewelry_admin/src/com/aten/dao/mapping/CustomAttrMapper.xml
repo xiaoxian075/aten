@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.CustomAttrValueDao">
+	
+<!-- 	<cache type="org.mybatis.caches.ehcache.EhcacheCache"/>  -->
+
+	<resultMap id="resultlistCustomAttrValue" type="com.aten.model.orm.CustomAttrValueNode">
+		<result property="sav_id" column="sav_id" />
+		<result property="custom_attr_id" column="custom_attr_id" />
+		<result property="attr_id" column="attr_id" />
+		<result property="av_id" column="av_id" />
+		<result property="custom_av_id" column="custom_av_id" />
+		<result property="custom_attr_value" column="custom_attr_value" />
+		<result property="custom_attr_img" column="custom_attr_img" />
+		<result property="relate_img" column="relate_img" />
+	</resultMap>
+
+	<select id="getByCustomattridAndAttrid" parameterType="map"
+		resultMap="resultlistCustomAttrValue">
+		SELECT
+		`sav_id`,
+		`custom_attr_id`,
+		`attr_id`,
+		`av_id`,
+		`custom_av_id`,
+		`custom_attr_value`,
+		`custom_attr_img`,
+		`relate_img`
+		FROM
+		`t_custom_attr_value`
+		WHERE
+		`custom_attr_id`=#{custom_attr_id}
+		<!-- AND `attr_id`=#{attr_id} -->
+	</select>
+
+
+</mapper>
+

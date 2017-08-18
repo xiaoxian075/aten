@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.admin.dao.ReportDaoMapper">
+    <resultMap id="BaseResultMap" type="com.admin.model.Order">
+        <result column="sys_id" property="sysId" jdbcType="DECIMAL" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="order_number" property="orderNumber" jdbcType="VARCHAR" />
+        <result column="yun_id" property="yunId" jdbcType="VARCHAR" />
+        <result column="machinecode" property="machineCode" jdbcType="VARCHAR" />
+        <result column="total_fee" property="totalFee" jdbcType="DECIMAL" />
+        <result column="pay_time" property="payTime" jdbcType="TIMESTAMP" />
+        <result column="pay_type" property="payType" jdbcType="VARCHAR" />
+        <result column="card_no" property="cardNo" jdbcType="VARCHAR" />
+        <result column="order_type" property="orderType" jdbcType="DECIMAL" />
+        <result column="order_state" property="orderState" jdbcType="DECIMAL" />
+        <result column="pay_state" property="payState" jdbcType="DECIMAL" />
+        <result column="counter_fee" property="counterFee" jdbcType="DECIMAL" />
+    </resultMap>
+    <sql id="Example_Where_Clause" >
+        <where >
+            <foreach collection="oredCriteria" item="criteria" separator="or" >
+                <if test="criteria.valid" >
+                    <trim prefix="(" suffix=")" prefixOverrides="and" >
+                        <foreach collection="criteria.criteria" item="criterion" >
+                            <choose >
+                                <when test="criterion.noValue" >
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue" >
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue" >
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue" >
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+
+    <select id="selectPrintCollect" resultType="java.util.HashMap" parameterType="com.admin.model.Order">
+        select PAY_TYPE , count(*) as num , sum(total_fee) as sum_total_fee  from T_ORDER where  to_char(pay_time,'yyyy-mm-dd') =  to_char(#{payTime,jdbcType=TIMESTAMP},'yyyy-mm-dd')
+        and DEVICE_UNIQUE = #{deviceUnique,jdbcType=VARCHAR}
+        group by  DEVICE_UNIQUE , PAY_TYPE
+    </select>
+
+    <select id="selectTodayLastOne" resultMap="BaseResultMap" parameterType="com.admin.model.Order">
+        select * from (
+        select * from T_ORDER where pay_state = 1
+        and order_type = 1
+        and device_unique = #{deviceUnique,jdbcType=VARCHAR}
+        order by PAY_TIME desc
+        )
+        where ROWNUM=1
+    </select>
+</mapper>

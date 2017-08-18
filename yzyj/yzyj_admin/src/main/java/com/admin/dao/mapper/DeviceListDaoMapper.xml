@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.admin.dao.DeviceListDaoMapper">
+    <resultMap id="BaseResultMap" type="com.admin.model.DeviceList">
+        <result column="id" property="id" jdbcType="DECIMAL" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="agent_unique" property="agentUnique" jdbcType="VARCHAR" />
+        <result column="device_code" property="deviceCode" jdbcType="VARCHAR" />
+        <result column="activation_code" property="activationCode" jdbcType="VARCHAR" />
+        <result column="device_name" property="deviceName" jdbcType="VARCHAR" />
+        <result column="device_type" property="deviceType" jdbcType="DECIMAL" />
+        <result column="merchant_name" property="merchantName" jdbcType="VARCHAR" />
+        <result column="merchant_yun_pay_account" property="merchantYunPayAccount" jdbcType="VARCHAR" />
+        <result column="merchant_phone" property="merchantPhone" jdbcType="VARCHAR" />
+        <result column="state" property="state" jdbcType="VARCHAR" />
+        <result column="device_unique" property="deviceUnique" jdbcType="VARCHAR" />
+        <result column="REALNAME" property="realName" jdbcType="VARCHAR" />
+        <result column="MONEYCOUNT" property="moneyCount" jdbcType="VARCHAR" />
+        <result column="MACHINECODE" property="machineCode" jdbcType="VARCHAR" />
+        <result column="MERCHANT_ID" property="merchantId" jdbcType="VARCHAR" />
+        <result column="QUOTA_GROUP" property="quotaGroup" jdbcType="DECIMAL" />
+        <result column="APPROVAL_STATUS" property="approvalStatus" jdbcType="DECIMAL" />
+        <result column="SUBSIDY_STATUS" property="subsidyStatus" jdbcType="DECIMAL" />
+        <result column="SUBSIDY_TIME" property="subsidyTime" jdbcType="VARCHAR" />
+        <result column="LKL_MERCHANT_CODE" property="lklMerchantCode" jdbcType="VARCHAR" />
+        <result column="TYJ_STATUS" property="tyjStatus" jdbcType="VARCHAR" />
+        <result column="TYJ_TIME" property="tyjTime" jdbcType="VARCHAR" />
+        <result column="TYJ_NUMBER" property="tyjNumber" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <sql id="Example_Where_Clause" >
+        <where >
+            <foreach collection="oredCriteria" item="criteria" separator="or" >
+                <if test="criteria.valid" >
+                    <trim prefix="(" suffix=")" prefixOverrides="and" >
+                        <foreach collection="criteria.criteria" item="criterion" >
+                            <choose >
+                                <when test="criterion.noValue" >
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue" >
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue" >
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue" >
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <select id="selectMaxId" resultType="java.lang.Integer" >
+        select max(id) as maxId  from t_device_list
+    </select>
+    <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.admin.model.BaseExample">
+        select
+        *
+        from t_device_list
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+
+    <select id="getDeviceListByDId" resultMap="BaseResultMap" resultType="java.lang.String">
+        select
+        *
+        from t_device_list
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectByExampleAndPage" parameterType="com.admin.model.BaseExample"  resultMap="BaseResultMap">
+        select device.*,agent.REALNAME from  t_device_list device
+        left join Z_AGENCY_PERSON agent on agent.agent_unique = device.agent_unique
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+
+    <select id="getMoneyByAgentUnique" resultMap="BaseResultMap">
+        select NVL(sum(t.total_fee),0) as MONEYCOUNT,t.MACHINECODE from T_ORDER t
+        where t.AGENT_UNIQUE=#{agentUnique}
+        and pay_state = 1
+        <if test="type == 2">
+            and order_type = 1
+        </if>
+       GROUP BY t.MACHINECODE
+    </select>
+
+    <select id="getCountMoneyByAgentUnique" resultType="java.lang.Long">
+        select NVL(sum(t.total_fee),0) as MONEYCOUNT from T_ORDER t where t.AGENT_UNIQUE=#{agentUnique} and pay_state = 1
+    </select>
+
+    <select id="getMoneyByAgentUniqueAndDay" resultMap="BaseResultMap">
+        select NVL(sum(t.total_fee),0) as MONEYCOUNT,t.MACHINECODE from T_ORDER t
+        where t.AGENT_UNIQUE=#{agentUnique}
+        and pay_state = 1
+        <if test="type == 2">
+            and order_type = 1
+        </if>
+        and to_char(t.pay_time,'yyyy-mm-dd') = to_char(sysdate,'yyyy-mm-dd') GROUP BY t.MACHINECODE
+    </select>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        *
+        from t_device_list
+        where id = #{id,jdbcType=DECIMAL}
+    </select>
+    <insert id="insertSelective" parameterType="com.admin.model.BaseExample" >
+        insert into t_device_list
+        <selectKey keyProperty="id" resultType="String" order="BEFORE">
+            select t_device_list_SEQUENCE.nextval from dual
+        </selectKey>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="agentUnique != null">
+                agent_unique,
+            </if>
+            <if test="lklMachineCode != null">
+                lkl_machine_code,
+            </if>
+            <if test="lklActivationCode != null">
+                lkl_activation_code,
+            </if>
+            <if test="lklMerchantCode != null">
+                lkl_merchant_code,
+            </if>
+            <if test="lklTerminalCode != null">
+                lkl_terminal_code,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="deviceCode != null">
+                device_code,
+            </if>
+            <if test="activationCode != null">
+                activation_code,
+            </if>
+            <if test="deviceName != null">
+                device_name,
+            </if>
+            <if test="deviceType != null">
+                device_type,
+            </if>
+            <if test="merchantName != null">
+                merchant_name,
+            </if>
+            <if test="merchantYunPayAccount != null">
+                merchant_yun_pay_account,
+            </if>
+            <if test="merchantPhone != null">
+                merchant_phone,
+            </if>
+            <if test="state != null">
+                state,
+            </if>
+            <if test="deviceUnique != null">
+                device_unique,
+            </if>
+            <if test="quotaGroup != null">
+                QUOTA_GROUP,
+            </if>
+            <if test="approvalStatus != null">
+                APPROVAL_STATUS,
+            </if>
+            <if test="merchantId != null">
+                MERCHANT_ID,
+            </if>
+            <if test="subsidyStatus != null">
+                SUBSIDY_STATUS,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="agentUnique != null">
+                #{agentUnique,jdbcType=VARCHAR},
+            </if>
+            <if test="lklMachineCode != null">
+                #{lklMachineCode,jdbcType=VARCHAR},
+            </if>
+            <if test="lklActivationCode != null">
+                #{lklActivationCode,jdbcType=VARCHAR},
+            </if>
+            <if test="lklMerchantCode != null">
+                #{lklMerchantCode,jdbcType=VARCHAR},
+            </if>
+            <if test="lklTerminalCode != null">
+                #{lklTerminalCode,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=VARCHAR},
+            </if>
+            <if test="deviceCode != null">
+                #{deviceCode,jdbcType=VARCHAR},
+            </if>
+            <if test="activationCode != null">
+                #{activationCode,jdbcType=VARCHAR},
+            </if>
+            <if test="deviceName != null">
+                #{deviceName,jdbcType=VARCHAR},
+            </if>
+            <if test="deviceType != null">
+                #{deviceType,jdbcType=DECIMAL},
+            </if>
+            <if test="merchantName != null">
+                #{merchantName,jdbcType=VARCHAR},
+            </if>
+            <if test="merchantYunPayAccount != null">
+                #{merchantYunPayAccount,jdbcType=VARCHAR},
+            </if>
+            <if test="merchantPhone != null">
+                #{merchantPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="state != null">
+                #{state,jdbcType=DECIMAL},
+            </if>
+            <if test="deviceUnique != null">
+                #{deviceUnique,jdbcType=VARCHAR},
+            </if>
+            <if test="quotaGroup != null">
+                #{quotaGroup,jdbcType=DECIMAL},
+            </if>
+            <if test="approvalStatus != null">
+                #{approvalStatus,jdbcType=DECIMAL},
+            </if>
+            <if test="merchantId != null">
+                #{merchantId,jdbcType=DECIMAL},
+            </if>
+            <if test="subsidyStatus != null">
+                #{subsidyStatus,jdbcType=DECIMAL},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.admin.model.BaseExample">
+        update t_device_list
+        <set>
+            <if test="agentUnique != null">
+                agent_unique= #{agentUnique,jdbcType=VARCHAR},
+            </if>
+            <if test="deviceCode != null">
+                device_code= #{deviceCode,jdbcType=VARCHAR},
+            </if>
+            <if test="activationCode != null">
+                activation_code= #{activationCode,jdbcType=VARCHAR},
+            </if>
+            <if test="deviceName != null">
+                device_name= #{deviceName,jdbcType=VARCHAR},
+            </if>
+            <if test="lklMachineCode != null">
+                lkl_machine_code= #{lklMachineCode,jdbcType=VARCHAR},
+            </if>
+            <if test="lklActivationCode != null">
+                lkl_activation_code= #{lklActivationCode,jdbcType=VARCHAR},
+            </if>
+            <if test="lklMerchantCode != null">
+                lkl_merchant_code= #{lklMerchantCode,jdbcType=VARCHAR},
+            </if>
+            <if test="lklTerminalCode != null">
+                lkl_terminal_code= #{lklTerminalCode,jdbcType=VARCHAR},
+            </if>
+            <if test="deviceType != null">
+                device_type= #{deviceType,jdbcType=DECIMAL},
+            </if>
+            <if test="merchantName != null">
+                merchant_name= #{merchantName,jdbcType=VARCHAR},
+            </if>
+            <if test="merchantYunPayAccount != null">
+                merchant_yun_pay_account= #{merchantYunPayAccount,jdbcType=VARCHAR},
+            </if>
+            <if test="merchantPhone != null">
+                merchant_phone= #{merchantPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="state != null">
+                state= #{state,jdbcType=DECIMAL},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from t_device_list
+        where id = #{id,jdbcType=DECIMAL}
+    </delete>
+
+    <delete id="deleteAgentDevice" parameterType="com.admin.model.DeviceList" >
+        delete from t_device_list
+        where 1=1
+        and DEVICE_UNIQUE = #{deviceUnique,jdbcType=VARCHAR}
+    </delete>
+
+    <select id="getDeviceListByAgentUnique" resultType="com.admin.model.DeviceList" >
+        select * from t_device_list
+        where agent_unique = #{agentUnique,jdbcType=VARCHAR}
+    </select>
+
+    <update id="updateApproval" parameterType="java.lang.Integer">
+        update t_device_list set APPROVAL_STATUS = #{approvalStatus},STATE = #{state} where id = #{id}
+    </update>
+
+    <update id="updateOneKey" parameterType="java.lang.Integer">
+        update t_device_list set STATE = #{state} WHERE  1=1 and APPROVAL_STATUS = 3
+    </update>
+
+    <update id="updateByMId" parameterType="java.lang.String">
+        update t_device_list set AGENT_UNIQUE = #{agentUnique,jdbcType=VARCHAR} where MERCHANT_ID = #{id}
+    </update>
+
+    <update id="updateGroup" parameterType="java.lang.String">
+        update t_device_list set  QUOTA_GROUP = #{group,jdbcType=VARCHAR} where DEVICE_UNIQUE = #{devicUnique,jdbcType=VARCHAR}
+    </update>
+
+    <select id="getDeviceListByYId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select * from t_device_list t where t.MERCHANT_YUN_PAY_ACCOUNT = #{loginName,jdbcType=VARCHAR}
+    </select>
+
+    <update id="updateYunId" parameterType="java.lang.String">
+        update T_DEVICE_LIST q set q.MERCHANT_YUN_PAY_ACCOUNT = #{merchantYunPayAccountUpdate,jdbcType=VARCHAR} where q.MERCHANT_YUN_PAY_ACCOUNT = #{merchantYunPayAccount,jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateState" parameterType="java.lang.String">
+        update T_DEVICE_LIST t set t.state = 1 where t.DEVICE_CODE = #{machineCode,jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateSubsidyStatus">
+        update T_DEVICE_LIST t set t.SUBSIDY_STATUS = #{subsidyStatus},t.SUBSIDY_TIME = #{time} where t.id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <select id="searchDeviceList" parameterType="DeviceList" resultType="com.admin.model.DeviceList">
+        select o.*,z.REALNAME from  t_device_list o, Z_AGENCY_PERSON z where 1=1
+        <if test="lklMerchantCode != null and lklMerchantCode != ''">
+            AND o.LKL_MERCHANT_CODE= #{lklMerchantCode}
+        </if>
+        <if test="lklTerminalCode != null and lklTerminalCode != ''">
+            AND o.LKL_TERMINAL_CODE= #{lklTerminalCode}
+        </if>
+        <if test="merchantYunPayAccount != null and merchantYunPayAccount != ''">
+            AND o.MERCHANT_YUN_PAY_ACCOUNT= #{merchantYunPayAccount}
+        </if>
+        <if test="realName != null and realName != ''">
+            AND z.REALNAME like '%${realName}%'
+        </if>
+        and o.AGENT_UNIQUE = z.AGENT_UNIQUE and o.subsidy_status = 2 order by o.CREATE_TIME desc
+    </select>
+
+    <update id="updateTyjStatus" parameterType="DeviceList">
+        update T_DEVICE_LIST
+        <set>
+            <if test="tyjStatus != null">
+                TYJ_STATUS= #{tyjStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="tyjTime != null">
+                TYJ_TIME= #{tyjTime,jdbcType=VARCHAR},
+            </if>
+            <if test="tyjNumber != null">
+                TYJ_NUMBER= #{tyjNumber,jdbcType=VARCHAR}
+            </if>
+            where DEVICE_UNIQUE = #{deviceUnique,jdbcType=VARCHAR}
+        </set>
+    </update>
+
+    <update id="updateTyjStatus1" parameterType="DeviceList">
+        update T_DEVICE_LIST
+        <set>
+            <if test="tyjStatus != null">
+                TYJ_STATUS= #{tyjStatus,jdbcType=VARCHAR}
+            </if>
+            where DEVICE_UNIQUE = #{deviceUnique,jdbcType=VARCHAR}
+        </set>
+    </update>
+
+</mapper>

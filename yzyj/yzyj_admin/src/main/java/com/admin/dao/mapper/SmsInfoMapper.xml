@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.admin.dao.SmsInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.admin.model.SmsInfo">
+        <id column="ID" jdbcType="BIGINT" property="id"/>
+        <result column="TOTAL_COUNT" jdbcType="INTEGER" property="totalCount"/>
+        <result column="TOTAL_FEE" jdbcType="VARCHAR" property="totalFee"/>
+        <result column="UNIT" jdbcType="VARCHAR" property="unit"/>
+        <result column="TEXT" jdbcType="VARCHAR" property="text"/>
+        <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime"/>
+    </resultMap>
+    <sql id="Example_Where_Clause" >
+        <where >
+            <foreach collection="oredCriteria" item="criteria" separator="or" >
+                <if test="criteria.valid" >
+                    <trim prefix="(" suffix=")" prefixOverrides="and" >
+                        <foreach collection="criteria.criteria" item="criterion" >
+                            <choose >
+                                <when test="criterion.noValue" >
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue" >
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue" >
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue" >
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+
+    <select id="selectOne" parameterType="java.lang.Long" resultType="com.admin.model.SmsInfo" >
+        SELECT
+              ID,
+              TOTAL_COUNT,
+              TOTAL_FEE,
+              UNIT,
+              TEXT,
+              CREATE_TIME
+        FROM
+        T_SMS_INFO
+        WHERE
+        ID=#{id}
+        AND rownum = 1
+    </select>
+
+    <insert id="insertOne" parameterType="com.admin.model.SmsInfo" >
+        <selectKey resultType="java.lang.Long" order="BEFORE" keyProperty="id">
+            SELECT T_SMS_INFO_SEQUENCE.nextval as ID from DUAL
+        </selectKey>
+        INSERT INTO
+        T_SMS_INFO
+            (
+              ID,
+              TOTAL_COUNT,
+              TOTAL_FEE,
+              UNIT,
+              TEXT,
+              CREATE_TIME
+            )
+        VALUES
+            (
+                #{id},
+                #{totalCount},
+                #{totalFee},
+                #{unit},
+                #{text},
+                #{createTime}
+            )
+    </insert>
+
+<!--    <select id="selectList" resultMap="BaseResultMap" parameterType="com.admin.model.BaseExample" >
+        select
+        ID,
+        TYPE,
+        SIGN,
+        CONTENT,
+        STATUS,
+        REASON,
+        CREATE_TIME,
+        UPDATE_TIME
+        from T_SMS_MODEL
+        <if test="_parameter != null" >
+            <include refid="Example_Where_Clause" />
+        </if>
+        <if test="orderByClause != null" >
+            order by ${orderByClause}
+        </if>
+    </select>
+
+    <select id="signList" resultMap="BaseResultMap" >
+        SELECT
+        ID,
+        TYPE,
+        SIGN,
+        CONTENT,
+        STATUS,
+        REASON,
+        CREATE_TIME,
+        UPDATE_TIME
+        FROM
+        T_SMS_MODEL
+        WHERE
+        STATUS=1
+    </select>
+
+
+
+
+
+
+    <delete id="deleteOne" parameterType="java.lang.Long" >
+        DELETE FROM
+        T_SMS_MODEL
+        WHERE
+        ID = #{id}
+        AND rownum = 1
+    </delete>
+
+    <update id="updateOne" parameterType="com.admin.model.SmsModel">
+        UPDATE
+        T_SMS_MODEL
+        SET
+        TYPE = #{type},
+        SIGN = #{sign},
+        CONTENT = #{content},
+        STATUS = #{status},
+        REASON = #{reason},
+        UPDATE_TIME = #{updateTime}
+        WHERE
+        id = #{id}
+        AND rownum = 1
+    </update>-->
+</mapper>

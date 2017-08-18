@@ -1,0 +1,20 @@
+{
+	"yunpay": {
+		"accessKeyId": "yYcjJkjjwNuAG7wfeXkRSg==",
+		"accessKeySecret": "o9Y4atpnOz4aiSQ2tIlbWZieE90L6S/GVCYBz7qgiUA=",
+		"roleArn": "dTRA5j6tvBiMnEniabCB5fuX6vZ/LnhlF45+f566DNUYt9Q3ua7DBLDroY9UJ52FI9sPh6fwYgWQgULfjcmHww==",
+		"sign": "thisIsMd5Key",
+		"roleSessionName": "yunpay-v2",
+		"bucket": "yunpay",
+		"domain": "img.ipaye.cn"
+	},
+	"yunpay_test": {
+		"accessKeyId": "Uy20RwVGwhgfXaLZH1oi2A==",
+		"accessKeySecret": "/zoau4aF+4h+38Azz42TxDanjwHce06KyCQ8U8X9qGs=",
+		"roleArn": "dTRA5j6tvBgvKoUoxoPgMl/v+QMcgg33b88JcpKNED+9WSODkOZTyx/48lZYae0i",
+		"sign": "thisIsMd5Key",
+		"roleSessionName": "yunpay-v2",
+		"bucket": "yunpay-test",
+		"domain": "http://oss-cn-shanghai.aliyuncs.com"
+	}
+}

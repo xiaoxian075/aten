@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.FeedbackDao">
+
+	<!-- 数据库映射模型区域 -->
+	<resultMap id="resultFeedback" type="com.aten.model.orm.Feedback" >
+		<result property="fb_id" column="fb_id" />
+		<result property="account_id" column="account_id" />
+		<result property="nick_name" column="nick_name" />
+		<result property="fb_content" column="fb_content" />
+		<result property="fb_time" column="fb_time" />
+		
+	</resultMap>
+
+	<!-- 新增数据区域 -->
+	<sql id="insertCommon">
+		INSERT INTO t_feedback
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="fb_id != null"> fb_id,</if>
+			<if test="account_id != null"> account_id,</if>
+			<if test="nick_name != null"> nick_name,</if>
+			<if test="fb_content != null"> fb_content,</if>
+			<if test="fb_time != null"> fb_time</if>
+			
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="fb_id != null">#{fb_id},</if>
+			<if test="account_id != null">#{account_id},</if>
+			<if test="nick_name != null">#{nick_name},</if>
+			<if test="fb_content != null">#{fb_content},</if>
+			<if test="fb_time != null">#{fb_time}</if>
+			
+		</trim>
+	</sql>
+	
+	<insert id="insert" parameterType="com.aten.model.orm.Feedback">
+		<include refid="insertCommon" />
+	</insert>
+
+	<insert id="insertGetPk" parameterType="com.aten.model.orm.Feedback" >
+		<include refid="insertCommon" />
+		<selectKey resultType="String" order="AFTER" keyProperty="fd_id">  
+	       SELECT @@IDENTITY AS ID  
+	    </selectKey>  
+	</insert>
+	
+	<!-- 更新数据区域 -->
+	<sql id="update_clause">
+		<set>
+			<trim suffixOverrides=",">
+				<if test="fb_id != null"> fb_id = #{fb_id}, </if>
+				<if test="account_id != null"> account_id = #{account_id}, </if>
+				<if test="nick_name != null"> nick_name = #{nick_name}, </if>
+				<if test="fb_content != null"> fb_content = #{fb_content}, </if>
+				<if test="fb_time != null"> fb_time = #{fb_time} </if>
+				
+			</trim>
+		</set>
+	</sql>
+	
+	
+	
+	
+
+	<update id="update" parameterType="com.aten.model.orm.Feedback">
+		UPDATE t_feedback <include refid="update_clause" /> WHERE fd_id = #{fd_id}
+	</update>
+
+	<!-- 删除数据区域 -->
+	<delete id="delete" parameterType="String">
+		delete from t_feedback where fd_id in
+		<foreach item="idItem" collection="array" index="index" open="(" separator="," close=")">
+			#{idItem}
+		</foreach>
+	</delete>
+
+	<!-- 获取对象数据区域 -->
+	<select id="get" parameterType="String"	resultMap="resultFeedback">
+		 SELECT
+		 t.fb_id,t.account_id,t.nick_name,t.fb_content,t.fb_time
+		 FROM t_feedback t WHERE fd_id = #{fd_id}
+	</select>
+	
+	<!-- 搜索数据区域 -->
+	<sql id="where_clause">
+		<where> 
+			1=1
+			<if test="fb_id != null"> and t.fb_id = #{fb_id} </if>
+			<if test="fb_id_vague != null"> and instr(t.fb_id,#{fb_id_vague})>0 </if>
+			<if test="account_id != null"> and t.account_id = #{account_id} </if>
+			<if test="account_id_vague != null"> and instr(t.account_id,#{account_id_vague})>0 </if>
+			<if test="nick_name != null"> and t.nick_name = #{nick_name} </if>
+			<if test="nick_name_vague != null"> and instr(t.nick_name,#{nick_name_vague})>0 </if>
+			<if test="fb_content != null"> and t.fb_content = #{fb_content} </if>
+			<if test="fb_content_vague != null"> and instr(t.fb_content,#{fb_content_vague})>0 </if>
+			<if test="fb_time != null"> and t.fb_time = #{fb_time} </if>
+			<if test="fb_time_vague != null"> and instr(t.fb_time#{fb_time_vague})>0 </if>
+			<if test="start_date != null"> and DATE_FORMAT(t.fb_time,'%Y-%m-%d') &gt;= DATE_FORMAT(#{start_date},'%Y-%m-%d')</if>
+			<if test="end_date != null">   and DATE_FORMAT(t.fb_time,'%Y-%m-%d') &lt;= DATE_FORMAT(#{end_date},'%Y-%m-%d')</if>
+		</where>
+	</sql>
+	
+	<sql id="getCommon">
+		select  t.fb_id,t.account_id,t.nick_name,t.fb_content,t.fb_time
+		from t_feedback t
+		<include refid="where_clause" /> order by fb_id desc
+	</sql>
+
+	
+
+	<select id="getList" parameterType="map" resultMap="resultFeedback">
+            <include refid="getCommon" />
+             <if test="start != null">
+         		LIMIT ${start},${limit}
+        	</if> 
+	</select>
+
+	<select id="getCount" parameterType="map" resultType="int">
+			select count(*) ct from t_feedback t <include refid="where_clause" />
+	</select>
+	
+	
+	<!-- 排序区域 -->
+	<update id="updateBatch" parameterType="java.util.List">
+	   <foreach collection="list" item="item" index="index" separator=";">  
+			update t_feedback 
+			<set>
+				sort_no = #{item.sort_no}
+			</set>
+			WHERE fd_id = #{item.id}
+	   </foreach>
+	</update>
+	
+</mapper>
+

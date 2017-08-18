@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.CommparaDao">
+
+	<!-- <cache type="org.mybatis.caches.ehcache.EhcacheCache">
+		<property name="timeToIdleSeconds" value="120" />
+		<property name="timeToLiveSeconds" value="120" />
+	</cache> -->
+	
+	<cache type="org.mybatis.caches.ehcache.EhcacheCache"/> 
+
+	<!-- 数据库映射模型区域 -->
+	<resultMap id="resultCommpara" type="com.aten.model.orm.Commpara">
+		<result property="para_id" column="para_id" />
+		<result property="para_code" column="para_code" />
+		<result property="para_name" column="para_name" />
+		<result property="para_key" column="para_key" />
+		<result property="sort_no" column="sort_no" />
+		<result property="state" column="state" />
+
+	</resultMap>
+
+	<!-- 新增数据区域 -->
+	<sql id="insertCommon">
+		insert into t_commpara(
+		<if test="para_code != null"> para_code,</if>
+		<if test="para_name != null"> para_name,</if>
+		<if test="para_key != null"> para_key,</if>
+		<if test="sort_no != null"> sort_no,</if>
+		<if test="state != null"> state</if>
+		)
+		values(
+		<if test="para_code != null">#{para_code},</if>
+		<if test="para_name != null">#{para_name},</if>
+		<if test="para_key != null">#{para_key},</if>
+		<if test="sort_no != null">#{sort_no},</if>
+		<if test="state != null">#{state}</if>
+		)
+	</sql>
+
+	<insert id="insert" parameterType="com.aten.model.orm.Commpara">
+		<include refid="insertCommon" />
+	</insert>
+
+	<!-- 更新数据区域 -->
+	<sql id="update_clause">
+		<set>
+			<if test="para_id != null"> para_id = #{para_id}, </if>
+			<if test="para_code != null"> para_code = #{para_code}, </if>
+			<if test="para_name != null"> para_name = #{para_name}, </if>
+			<if test="para_key != null"> para_key = #{para_key}, </if>
+			<if test="sort_no != null"> sort_no = #{sort_no}, </if>
+			<if test="state != null"> state = #{state} </if>
+		</set>
+	</sql>
+
+
+	<update id="update" parameterType="com.aten.model.orm.Commpara">
+		UPDATE t_commpara
+		<include refid="update_clause" />
+		WHERE para_id = #{para_id}
+	</update>
+
+	<!-- 删除数据区域 -->
+	<delete id="delete" parameterType="String">
+		delete from t_commpara where para_id in
+		<foreach item="idItem" collection="array" index="index" open="("
+			separator="," close=")">
+			#{idItem}
+		</foreach>
+	</delete>
+
+	<!-- 获取对象数据区域 -->
+	<select id="get" parameterType="String" resultMap="resultCommpara">
+		SELECT
+		para_id,para_code,para_name,para_key,sort_no,state
+		FROM t_commpara WHERE para_id = #{para_id}
+	</select>
+
+	<!-- 搜索数据区域 -->
+	<sql id="where_clause">
+		<if test="para_id != null"> and para_id = #{para_id} </if>
+		<if test="para_code != null"> and instr(para_code,#{para_code})>0</if>
+		<if test="para_name != null"> and instr(para_name,#{para_name})>0</if>
+		<if test="para_key != null"> and para_key = #{para_key} </if>
+		<if test="sort_no != null"> and sort_no = #{sort_no} </if>
+		<if test="state != null"> and state = #{state} </if>
+	</sql>
+
+	<sql id="getCommon">
+		select * from t_commpara
+		where 1 = 1
+		<include refid="where_clause" />
+		order by para_code asc , sort_no desc, para_id desc
+	</sql>
+
+
+	<select id="getMapList" parameterType="map" resultType="map">
+		select ${sqlField} from t_commpara
+		where 1 = 1
+		<include refid="where_clause" />
+		order by para_code asc , sort_no desc, para_id desc
+	</select>
+
+	<select id="getList" parameterType="map" resultMap="resultCommpara">
+		select * from t_commpara
+		where 1 = 1
+		<include refid="where_clause" />
+		order by para_code asc , sort_no desc, para_id desc
+		<if test="start != null">
+			LIMIT ${start},${limit}
+		</if>
+	</select>
+
+	<select id="getCount" parameterType="map" resultType="int">
+		select count(*) ct from t_commpara
+		where 1 = 1
+		<include refid="where_clause" />
+	</select>
+
+	<select id="getParaCodeList" parameterType="map" resultMap="resultCommpara">
+		SELECT DISTINCT para_code FROM t_commpara
+	</select>
+
+
+	<!-- 排序区域 -->
+	<update id="updateBatch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" open=""
+			close="" separator=";">
+			update t_commpara
+			<set>
+				sort_no = #{item.sort_no}
+			</set>
+			WHERE para_id = #{item.id}
+		</foreach>
+	</update>
+
+</mapper>
+

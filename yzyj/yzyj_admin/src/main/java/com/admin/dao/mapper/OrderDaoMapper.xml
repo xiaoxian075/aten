@@ -1,0 +1,594 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.admin.dao.OrderDaoMapper">
+    <resultMap id="BaseResultMap" type="com.admin.model.Order">
+        <result column="sys_id" property="sysId" jdbcType="DECIMAL" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="order_number" property="orderNumber" jdbcType="VARCHAR" />
+        <result column="yun_id" property="yunId" jdbcType="VARCHAR" />
+        <result column="machinecode" property="machineCode" jdbcType="VARCHAR" />
+        <result column="total_fee" property="totalFee" jdbcType="DECIMAL" />
+        <result column="pay_time" property="payTime" jdbcType="TIMESTAMP" />
+        <result column="pay_type" property="payType" jdbcType="VARCHAR" />
+        <result column="card_no" property="cardNo" jdbcType="VARCHAR" />
+        <result column="order_type" property="orderType" jdbcType="DECIMAL" />
+        <result column="order_state" property="orderState" jdbcType="DECIMAL" />
+        <result column="pay_state" property="payState" jdbcType="DECIMAL" />
+        <result column="counter_fee" property="counterFee" jdbcType="DECIMAL" />
+        <result column="refernumber" property="refernumber" jdbcType="VARCHAR" />
+        <result column="trade_type" property="tradeType" jdbcType="VARCHAR" />
+        <result column="batchbillno" property="batchbillno" jdbcType="VARCHAR" />
+        <result column="systraceno" property="systraceno" jdbcType="VARCHAR" />
+        <result column="lkl_merchant_code" property="lklMerchantCode" jdbcType="VARCHAR" />
+        <result column="lkl_terminal_code" property="lklTerminalCode" jdbcType="VARCHAR" />
+        <result column="app_pay_state" property="appPayState" jdbcType="DECIMAL" />
+        <result column="excess_amount" property="excessAmount" jdbcType="DECIMAL" />
+        <result column="app_pay_time" property="appPayTime" jdbcType="TIMESTAMP" />
+        <result column="merchant_name" property="merchantName" jdbcType="VARCHAR" />
+        <result column="realName" property="realName" jdbcType="VARCHAR" />
+    </resultMap>
+    <resultMap id="BaseResultMap1" type="com.admin.model.RepairOrder">
+        <result column="id" property="id" jdbcType="DECIMAL" />
+        <result column="order_number" property="orderNumber" jdbcType="VARCHAR" />
+        <result column="repair_time" property="repairTime" jdbcType="TIMESTAMP" />
+        <result column="al_status" property="alStatus" jdbcType="DECIMAL" />
+        <result column="repair_money" property="repairMoney" jdbcType="DECIMAL" />
+        <result column="user_name" property="userName" jdbcType="VARCHAR" />
+        <result column="al_time" property="alTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <resultMap id="AgentPosMap" type="com.admin.model.Order">
+        <result column="sys_id" property="sysId" jdbcType="DECIMAL" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="order_number" property="orderNumber" jdbcType="VARCHAR" />
+        <result column="yun_id" property="yunId" jdbcType="VARCHAR" />
+        <result column="machinecode" property="machineCode" jdbcType="VARCHAR" />
+        <result column="total_fee" property="totalFee" jdbcType="DECIMAL" />
+        <result column="pay_time" property="payTime" jdbcType="TIMESTAMP" />
+        <result column="pay_type" property="payType" jdbcType="VARCHAR" />
+        <result column="card_no" property="cardNo" jdbcType="VARCHAR" />
+        <result column="order_type" property="orderType" jdbcType="DECIMAL" />
+        <result column="order_state" property="orderState" jdbcType="DECIMAL" />
+        <result column="pay_state" property="payState" jdbcType="DECIMAL" />
+        <result column="device_name" property="deviceName" jdbcType="VARCHAR" />
+        <result column="merchant_name" property="merchantName" jdbcType="VARCHAR" />
+        <result column="lkl_merchant_code" property="lklMerchantCode" jdbcType="VARCHAR" />
+        <result column="lkl_terminal_code" property="lklTerminalCode" jdbcType="VARCHAR" />
+        <result column="app_pay_state" property="appPayState" jdbcType="DECIMAL" />
+        <result column="app_pay_time" property="appPayTime" jdbcType="TIMESTAMP" />
+        <result column="excess_amount" property="excessAmount" jdbcType="DECIMAL" />
+    </resultMap>
+    <resultMap id="ScanCodeOrderMap" type="com.admin.model.Order">
+        <result column="sys_id" property="sysId" jdbcType="DECIMAL" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="order_number" property="orderNumber" jdbcType="VARCHAR" />
+        <result column="yun_id" property="yunId" jdbcType="VARCHAR" />
+        <result column="machinecode" property="machineCode" jdbcType="VARCHAR" />
+        <result column="total_fee" property="totalFee" jdbcType="DECIMAL" />
+        <result column="pay_time" property="payTime" jdbcType="TIMESTAMP" />
+        <result column="pay_type" property="payType" jdbcType="VARCHAR" />
+        <result column="card_no" property="cardNo" jdbcType="VARCHAR" />
+        <result column="order_type" property="orderType" jdbcType="DECIMAL" />
+        <result column="order_state" property="orderState" jdbcType="DECIMAL" />
+        <result column="pay_state" property="payState" jdbcType="DECIMAL" />
+        <result column="device_name" property="deviceName" jdbcType="VARCHAR" />
+        <result column="umeng_token" property="umengToken" jdbcType="VARCHAR" />
+        <result column="excess_amount" property="excessAmount" jdbcType="DECIMAL" />
+    </resultMap>
+    <sql id="Example_Where_Clause" >
+        <where >
+            <foreach collection="oredCriteria" item="criteria" separator="or" >
+                <if test="criteria.valid" >
+                    <trim prefix="(" suffix=")" prefixOverrides="and" >
+                        <foreach collection="criteria.criteria" item="criterion" >
+                            <choose >
+                                <when test="criterion.noValue" >
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue" >
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue" >
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue" >
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <select id="selectScanCodeOrder" resultMap="ScanCodeOrderMap" parameterType="com.admin.model.BaseExample">
+        select o.* , device.umeng_token from t_order o
+        left join  t_device_info device on device.device_unique = o.device_unique
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+
+    <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.admin.model.BaseExample">
+        select
+        *
+        from t_order
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+    <select id="selectByExampleAndPage" parameterType="com.admin.model.BaseExample"  resultMap="BaseResultMap">
+        select
+        *
+        from t_order
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+
+    <select id="selectMerchantOrder" parameterType="com.admin.model.BaseExample"  resultMap="AgentPosMap">
+        select o.*,device.merchant_name,device.device_name,device.LKL_MERCHANT_CODE ,device.LKL_TERMINAL_CODE  from t_order o , t_device_list device
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        and device.device_unique = o.device_unique
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+
+    <select id="getCountByType"  parameterType="java.util.HashMap" resultType="java.lang.Long">
+        select NVL(sum(t.total_fee),0) as AMOUNT
+        from t_order t where 1=1 and pay_state =1
+        <if test="type != null">
+            and t.ORDER_TYPE = #{type}
+        </if>
+    </select>
+
+    <select id="selectPosPage" parameterType="com.admin.model.BaseExample"  resultMap="AgentPosMap">
+        select o.*,device.merchant_name,device.device_name,device.LKL_MERCHANT_CODE ,device.LKL_TERMINAL_CODE  from t_order o , t_device_list device
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        and device.device_unique = o.device_unique
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+
+    <select id="selectRepairOrderPage" parameterType="com.admin.model.BaseExample"  resultMap="BaseResultMap1">
+        select * from T_REPAIR_ORDER
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+
+    <insert id="insertSelective" parameterType="com.admin.model.BaseExample" >
+        insert into t_order
+        <selectKey keyProperty="sysId" resultType="String" order="BEFORE">
+            select t_order_SEQUENCE.nextval from dual
+        </selectKey>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="sysId != null">
+                sys_id,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="orderNumber != null">
+                order_number,
+            </if>
+            <if test="yunId != null">
+                yun_id,
+            </if>
+            <if test="machineCode != null">
+                machinecode,
+            </if>
+            <if test="totalFee != null">
+                total_fee,
+            </if>
+            <if test="payTime != null">
+                pay_time,
+            </if>
+            <if test="payType != null">
+                pay_type,
+            </if>
+            <if test="cardNo != null">
+                card_no,
+            </if>
+            <if test="cardType != null">
+                card_type,
+            </if>
+            <if test="orderType != null">
+                order_type,
+            </if>
+            <if test="orderState != null">
+                order_state,
+            </if>
+            <if test="payState != null">
+                pay_state,
+            </if>
+            <if test="deviceUnique != null">
+                device_unique,
+            </if>
+            <if test="agentUnique != null">
+                agent_unique,
+            </if>
+            <if test="merchantYunId != null">
+                merchant_yun_id,
+            </if>
+            <if test="counterFee != null">
+                counter_fee,
+            </if>
+            <if test="realAmount != null">
+                real_amount,
+            </if>
+            <if test="excessAmount != null">
+                excess_amount,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="sysId != null">
+                #{sysId,jdbcType=DECIMAL},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="orderNumber != null">
+                #{orderNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="yunId != null">
+                #{yunId,jdbcType=VARCHAR},
+            </if>
+            <if test="machineCode != null">
+                #{machineCode,jdbcType=VARCHAR},
+            </if>
+            <if test="totalFee != null">
+                #{totalFee,jdbcType=DECIMAL},
+            </if>
+            <if test="payTime != null">
+                #{payTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="payType != null">
+                #{payType,jdbcType=VARCHAR},
+            </if>
+            <if test="cardNo != null">
+                #{cardNo,jdbcType=VARCHAR},
+            </if>
+            <if test="cardType != null">
+                #{cardType,jdbcType=VARCHAR},
+            </if>
+            <if test="orderType != null">
+                #{orderType,jdbcType=DECIMAL},
+            </if>
+            <if test="orderState != null">
+                #{orderState,jdbcType=DECIMAL},
+            </if>
+            <if test="payState != null">
+                #{payState,jdbcType=DECIMAL},
+            </if>
+            <if test="deviceUnique != null">
+                #{deviceUnique,jdbcType=VARCHAR},
+            </if>
+            <if test="agentUnique != null">
+                #{agentUnique,jdbcType=VARCHAR},
+            </if>
+            <if test="merchantYunId != null">
+                #{merchantYunId,jdbcType=VARCHAR},
+            </if>
+            <if test="counterFee != null">
+                #{counterFee,jdbcType=DECIMAL},
+            </if>
+            <if test="realAmount != null">
+                #{realAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="excessAmount != null">
+                #{excessAmount,jdbcType=DECIMAL},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateOrderPayState" parameterType="com.admin.model.BaseExample">
+        update t_order
+            <set>
+                <if test="orderState != null">
+                    order_state= #{orderState,jdbcType=DECIMAL} ,
+                </if>
+                <if test="payTime != null">
+                    pay_time=#{payTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="payType != null">
+                    pay_type=  #{payType,jdbcType=VARCHAR},
+                </if>
+                <if test="cardNo != null">
+                    card_no=  #{cardNo,jdbcType=VARCHAR},
+                </if>
+                <if test="yunId != null">
+                    yun_id=  #{yunId,jdbcType=VARCHAR},
+                </if>
+                <if test="realAmount != null">
+                    real_amount=  #{realAmount,jdbcType=DECIMAL},
+                </if>
+            </set>
+        where order_number = #{orderNumber,jdbcType=VARCHAR} and order_state = 0 and pay_state = 0
+    </update>
+    <update id="updateOrderPayStateBySm" parameterType="com.admin.model.BaseExample">
+        update t_order
+            <set>
+                <if test="orderState != null">
+                    order_state= #{orderState,jdbcType=DECIMAL} ,
+                </if>
+                <if test="payState != null">
+                    pay_state=  #{payState,jdbcType=DECIMAL},
+                </if>
+                <if test="payTime != null">
+                    pay_time=#{payTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="payType != null">
+                    pay_type=  #{payType,jdbcType=VARCHAR},
+                </if>
+                <if test="cardNo != null">
+                    card_no=  #{cardNo,jdbcType=VARCHAR},
+                </if>
+                <if test="yunId != null">
+                    yun_id=  #{yunId,jdbcType=VARCHAR},
+                </if>
+                <if test="realAmount != null">
+                    real_amount=  #{realAmount,jdbcType=DECIMAL},
+                </if>
+                <if test="totalFee != null">
+                    total_fee=  #{totalFee,jdbcType=DECIMAL},
+                </if>
+            </set>
+        where order_number = #{orderNumber,jdbcType=VARCHAR} and order_state = 0 and pay_state = 0
+    </update>
+
+    <update id="updateOrderPushState" parameterType="com.admin.model.BaseExample">
+        update t_order
+        <set>
+            <if test="orderState != null">
+                order_state= #{orderState,jdbcType=DECIMAL} ,
+            </if>
+        </set>
+        where order_number = #{orderNumber,jdbcType=VARCHAR} and order_state = 1 and pay_state = 1 and app_pay_state =1
+    </update>
+
+    <update id="updateRepairOrderStatus" parameterType="com.admin.model.BaseExample">
+        update T_REPAIR_ORDER
+        <set>
+            <if test="alStatus != null">
+                al_status= #{alStatus,jdbcType=DECIMAL} ,
+            </if>
+            <if test="alTime != null">
+                al_time= #{alTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where order_number = #{orderNumber,jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateOrderStateByNumber" parameterType="com.admin.model.Order">
+        update t_order
+        <set>
+            <if test="payTime != null">
+                pay_time= #{payTime,jdbcType=TIMESTAMP} ,
+            </if>
+            <if test="payState != null">
+                pay_state= #{payState,jdbcType=DECIMAL},
+            </if>
+            <if test="orderState != null">
+                order_state= #{orderState,jdbcType=DECIMAL},
+            </if>
+            <if test="appPayState != null">
+                app_pay_state= #{appPayState,jdbcType=DECIMAL},
+            </if>
+            <if test="appPayTime != null">
+                app_pay_time= #{appPayTime,jdbcType=DECIMAL},
+            </if>
+
+        </set>
+        where order_number = #{orderNumber,jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateOrderState" parameterType="com.admin.model.BaseExample">
+        update t_order
+        <set>
+            <if test="errorState != null">
+                error_state= #{errorState,jdbcType=DECIMAL},
+            </if>
+            <if test="appPayState != null">
+                app_pay_state= #{appPayState,jdbcType=DECIMAL},
+            </if>
+            <if test="appPayTime != null">
+                app_pay_time= #{appPayTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="payState != null">
+                pay_state= #{payState,jdbcType=DECIMAL},
+            </if>
+        </set>
+        where order_number = #{orderNumber,jdbcType=VARCHAR} and agent_unique = #{agentUnique,jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.admin.model.BaseExample">
+        update t_order
+        <set>
+            <if test="createTime != null">
+                create_time= #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="orderNumber != null">
+                order_number= #{orderNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="yunId != null">
+                yun_id= #{yunId,jdbcType=VARCHAR},
+            </if>
+            <if test="machineCode != null">
+                machinecode= #{machineCode,jdbcType=VARCHAR},
+            </if>
+            <if test="totalFee != null">
+                total_fee= #{totalFee,jdbcType=DECIMAL},
+            </if>
+            <if test="payTime != null">
+                pay_time= #{payTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="payType != null">
+                pay_type= #{payType,jdbcType=VARCHAR},
+            </if>
+            <if test="cardNo != null">
+                card_no= #{cardNo,jdbcType=VARCHAR},
+            </if>
+            <if test="orderType != null">
+                order_type= #{orderType,jdbcType=DECIMAL},
+            </if>
+            <if test="orderState != null">
+                order_state= #{orderState,jdbcType=DECIMAL},
+            </if>
+            <if test="payState != null">
+                pay_state= #{payState,jdbcType=DECIMAL},
+            </if>
+        </set>
+        where order_number = #{orderNumber,jdbcType=VARCHAR}
+    </update>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from t_order
+        where sys_id = #{sysIid,jdbcType=VARCHAR}
+    </delete>
+
+    <select id="searchOrder" parameterType="Order" resultType="com.admin.model.Order">
+        select o.*,device.merchant_name,device.device_name,z.REALNAME from t_order o , t_device_list device, Z_AGENCY_PERSON z where 1=1
+        <if test="orderNumber != null and orderNumber != ''">
+            AND o.ORDER_NUMBER= #{orderNumber}
+        </if>
+        <if test="lklMerchantCode != null and lklMerchantCode != ''">
+            AND device.LKL_MERCHANT_CODE= #{lklMerchantCode}
+        </if>
+        <if test="merchantYunId != null and merchantYunId != ''">
+            AND o.MERCHANT_YUN_ID= #{merchantYunId}
+        </if>
+        <if test="strSdate != null and strSdate != ''">
+            AND TO_CHAR(o.CREATE_TIME,'yyyy-mm-dd hh24:mi:ss') &gt;= #{strSdate}
+        </if>
+        <if test="strEdate != null and strEdate != ''">
+            AND TO_CHAR(o.CREATE_TIME,'yyyy-mm-dd hh24:mi:ss') &lt;= #{strEdate}
+        </if>
+        <if test="orderType != null and orderType != ''">
+            AND o.ORDER_TYPE= #{orderType}
+        </if>
+        <if test="payState != null and payState != ''">
+            AND o.PAY_STATE= #{payState}
+        </if>
+        <if test="payType != null and payType != ''">
+            AND o.PAY_TYPE= #{payType}
+        </if>
+        <if test="searchType == 2">
+            AND o.AGENT_UNIQUE = #{agentUnique}
+        </if>
+        and o.AGENT_UNIQUE = z.AGENT_UNIQUE
+        and device.device_unique = o.device_unique  order by o.CREATE_TIME desc
+    </select>
+
+    <select id="getOrderByNumber" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        q.*,
+        w.REFERNUMBER,
+        w.TRADE_TYPE,
+        w.BATCHBILLNO,
+        w.SYSTRACENO,
+        e.LKL_MERCHANT_CODE,
+        e.LKL_TERMINAL_CODE,
+        e.MERCHANT_NAME,
+        e.MERCHANT_YUN_PAY_ACCOUNT,
+        r.REALNAME
+        from T_ORDER q,T_PAY_INFO_LIST w,T_DEVICE_LIST e,Z_AGENCY_PERSON r
+        where q.ORDER_NUMBER = w.OUT_TRADE_NO
+        and q.DEVICE_UNIQUE = e.DEVICE_UNIQUE
+        and q.AGENT_UNIQUE = r.AGENT_UNIQUE
+        and q.ORDER_NUMBER = #{orderNumber,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getOrderByNumberAndOrderType" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select * from T_ORDER q where q.order_type = #{type,jdbcType=DECIMAL} and q.ORDER_NUMBER = #{orderNumber,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getRepairOrderByNumber" parameterType="java.lang.String" resultMap="BaseResultMap1">
+        select * from T_REPAIR_ORDER t where t.ORDER_NUMBER = #{orderNumber,jdbcType=VARCHAR}
+    </select>
+
+    <insert id="insertRepairOrder" parameterType="com.admin.model.RepairOrder" >
+        insert into T_REPAIR_ORDER
+        <selectKey keyProperty="id" resultType="java.lang.Integer" order="BEFORE">
+            select T_REPAIR_ORDER_SEQUENCE.nextval from dual
+        </selectKey>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="orderNumber != null">
+                order_number,
+            </if>
+            <if test="repairTime != null">
+                repair_time,
+            </if>
+            <if test="lklPayTime != null">
+                lkl_pay_time,
+            </if>
+            <if test="userName != null">
+                user_name,
+            </if>
+            <if test="alStatus != null">
+                al_status,
+            </if>
+            <if test="repairMoney != null">
+                repair_money,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=DECIMAL},
+            </if>
+            <if test="orderNumber != null">
+                #{orderNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="repairTime != null">
+                #{repairTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lklPayTime != null">
+                #{lklPayTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="userName != null">
+                #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="alStatus != null">
+                #{alStatus,jdbcType=DECIMAL},
+            </if>
+            <if test="repairMoney != null">
+                #{repairMoney,jdbcType=DECIMAL},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="getCountPay" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select count(*) from T_PAY_INFO_LIST q where q.OUT_TRADE_NO =  #{orderNumber,jdbcType=VARCHAR}
+    </select>
+
+    <update id="updateMId" parameterType="java.lang.String">
+        update T_ORDER t set t.MERCHANT_YUN_ID = #{merchantYunPayAccountUpdate,jdbcType=VARCHAR} where t.MERCHANT_YUN_ID = #{merchantYunPayAccount,jdbcType=VARCHAR}
+    </update>
+
+
+    <select id="getCountByDevice" parameterType="com.admin.model.DeviceList" resultType="java.lang.Integer">
+        select  NVL(sum(t.total_fee),0) as countDevice from T_ORDER t where t.DEVICE_UNIQUE = #{deviceUnique,jdbcType=VARCHAR} and t.MERCHANT_YUN_ID = #{merchantYunPayAccount,jdbcType=VARCHAR} and t.PAY_STATE = 1 and t.order_type = 1
+    </select>
+
+</mapper>

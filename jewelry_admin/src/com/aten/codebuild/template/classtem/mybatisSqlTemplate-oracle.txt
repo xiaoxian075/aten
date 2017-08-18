@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.{CLASS_NAME}Dao">
+
+	<!-- 数据库映射模型区域 -->
+	<resultMap id="result{CLASS_NAME}" type="com.aten.model.orm.{CLASS_NAME}" >
+		{fieldlist}<result property="[field_name]" column="[field_name]" />
+		{/fieldlist}
+	</resultMap>
+
+	<!-- 新增数据区域 -->
+	<sql id="insertCommon">
+		insert into {TABLENAME}(
+		{fieldlist}<if test="[field_name] != null"> [field_name],</if>
+		{/fieldlist})
+		values(
+		{fieldlist}<if test="[field_name] != null">#{[field_name]},</if>
+		{/fieldlist})
+	</sql>
+	
+	<insert id="insert" parameterType="com.aten.model.orm.{CLASS_NAME}">
+		<include refid="insertCommon" />
+	</insert>
+
+	<insert id="insertGetPk" parameterType="com.aten.model.orm.{CLASS_NAME}" >
+		<selectKey resultType="String" order="BEFORE" keyProperty="{TABLEKEY}">  
+	       SELECT {TABLENAME}_sequence.Nextval from DUAL  
+	    </selectKey>  
+		<include refid="insertCommon" />
+	</insert>
+	
+	<!-- 更新数据区域 -->
+	<sql id="update_clause">
+		<set>
+			{fieldlist}<if test="[field_name] != null"> [field_name] = #{[field_name]}, </if>
+			{/fieldlist}
+		</set>
+	</sql>
+	
+
+	<update id="update" parameterType="com.aten.model.orm.{CLASS_NAME}">
+		update {TABLENAME} <include refid="update_clause" /> where {TABLEKEY} = #{{TABLEKEY}}
+	</update>
+
+	<!-- 删除数据区域 -->
+	<delete id="delete" parameterType="String">
+		delete from {TABLENAME} where {TABLEKEY} in
+		<foreach item="idItem" collection="array" index="index" open="(" separator="," close=")">
+			#{idItem}
+		</foreach>
+	</delete>
+
+	<!-- 获取对象数据区域 -->
+	<select id="get" parameterType="String"	resultMap="result{CLASS_NAME}">
+		 SELECT
+		 {fieldlist} t.[field_name],{/fieldlist}
+		 FROM {TABLENAME} t WHERE {TABLEKEY} = #{{TABLEKEY}}
+	</select>
+	
+	<select id="getObjByMap" parameterType="map" resultMap="result{CLASS_NAME}">
+		 SELECT
+		 {fieldlist} t.[field_name],{/fieldlist}
+		 FROM {TABLENAME} t <include refid="where_clause" /> 
+	</select>
+	
+	<!-- 搜索数据区域 -->
+	<sql id="where_clause">
+		<where>
+			1=1
+		{fieldlist}<if test="[field_name] != null"> and t.[field_name] = #{[field_name]} </if>
+		{/fieldlist}
+		</where>
+	</sql>
+	
+	<sql id="getCommon">
+		select {fieldlist} t.[field_name],{/fieldlist}
+		from {TABLENAME} t
+		<include refid="where_clause" /> 
+		order by t.{TABLEKEY} desc
+	</sql>
+
+	
+
+	<select id="getList" parameterType="map" resultMap="result{CLASS_NAME}">
+		<choose>
+                <when test="start != null">
+                      SELECT  *  FROM   
+						(  SELECT s.*, ROWNUM RN   FROM 
+								(<include refid="getCommon" />) 
+							s   WHERE 1=1 and  ROWNUM  &lt;= #{top} 
+						) 
+					 WHERE RN >= #{start}  	
+                </when>
+                <otherwise>
+                      <include refid="getCommon" />
+                </otherwise>
+         </choose>
+	</select>
+
+	<select id="getCount" parameterType="map" resultType="int">
+			select count(*) ct from (<include refid="getCommon" />) 
+	</select>
+	
+	
+	<!-- 排序区域 -->
+	<update id="updateBatch" parameterType="java.util.List">
+	   <foreach collection="list" item="item" index="index" open="begin" close=";end;" separator=";">  
+			update {TABLENAME} 
+			<set>
+				sort_no = #{item.sort_no}
+			</set>
+			WHERE {TABLEKEY} = #{item.id}
+	   </foreach>
+	</update>
+	
+</mapper>

@@ -1,0 +1,7 @@
+		<tr>
+			<td class="td_left">[field_note][is_must_span]</td>
+			<td class="td_right_two">
+				<input  class="text [validate]" type="[field_type]" name="[field_name]"  [is_must]  tipmsg="[field_note]" 
+		 		  [field_length]  [data_type]  value="${{DEFINE_CLASS_NAME}.[field_name]}"/>
+			</td>
+		</tr>

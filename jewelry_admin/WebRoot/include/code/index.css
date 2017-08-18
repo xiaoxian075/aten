@@ -1,0 +1,191 @@
+body {
+	margin: 0;
+	padding: 0;
+	font-size: 12px;
+	font-family: sans-serif，tahoma, arial, 宋体;
+}
+
+html {
+	height: 100%
+}
+
+ul, li {
+	padding: 0px;
+	margin: 0px;
+	list-style-type: none;
+}
+
+div, ul, li, p, h2, h3, table {
+	margin: 0;
+	padding: 0;
+	border: none;
+}
+
+a {
+	text-decoration: none;
+	color: #333;
+}
+
+a:hover {
+	text-decoration: underline;
+	color: #FF7300;
+}
+
+.f_left {
+	float: left;
+}
+
+.f_right {
+	float: right;
+}
+
+img {
+	border: 0;
+}
+
+.clear {
+	clear: both;
+}
+
+label {
+	font-size: 14px;
+}
+
+checkbox {
+	width: 14px;
+	height: 14px;
+}
+
+span {
+	font-size: 14px;
+}
+
+.navbar-top {
+	border-bottom: 1px solid #E5E5E5;
+	height: 75px;
+	display: block;
+	margin: 0;
+	padding: 0;
+	color: #FFFFFF;
+	background: #EEEEEE;
+}
+
+.top {
+	background: url("/include/admin/image/top_bg.png") repeat-x;
+	height: 73px;
+	background-color: #f5fafe;
+}
+
+.top-left {
+	margin: 10px 0px 0px 120px;
+	height: 40px;
+	font-size: 30px;
+}
+
+.db_table {
+	width: 100%;
+}
+
+.db_table th, td {
+	text-align: center;
+	font-size: 12px;
+}
+
+.db_code {
+	width: 98%;
+	margin: 10px auto;
+	padding-bottom: 100px;
+}
+
+.db_msg {
+	background-color: #f5fafe;
+	border: 1px solid #eee;
+	margin: 5px 0 0 15px;
+	padding: 10px;
+	margin: 10px;
+}
+
+.db_msg li {
+	margin-bottom: 5px;
+}
+
+.db_msg li span {
+	width: 160px;
+	text-align: right;
+	display: block;
+	float: left;
+}
+
+.select {
+	background-color: #5a98de;
+	border: 1px solid #5a98de;
+	box-sizing: border-box;
+	color: #fff;
+	margin-right: 5px;
+}
+
+.btn {
+	cursor: pointer;
+	display: inline-block;
+	font-weight: 400;
+	text-align: center;
+	transition: background-color 0.1s linear 0s;
+	vertical-align: middle;
+	white-space: nowrap;
+	width: auto;
+	padding: 4px 12px;
+	font-size: 14px;
+	height: 31px;
+	overflow: hidden;
+	border-radius: 4px;
+	line-height: 31px;
+	line-height: normal !important;
+	box-sizing: border-box;
+}
+
+.list_div {
+	margin: 10px 10px 0px 10px;
+}
+
+.list_div table {
+	border-collapse: collapse;
+	width: 100%;
+}
+
+.list_div table th {
+	height: 30px;
+	line-height: 30px;
+	border: solid 1px #ddd;
+	background-color: #f5fafe;
+}
+
+.list_div table td {
+	text-align: center;
+	height: 25px;
+	padding: 4px;
+	border: solid 1px #ddd;
+}
+
+.key {
+	color: red;
+	font-weight: 600;
+}
+
+.errorSpan {
+	color: red;
+}
+
+.wrong {
+	background-color: #fbe2e2;
+	border-color: #c66161;
+	color: #c00;
+	padding: 6px 0px 0px 10px;
+	position: absolute;
+	border: 1px solid red;
+	z-index: 9999;
+	font-size: 12px;
+}
+
+.field_type {
+	width: 80px;
+}

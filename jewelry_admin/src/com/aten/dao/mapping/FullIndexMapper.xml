@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.FullIndexDao">
+
+	<!-- 数据库映射模型区域 -->
+	<resultMap id="resultFullIndex" type="com.aten.model.orm.FullIndex">
+		<result property="full_index_id" column="full_index_id" />
+		<result property="module" column="module" />
+		<result property="oper_time" column="oper_time" />
+		<result property="index_version" column="index_version" />
+		<result property="oper_man" column="oper_man" />
+		<result property="use_version" column="use_version" />
+
+	</resultMap>
+
+	<!-- 新增数据区域 -->
+	<sql id="insertCommon">
+		INSERT INTO t_full_index
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="full_index_id != null"> full_index_id,</if>
+			<if test="module != null"> module,</if>
+			oper_time,
+			<if test="index_version != null"> index_version,</if>
+			<if test="oper_man != null"> oper_man,</if>
+			<if test="use_version != null"> use_version</if>
+
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="full_index_id != null">#{full_index_id},</if>
+			<if test="module != null">#{module},</if>
+			now(),
+			<if test="index_version != null">#{index_version},</if>
+			<if test="oper_man != null">#{oper_man},</if>
+			<if test="use_version != null">#{use_version}</if>
+
+		</trim>
+	</sql>
+
+	<insert id="insert" parameterType="com.aten.model.orm.FullIndex">
+		<include refid="insertCommon" />
+	</insert>
+
+	<insert id="insertGetPk" parameterType="com.aten.model.orm.FullIndex">
+		<include refid="insertCommon" />
+		<selectKey resultType="String" order="AFTER" keyProperty="full_index_id">
+			SELECT @@IDENTITY AS ID
+		</selectKey>
+	</insert>
+
+	<!-- 更新数据区域 -->
+	<sql id="update_clause">
+		<set>
+			<trim suffixOverrides=",">
+				<if test="full_index_id != null"> full_index_id = #{full_index_id}, </if>
+				<if test="module != null"> module = #{module}, </if>
+				oper_time = now(),
+				<if test="index_version != null"> index_version = #{index_version}, </if>
+				<if test="oper_man != null"> oper_man = #{oper_man}, </if>
+				<if test="use_version != null"> use_version = #{use_version} </if>
+
+			</trim>
+		</set>
+	</sql>
+
+
+
+
+
+	<update id="update" parameterType="com.aten.model.orm.FullIndex">
+		UPDATE t_full_index
+		<include refid="update_clause" />
+		WHERE full_index_id = #{full_index_id}
+	</update>
+
+	<!-- 删除数据区域 -->
+	<delete id="delete" parameterType="String">
+		delete from t_full_index where full_index_id in
+		<foreach item="idItem" collection="array" index="index" open="("
+			separator="," close=")">
+			#{idItem}
+		</foreach>
+	</delete>
+
+	<!-- 获取对象数据区域 -->
+	<select id="get" parameterType="String" resultMap="resultFullIndex">
+		SELECT
+		t.full_index_id,t.module,t.oper_time,t.index_version,t.oper_man,t.use_version
+		FROM t_full_index t WHERE full_index_id = #{full_index_id}
+	</select>
+
+	<!-- 搜索数据区域 -->
+	<sql id="where_clause">
+		<where>
+			1=1
+			<if test="full_index_id != null"> and t.full_index_id = #{full_index_id} </if>
+			<if test="full_index_id_vague != null"> and instr(t.full_index_id,#{full_index_id_vague})>0 </if>
+			<if test="module != null"> and t.module = #{module} </if>
+			<if test="module_vague != null"> and instr(t.module,#{module_vague})>0 </if>
+			<if test="oper_time != null"> and t.oper_time = #{oper_time} </if>
+			<if test="oper_time_vague != null"> and instr(t.oper_time,#{oper_time_vague})>0 </if>
+			<if test="index_version != null"> and t.index_version = #{index_version} </if>
+			<if test="index_version_vague != null"> and instr(t.index_version,#{index_version_vague})>0 </if>
+			<if test="oper_man != null"> and t.oper_man = #{oper_man} </if>
+			<if test="oper_man_vague != null"> and instr(t.oper_man,#{oper_man_vague})>0 </if>
+			<if test="use_version != null"> and t.use_version = #{use_version} </if>
+			<if test="use_version_vague != null"> and instr(t.use_version#{use_version_vague})>0 </if>
+
+		</where>
+	</sql>
+
+	<sql id="getCommon">
+		select
+		t.full_index_id,t.module,t.oper_time,t.index_version,t.oper_man,t.use_version
+		from t_full_index t
+		<include refid="where_clause" />
+		order by module desc, index_version desc
+	</sql>
+
+
+
+	<select id="getList" parameterType="map" resultMap="resultFullIndex">
+		<include refid="getCommon" />
+		<if test="start != null">
+			LIMIT ${start},${limit}
+		</if>
+	</select>
+
+	<select id="getCount" parameterType="map" resultType="int">
+		select count(*) ct from t_full_index t
+		<include refid="where_clause" />
+	</select>
+
+
+	<!-- 排序区域 -->
+	<update id="updateBatch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index"
+			separator=";">
+			update t_full_index
+			<set>
+				sort_no = #{item.sort_no}
+			</set>
+			WHERE full_index_id = #{item.id}
+		</foreach>
+	</update>
+
+	<update id="updateUse" parameterType="com.aten.model.orm.FullIndex">
+		update t_full_index
+		<set>
+			use_version = #{use_version}
+		</set>
+		WHERE module = #{module}
+	</update>
+</mapper>
+

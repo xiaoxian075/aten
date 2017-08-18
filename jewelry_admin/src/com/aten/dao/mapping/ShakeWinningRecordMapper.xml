@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.ShakeWinningRecordDao">
+
+	<!-- 数据库映射模型区域 -->
+	<resultMap id="resultShakeWinningRecord" type="com.aten.model.orm.ShakeWinningRecord" >
+		<result property="wr_id" column="wr_id" />
+		<result property="shake_id" column="shake_id" />
+		<result property="awards_id" column="awards_id" />
+		<result property="login_name" column="login_name" />
+		<result property="account_id" column="account_id" />
+		<result property="draw_time" column="draw_time" />
+		<result property="is_draw" column="is_draw" />
+		<result property="accept_time" column="accept_time" />
+		<result property="awards_name" column="awards_name" />
+		<result property="shake_name" column="shake_name" />
+	</resultMap>
+
+	<!-- 新增数据区域 -->
+	<sql id="insertCommon">
+		INSERT INTO t_shake_winning_record
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="wr_id != null"> wr_id,</if>
+			<if test="shake_id != null"> shake_id,</if>
+			<if test="awards_id != null"> awards_id,</if>
+			<if test="login_name != null"> login_name,</if>
+			<if test="account_id != null"> account_id,</if>
+			<if test="draw_time != null"> draw_time,</if>
+			<if test="is_draw != null"> is_draw,</if>
+			<if test="accept_time != null"> accept_time</if>
+			
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="wr_id != null">#{wr_id},</if>
+			<if test="shake_id != null">#{shake_id},</if>
+			<if test="awards_id != null">#{awards_id},</if>
+			<if test="login_name != null">#{login_name},</if>
+			<if test="account_id != null">#{account_id},</if>
+			<if test="draw_time != null">#{draw_time},</if>
+			<if test="is_draw != null">#{is_draw},</if>
+			<if test="accept_time != null">#{accept_time}</if>
+			
+		</trim>
+	</sql>
+	
+	<insert id="insert" parameterType="com.aten.model.orm.ShakeWinningRecord">
+		<include refid="insertCommon" />
+	</insert>
+
+	<insert id="insertGetPk" parameterType="com.aten.model.orm.ShakeWinningRecord" >
+		<include refid="insertCommon" />
+		<selectKey resultType="String" order="AFTER" keyProperty="wr_id">  
+	       SELECT @@IDENTITY AS ID  
+	    </selectKey>  
+	</insert>
+	
+	<!-- 更新数据区域 -->
+	<sql id="update_clause">
+		<set>
+			<trim suffixOverrides=",">
+				<if test="wr_id != null"> wr_id = #{wr_id}, </if>
+				<if test="shake_id != null"> shake_id = #{shake_id}, </if>
+				<if test="awards_id != null"> awards_id = #{awards_id}, </if>
+				<if test="login_name != null"> login_name = #{login_name}, </if>
+				<if test="account_id != null"> account_id = #{account_id}, </if>
+				<if test="draw_time != null"> draw_time = #{draw_time}, </if>
+				<if test="is_draw != null"> is_draw = #{is_draw}, </if>
+				<if test="accept_time != null"> accept_time = #{accept_time} </if>
+				
+			</trim>
+		</set>
+	</sql>
+	
+	
+	
+	
+
+	<update id="update" parameterType="com.aten.model.orm.ShakeWinningRecord">
+		UPDATE t_shake_winning_record <include refid="update_clause" /> WHERE wr_id = #{wr_id}
+	</update>
+
+	<!-- 删除数据区域 -->
+	<delete id="delete" parameterType="String">
+		delete from t_shake_winning_record where wr_id in
+		<foreach item="idItem" collection="array" index="index" open="(" separator="," close=")">
+			#{idItem}
+		</foreach>
+	</delete>
+
+	<!-- 获取对象数据区域 -->
+	<select id="get" parameterType="String"	resultMap="resultShakeWinningRecord">
+		 SELECT
+		 t.wr_id,t.shake_id,t.awards_id,t.login_name,t.account_id,t.draw_time,t.is_draw,t.accept_time
+		 FROM t_shake_winning_record t WHERE wr_id = #{wr_id}
+	</select>
+	
+	<!-- 搜索数据区域 -->
+	<sql id="where_clause">
+		<where> 
+			1=1
+			<if test="wr_id != null"> and t.wr_id = #{wr_id} </if>
+			<if test="wr_id_vague != null"> and instr(t.wr_id,#{wr_id_vague})>0 </if>
+			<if test="shake_id != null"> and t.shake_id = #{shake_id} </if>
+			<if test="shake_id_vague != null"> and instr(t.shake_id,#{shake_id_vague})>0 </if>
+			<if test="awards_id != null"> and t.awards_id = #{awards_id} </if>
+			<if test="awards_id_vague != null"> and instr(t.awards_id,#{awards_id_vague})>0 </if>
+			<if test="login_name != null"> and t.login_name = #{login_name} </if>
+			<if test="login_name_vague != null"> and instr(t.login_name,#{login_name_vague})>0 </if>
+			<if test="account_id != null"> and t.account_id = #{account_id} </if>
+			<if test="account_id_vague != null"> and instr(t.account_id,#{account_id_vague})>0 </if>
+			<if test="draw_time != null"> and t.draw_time = #{draw_time} </if>
+			<if test="draw_time_vague != null"> and instr(t.draw_time,#{draw_time_vague})>0 </if>
+			<if test="is_draw != null"> and t.is_draw = #{is_draw} </if>
+			<if test="is_draw_vague != null"> and instr(t.is_draw,#{is_draw_vague})>0 </if>
+			<if test="accept_time != null"> and t.accept_time = #{accept_time} </if>
+			<if test="accept_time_vague != null"> and instr(t.accept_time#{accept_time_vague})>0 </if>
+			
+		</where>
+	</sql>
+	
+	<sql id="getCommon">
+		select  s.shake_name,sa.awards_name,t.wr_id,t.shake_id,t.awards_id,t.login_name,t.account_id,t.draw_time,t.is_draw,t.accept_time
+		from t_shake_winning_record t
+		left join t_shake s on s.shake_id=t.shake_id
+		left join t_shake_awards sa on sa.awards_id=t.awards_id
+		<include refid="where_clause" /> order by wr_id desc
+	</sql>
+
+	
+
+	<select id="getList" parameterType="map" resultMap="resultShakeWinningRecord">
+            <include refid="getCommon" />
+             <if test="start != null">
+         		LIMIT ${start},${limit}
+        	</if> 
+	</select>
+
+	<select id="getCount" parameterType="map" resultType="int">
+			select count(*) ct from t_shake_winning_record t <include refid="where_clause" />
+	</select>
+	
+	
+	<!-- 排序区域 -->
+	<update id="updateBatch" parameterType="java.util.List">
+	   <foreach collection="list" item="item" index="index" separator=";">  
+			update t_shake_winning_record 
+			<set>
+				sort_no = #{item.sort_no}
+			</set>
+			WHERE wr_id = #{item.id}
+	   </foreach>
+	</update>
+	
+</mapper>
+

@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.ManaBillsDao">
+
+	<!-- 数据库映射模型区域 -->
+	<resultMap id="resultManaBills" type="com.aten.model.orm.ManaBills" >
+		<result property="mb_id" column="mb_id" />
+		<result property="seller_id" column="seller_id" />
+		<result property="trade_num" column="trade_num" />
+		<result property="bill_amount" column="bill_amount" />
+		<result property="trade_amount" column="trade_amount" />
+		<result property="statistics_date" column="statistics_date" />
+		<result property="settle_date" column="settle_date" />
+		<result property="divided_amount" column="divided_amount" />
+		
+	</resultMap>
+
+	<!-- 新增数据区域 -->
+	<sql id="insertCommon">
+		INSERT INTO t_mana_bills
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="mb_id != null"> mb_id,</if>
+			<if test="seller_id != null"> seller_id,</if>
+			<if test="trade_num != null"> trade_num,</if>
+			<if test="bill_amount != null"> bill_amount,</if>
+			<if test="trade_amount != null"> trade_amount,</if>
+			<if test="statistics_date != null"> statistics_date,</if>
+			<if test="settle_date != null"> settle_date,</if>
+			<if test="divided_amount != null"> divided_amount</if>
+			
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="mb_id != null">#{mb_id},</if>
+			<if test="seller_id != null">#{seller_id},</if>
+			<if test="trade_num != null">#{trade_num},</if>
+			<if test="bill_amount != null">#{bill_amount},</if>
+			<if test="trade_amount != null">#{trade_amount},</if>
+			<if test="statistics_date != null">#{statistics_date},</if>
+			<if test="settle_date != null">#{settle_date},</if>
+			<if test="divided_amount != null">#{divided_amount}</if>
+			
+		</trim>
+	</sql>
+	
+	<insert id="insert" parameterType="com.aten.model.orm.ManaBills">
+		<include refid="insertCommon" />
+	</insert>
+
+	<insert id="insertGetPk" parameterType="com.aten.model.orm.ManaBills" >
+		<include refid="insertCommon" />
+		<selectKey resultType="String" order="AFTER" keyProperty="mb_id">  
+	       SELECT @@IDENTITY AS ID  
+	    </selectKey>  
+	</insert>
+	
+	<!-- 更新数据区域 -->
+	<sql id="update_clause">
+		<set>
+			<trim suffixOverrides=",">
+				<if test="mb_id != null"> mb_id = #{mb_id}, </if>
+				<if test="seller_id != null"> seller_id = #{seller_id}, </if>
+				<if test="trade_num != null"> trade_num = #{trade_num}, </if>
+				<if test="bill_amount != null"> bill_amount = #{bill_amount}, </if>
+				<if test="trade_amount != null"> trade_amount = #{trade_amount}, </if>
+				<if test="statistics_date != null"> statistics_date = #{statistics_date}, </if>
+				<if test="settle_date != null"> settle_date = #{settle_date}, </if>
+				<if test="divided_amount != null"> divided_amount = #{divided_amount} </if>
+				
+			</trim>
+		</set>
+	</sql>
+	
+	
+	
+	
+
+	<update id="update" parameterType="com.aten.model.orm.ManaBills">
+		UPDATE t_mana_bills <include refid="update_clause" /> WHERE mb_id = #{mb_id}
+	</update>
+
+	<!-- 删除数据区域 -->
+	<delete id="delete" parameterType="String">
+		delete from t_mana_bills where mb_id in
+		<foreach item="idItem" collection="array" index="index" open="(" separator="," close=")">
+			#{idItem}
+		</foreach>
+	</delete>
+
+	<!-- 获取对象数据区域 -->
+	<select id="get" parameterType="String"	resultMap="resultManaBills">
+		 SELECT
+		 t.mb_id,t.seller_id,t.trade_num,t.bill_amount,t.trade_amount,t.statistics_date,t.settle_date,t.divided_amount
+		 FROM t_mana_bills t WHERE mb_id = #{mb_id}
+	</select>
+	
+	<!-- 搜索数据区域 -->
+	<sql id="where_clause">
+		<where> 
+			1=1
+			<if test="mb_id != null"> and t.mb_id = #{mb_id} </if>
+			<if test="mb_id_vague != null"> and instr(t.mb_id,#{mb_id_vague})>0 </if>
+			<if test="seller_id != null"> and t.seller_id = #{seller_id} </if>
+			<if test="seller_id_vague != null"> and instr(t.seller_id,#{seller_id_vague})>0 </if>
+			<if test="trade_num != null"> and t.trade_num = #{trade_num} </if>
+			<if test="trade_num_vague != null"> and instr(t.trade_num,#{trade_num_vague})>0 </if>
+			<if test="bill_amount != null"> and t.bill_amount = #{bill_amount} </if>
+			<if test="bill_amount_vague != null"> and instr(t.bill_amount,#{bill_amount_vague})>0 </if>
+			<if test="trade_amount != null"> and t.trade_amount = #{trade_amount} </if>
+			<if test="trade_amount_vague != null"> and instr(t.trade_amount,#{trade_amount_vague})>0 </if>
+			<if test="statistics_date != null"> and t.statistics_date = #{statistics_date} </if>
+			<if test="statistics_date_vague != null"> and instr(t.statistics_date,#{statistics_date_vague})>0 </if>
+			<if test="settle_date != null"> and t.settle_date = #{settle_date} </if>
+			<if test="settle_date_vague != null"> and instr(t.settle_date,#{settle_date_vague})>0 </if>
+			<if test="divided_amount != null"> and t.divided_amount = #{divided_amount} </if>
+			<if test="divided_amount_vague != null"> and instr(t.divided_amount#{divided_amount_vague})>0 </if>
+			<if test="start_date != null"> and DATE_FORMAT(t.settle_date,'%Y-%m-%d') &gt;= DATE_FORMAT(#{start_date},'%Y-%m-%d') </if>
+			<if test="end_date != null"> and DATE_FORMAT(t.settle_date,'%Y-%m-%d') &lt;= DATE_FORMAT(#{end_date},'%Y-%m-%d') </if>
+		</where>
+	</sql>
+	
+	<sql id="getCommon">
+		select  t.mb_id,t.seller_id, sum(t.trade_num) as trade_num,sum(t.bill_amount) as bill_amount,sum(t.trade_amount) as trade_amount,
+		t.statistics_date,t.settle_date,sum(t.divided_amount) as  divided_amount
+		from t_mana_bills t   <include refid="where_clause" />
+		GROUP BY DATE_FORMAT(t.settle_date,'%Y-%m-%d')
+		order by t.mb_id desc
+	</sql>
+
+	
+
+	<select id="getList" parameterType="map" resultMap="resultManaBills">
+            <include refid="getCommon" />
+             <if test="start != null">
+         		LIMIT ${start},${limit}
+        	</if> 
+	</select>
+
+	<select id="getCount" parameterType="map" resultType="int">
+			select count(*) ct from t_mana_bills t <include refid="where_clause" />
+	</select>
+	
+	
+	<!-- 排序区域 -->
+	<update id="updateBatch" parameterType="java.util.List">
+	   <foreach collection="list" item="item" index="index" separator=";">  
+			update t_mana_bills 
+			<set>
+				sort_no = #{item.sort_no}
+			</set>
+			WHERE mb_id = #{item.id}
+	   </foreach>
+	</update>
+	
+</mapper>
+

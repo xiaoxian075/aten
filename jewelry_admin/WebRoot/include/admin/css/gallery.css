@@ -1,0 +1,59 @@
+.gal_list_div {
+	padding: 10px 0px;
+}
+
+.gal_list_li {
+	position: relative;
+	width: 188px;
+	height: 220px;
+	float: left;
+	border: 1px solid #e1e2e3;
+	margin: 0px 10px 10px 0px;
+}
+
+.gal_list_li .gal_list_li_img {
+	width: 188px;
+	height: 188px;
+}
+
+.gal_list_li_p {
+	text-align: center;
+	padding-top: 8px;
+}
+
+.pict_ws {
+	font-size: 20px;
+	padding: 8px 0px 0px 15px;
+	font-weight: 600;
+	color: #666666;
+}
+
+.pict_gal {
+	color: #666666;
+	font-size: 16px;
+	padding: 8px 0px 0px 15px;
+}
+
+.pict_gal td.pict_gal_td2 {
+	padding: 0px 10px 0px 10px;
+}
+
+.gal_list_li_checkbox {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	float: left;
+	display: none;
+}
+
+.save_name {
+	display: none;
+}
+
+.galedit {
+	position: absolute;
+	left: 170px;
+	top: 0px;
+	cursor: pointer;
+	float: right;
+}

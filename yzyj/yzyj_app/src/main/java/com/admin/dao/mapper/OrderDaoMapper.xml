@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.admin.dao.OrderDaoMapper">
+    <resultMap id="BaseResultMap" type="com.admin.model.Order">
+        <result column="sys_id" property="sysId" jdbcType="DECIMAL" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="order_number" property="orderNumber" jdbcType="VARCHAR" />
+        <result column="yun_id" property="yunId" jdbcType="VARCHAR" />
+        <result column="machinecode" property="machineCode" jdbcType="VARCHAR" />
+        <result column="total_fee" property="totalFee" jdbcType="DECIMAL" />
+        <result column="pay_time" property="payTime" jdbcType="TIMESTAMP" />
+        <result column="pay_type" property="payType" jdbcType="VARCHAR" />
+        <result column="card_no" property="cardNo" jdbcType="VARCHAR" />
+        <result column="order_type" property="orderType" jdbcType="DECIMAL" />
+        <result column="order_state" property="orderState" jdbcType="DECIMAL" />
+        <result column="pay_state" property="payState" jdbcType="DECIMAL" />
+    </resultMap>
+
+    <resultMap id="AgentPosMap" type="com.admin.model.Order">
+        <result column="sys_id" property="sysId" jdbcType="DECIMAL" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="order_number" property="orderNumber" jdbcType="VARCHAR" />
+        <result column="yun_id" property="yunId" jdbcType="VARCHAR" />
+        <result column="machinecode" property="machineCode" jdbcType="VARCHAR" />
+        <result column="total_fee" property="totalFee" jdbcType="DECIMAL" />
+        <result column="pay_time" property="payTime" jdbcType="TIMESTAMP" />
+        <result column="pay_type" property="payType" jdbcType="VARCHAR" />
+        <result column="card_no" property="cardNo" jdbcType="VARCHAR" />
+        <result column="order_type" property="orderType" jdbcType="DECIMAL" />
+        <result column="order_state" property="orderState" jdbcType="DECIMAL" />
+        <result column="pay_state" property="payState" jdbcType="DECIMAL" />
+        <result column="device_name" property="deviceName" jdbcType="VARCHAR" />
+        <result column="merchant_name" property="merchantName" jdbcType="VARCHAR" />
+        <result column="MERCHANT_YUN_ID" property="merchantYunId" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Example_Where_Clause" >
+        <where >
+            <foreach collection="oredCriteria" item="criteria" separator="or" >
+                <if test="criteria.valid" >
+                    <trim prefix="(" suffix=")" prefixOverrides="and" >
+                        <foreach collection="criteria.criteria" item="criterion" >
+                            <choose >
+                                <when test="criterion.noValue" >
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue" >
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue" >
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue" >
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+
+    <select id="getHistorySumByCode" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select NVL(sum(t.total_fee),0) as HISTORYMONEYCOUNT from T_ORDER t where t.MACHINECODE=#{deviceCode,jdbcType=VARCHAR} and pay_state = 1
+    </select>
+
+    <select id="getOrderDetailList" parameterType="java.lang.String" resultType="com.admin.model.OrderDetail">
+        select  NVL(sum(t.total_fee),0) as count,to_char(t.PAY_TIME,'yyyy-mm-dd') as payTime from T_ORDER t where  t.MACHINECODE = #{deviceCode,jdbcType=VARCHAR}  and t.PAY_STATE = 1 GROUP BY to_char(t.PAY_TIME,'yyyy-mm-dd')  ORDER BY to_char(t.PAY_TIME,'yyyy-mm-dd') desc
+    </select>
+    
+    <!-- 获取云支付帐号下对应设置号刷卡记录的日期列表 -->
+    <select id="getOrderDetailListByMap" parameterType="map" resultType="com.admin.model.OrderDetail">
+        select  NVL(sum(t.total_fee),0) as count,to_char(t.PAY_TIME,'yyyy-mm-dd') as payTime from T_ORDER t 
+        where  t.MACHINECODE = #{deviceCode,jdbcType=VARCHAR}  and t.PAY_STATE = 1 
+        <if test="pay_type != null"> and t.pay_type = #{pay_type} </if>
+        <if test="startDay != null"> and to_char(t.PAY_TIME,'yyyy-mm-dd hh24:mi:ss') > #{startDay} </if>
+        <if test="endDay != null"> and to_char(t.PAY_TIME,'yyyy-mm-dd hh24:mi:ss') &lt; #{endDay} </if>
+        GROUP BY to_char(t.PAY_TIME,'yyyy-mm-dd') 
+        ORDER BY to_char(t.PAY_TIME,'yyyy-mm-dd') desc
+    </select>
+    
+    <!-- 获取云支付帐号下对应设置号刷卡记录的日期列表 -->
+    <select id="getOrderDetailDayListByMap" parameterType="map" resultType="com.admin.model.OrderDetail">
+        select t.PAY_TIME as time ,t.PAY_TYPE as type,TOTAL_FEE as dayMoney from T_ORDER t 
+        where t.MACHINECODE = #{deviceCode,jdbcType=VARCHAR}  and t.PAY_STATE = 1 
+        <if test="pay_type != null"> and t.pay_type = #{pay_type} </if>
+        <if test="startDay != null"> and to_char(t.PAY_TIME,'yyyy-mm-dd hh24:mi:ss') > #{startDay} </if>
+        <if test="endDay != null"> and to_char(t.PAY_TIME,'yyyy-mm-dd hh24:mi:ss') &lt; #{endDay} </if>
+        ORDER BY  t.PAY_TIME DESC
+    </select>
+    
+
+    <select id="getOrderDetailDayList" parameterType="java.lang.String" resultType="com.admin.model.OrderDetail">
+        select t.PAY_TIME as time ,t.PAY_TYPE as type,TOTAL_FEE as dayMoney from T_ORDER t where t.MACHINECODE = #{deviceCode,jdbcType=VARCHAR}  and t.PAY_STATE = 1  ORDER BY  t.PAY_TIME DESC
+    </select>
+
+    <select id="getMerchantMoneyCount"  resultMap="AgentPosMap" parameterType="Map">
+        select NVL(sum(t.total_fee),0) as total_fee,t.MERCHANT_YUN_ID From T_ORDER t Where 1=1 
+        <if test="type == 1">
+            and  trunc(t.PAY_TIME) = trunc(Sysdate)
+        </if>
+        <if test="type == 2">
+            and to_char(t.PAY_TIME,'yyyymm') = to_char(Sysdate,'yyyymm')
+        </if>
+        <if test="type == 3">
+        </if>
+        and t.AGENT_UNIQUE = #{agentUnique,jdbcType=VARCHAR}   and t.PAY_STATE = 1   GROUP BY t.MERCHANT_YUN_ID
+    </select>
+</mapper>

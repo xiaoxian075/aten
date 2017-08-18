@@ -1,0 +1,53 @@
+.list_title {
+	font-size: 14px;
+	margin-top: 20px;
+	margin-bottom: 10px;
+	font-weight: bold
+}
+/*.order-base{*/
+/*max-width: 1400px;*/
+/*padding-right:30px;*/
+/*}*/
+.order-hotel {
+	max-width: 800px;
+}
+
+.order-discount {
+	max-width: 600px;
+}
+
+.order-pay {
+	max-width: 800px;
+}
+
+.order-follow {
+	max-width: 400px;
+}
+
+.order-log {
+	max-width: 1200px;
+}
+
+.order-other-left {
+	display: inline-block;
+	margin-top: 5px;
+	font-size: 14px;
+	width: 100px;
+	text-align: right;
+}
+
+.order-other-right {
+	display: inline-block;
+}
+
+.user-other-left {
+	display: inline-block;
+	margin-top: 5px;
+	font-size: 14px;
+	width: 150px;
+	text-align: right;
+}
+
+.user-other-right {
+	display: inline-block;
+}

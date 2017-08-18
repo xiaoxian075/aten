@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.admin.dao.RoleDaoMapper">
+    <resultMap id="BaseResultMap" type="com.admin.model.Role">
+        <id column="ID" jdbcType="VARCHAR" property="id"/>
+        <result column="ROLE_NAME" jdbcType="VARCHAR" property="roleName"/>
+        <result column="ENABLED" jdbcType="VARCHAR" property="enabled"/>
+        <result column="ROLE_NUMBER" jdbcType="VARCHAR" property="roleNumber"/>
+    </resultMap>
+    <resultMap id="MenuHandleModuleMap" type="com.admin.model.MenuHandleModule">
+        <id column="ID" jdbcType="VARCHAR" property="id"/>
+        <result column="menu_id" jdbcType="VARCHAR" property="menuId"/>
+        <result column="module_id" jdbcType="VARCHAR" property="moduleId"/>
+    </resultMap>
+    <sql id="Example_Where_Clause" >
+        <where >
+            <foreach collection="oredCriteria" item="criteria" separator="or" >
+                <if test="criteria.valid" >
+                    <trim prefix="(" suffix=")" prefixOverrides="and" >
+                        <foreach collection="criteria.criteria" item="criterion" >
+                            <choose >
+                                <when test="criterion.noValue" >
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue" >
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue" >
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue" >
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <!--<select id="selectByUserName" resultMap="BaseResultMap" parameterType="com.admin.model.User">-->
+        <!--select-->
+        <!--*-->
+        <!--from T_USER-->
+        <!--where USERNAME= #{username,jdbcType=VARCHAR}-->
+    <!--</select>-->
+    <select id="selectMenuHandleModule" resultMap="MenuHandleModuleMap" parameterType="com.admin.model.BaseExample" >
+        select * from t_menu_handle_module
+        <if test="_parameter != null" >
+            <include refid="Example_Where_Clause" />
+        </if>
+        <if test="orderByClause != null" >
+            order by ${orderByClause}
+        </if>
+    </select>
+    <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.admin.model.RoleExample" >
+        select
+        *
+        from t_role
+        <if test="_parameter != null" >
+            <include refid="Example_Where_Clause" />
+        </if>
+        <if test="orderByClause != null" >
+            order by ${orderByClause}
+        </if>
+    </select>
+    <select id="selectByExampleAndPage" resultMap="BaseResultMap" parameterType="com.admin.model.RoleExample" >
+        select
+        *
+        from t_role
+        <if test="_parameter != null" >
+            <include refid="Example_Where_Clause" />
+        </if>
+        <if test="orderByClause != null" >
+            order by ${orderByClause}
+        </if>
+    </select>
+    <insert id="insertSelective" parameterType="com.admin.model.Role" >
+        insert into t_role
+        <selectKey keyProperty="id" resultType="String" order="BEFORE">
+            select t_role_SEQUENCE.nextval from dual
+        </selectKey>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="roleName != null">
+                role_name,
+            </if>
+            <if test="enabled != null">
+                enabled,
+            </if>
+            <if test="roleNumber != null">
+                role_number,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="roleName != null">
+                #{roleName,jdbcType=VARCHAR},
+            </if>
+            <if test="enabled != null">
+                #{enabled,jdbcType=VARCHAR},
+            </if>
+            <if test="roleNumber != null">
+                #{roleNumber,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.admin.model.Role">
+        update t_role
+        <set>
+            <if test="roleName != null">
+                role_name = #{roleName,jdbcType=VARCHAR},
+            </if>
+            <if test="enabled != null">
+                enabled = #{enabled,jdbcType=VARCHAR},
+            </if>
+            <if test="roleNumber != null">
+                role_number = #{roleNumber,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        *
+        from t_role
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteFunctionByRoleId" parameterType="java.lang.String" >
+        delete from t_role_menu_c
+        where role_id = #{roleId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insertFunction" parameterType="com.admin.model.RoleFunction" >
+        insert into t_role_menu_c
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="roleId != null">
+                role_id,
+            </if>
+            <if test="menuId != null">
+                menu_id,
+            </if>
+            <if test="handleModule != null">
+                handle_module,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="roleId != null">
+                #{roleId,jdbcType=VARCHAR},
+            </if>
+            <if test="menuId != null">
+                #{menuId,jdbcType=VARCHAR},
+            </if>
+            <if test="handleModule != null">
+                #{handleModule,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+</mapper>

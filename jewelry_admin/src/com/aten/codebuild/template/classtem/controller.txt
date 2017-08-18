@@ -1,0 +1,299 @@
+/*
+ * 系统名称:艾腾云商珠宝平台
+ * (C)  Copyright aten  {ydt}  Corporation 
+ * All rights reserved.
+ * Package:com.aten.controller
+ * FileName: {CLASS_NAME}Controller.java 
+ * Author:{AUTHOR}
+ */
+package com.aten.controller;
+
+import javax.servlet.http.HttpServletRequest;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import com.aten.annotation.TokenAnnotation;
+import com.communal.util.StringUtil;
+import com.aten.model.orm.{CLASS_NAME};
+import com.aten.service.{CLASS_NAME}Service;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+
+/**
+ * @author {AUTHOR}
+ * @Function {FUNCTION}  controller
+ * @date {ydt}
+ */
+@Controller
+@RequestMapping("admin/{URL_NAME}")
+public class {CLASS_NAME}Controller extends BaseController{
+
+	private static final Logger logger = Logger.getLogger({CLASS_NAME}Controller.class);
+	
+	@Autowired
+	private {CLASS_NAME}Service {DEFINE_CLASS_NAME}Service;
+	
+	/**
+	 * @author {AUTHOR}
+	 * @Description 初始方法
+	 * @param
+	 * @date {ydt}
+	 */
+	@ModelAttribute  
+    public void populateModel(HttpServletRequest request,Model model) { 
+		initialHiddenVal(request,model);
+    }  
+	
+	{method_list}
+	/**
+	 * @author {AUTHOR}
+	 * @Description {MODEL}列表页方法
+	 * @param
+	 * @date {ydt}
+	 */
+	@RequestMapping("list")
+	public String list(HttpServletRequest request,Model model){
+		HashMap<String, Object> paraMap = new HashMap<String,Object>();
+		//搜索封装
+		paraMap = searchMap(request,paraMap,model);
+		int count = this.{DEFINE_CLASS_NAME}Service.getCount(paraMap);
+		//分页工具
+		paraMap = pageTool(request,count,model,paraMap);
+		List<{CLASS_NAME}> {DEFINE_CLASS_NAME}List = this.{DEFINE_CLASS_NAME}Service.getList(paraMap);
+		model.addAttribute("{DEFINE_CLASS_NAME}List", {DEFINE_CLASS_NAME}List);
+		return "{DEFINE_CLASS_NAME}/list";
+	}
+	{/method_list}
+	
+	
+	{method_insert}
+	 /**
+	 * @author {AUTHOR}
+	 * @Description 跳转到添加{MODEL}页面方法
+	 * @param
+	 * @date {ydt}
+	 */
+	@RequestMapping("add")
+	@TokenAnnotation(needSaveToken = true)
+	public String add(Model model){
+		return "{DEFINE_CLASS_NAME}/insert";
+	}
+	
+	
+	/**
+	 * @author {AUTHOR}
+	 * @Description 添加{MODEL}方法
+	 * @param
+	 * @date {ydt}
+	 */
+	@RequestMapping("insert")
+	@TokenAnnotation(needRemoveToken = true)
+	public String insert({CLASS_NAME} {DEFINE_CLASS_NAME},Model model){
+		this.{DEFINE_CLASS_NAME}Service.insert({DEFINE_CLASS_NAME});
+		model.addAttribute("promptmsg","{MODEL}添加成功！");
+		return add(model);
+	}
+	{/method_insert}
+	
+	{method_update}	
+	/**
+	 * @author {AUTHOR}
+	 * @Description 跳转到修改{MODEL}页面方法
+	 * @param
+	 * @date {ydt}
+	 */
+	@RequestMapping("edit")
+	@TokenAnnotation(needSaveToken = true)
+	public String edit(HttpServletRequest request,Model model){
+		String parameter_id = request.getParameter("parameter_id");
+		if(parameter_id==null ||parameter_id.equals("")) return list(request,model);
+		//获取对象
+		{CLASS_NAME} {DEFINE_CLASS_NAME} = this.{DEFINE_CLASS_NAME}Service.get(parameter_id);
+		model.addAttribute("{DEFINE_CLASS_NAME}", {DEFINE_CLASS_NAME});
+		return "{DEFINE_CLASS_NAME}/update";
+	}
+	
+	
+	/**
+	 * @author {AUTHOR}
+	 * @Description 修改{MODEL}方法
+	 * @param
+	 * @date {ydt}
+	 */
+	@RequestMapping("update")
+	@TokenAnnotation(needRemoveToken = true)
+	public String update(HttpServletRequest request,{CLASS_NAME} {DEFINE_CLASS_NAME},Model model){
+		this.{DEFINE_CLASS_NAME}Service.update({DEFINE_CLASS_NAME});
+		model.addAttribute("promptmsg","{MODEL}修改成功！");
+		return list(request,model);
+	}
+	{/method_update}
+	
+	{method_delete}
+	/**
+	 * @author {AUTHOR}
+	 * @Description 删除{MODEL}方法
+	 * @param
+	 * @date {ydt}
+	 */
+	@RequestMapping("delete")
+	public String delete(HttpServletRequest request,Model model){
+		String parameter_id = request.getParameter("parameter_id");
+		if(parameter_id==null ||parameter_id.equals("")) return list(request,model);
+		this.{DEFINE_CLASS_NAME}Service.deleteOne(parameter_id);
+		model.addAttribute("promptmsg","{MODEL}删除成功！");
+		return list(request, model);
+	}
+	{/method_delete}
+	
+	{method_sort}
+	/**
+	 * @author {AUTHOR}
+	 * @Description {MODEL}排序方法
+	 * @param
+	 * @date {ydt}
+	 */
+	@RequestMapping("sort")
+	public String sort(HttpServletRequest request,Model model){
+		String sort_id = request.getParameter("sort_id");
+		String sort_val = request.getParameter("sort_val");
+		if(sort_id==null || sort_val==null) return null;
+		// 转成maplist
+		List<Map<String, String>> sortMapList = sortStrToMapList(sort_id,sort_val);
+		this.{DEFINE_CLASS_NAME}Service.updateBatch(sortMapList);
+		return list(request, model);
+	}
+	{/method_sort}
+	
+	
+	/**
+	 * @author {AUTHOR}
+	 * @Description {MODEL}批量删除成功
+	 * @param
+	 * @date 2017-5-3 下午4:09:55
+	 */
+	@RequestMapping("batchDelete")
+	public String batchDelete(HttpServletRequest request,Model model){
+		String parameter_id = request.getParameter("parameter_id");
+		if(parameter_id==null ||parameter_id.equals("")) return list(request,model);
+		//转成数组更新
+		boolean flag=false;
+		String[] ids = parameter_id.split(",");
+		for(String id:ids){
+			if(!StringUtil.isEmpty(id)){
+				if(checkBrand(id)){
+					flag = true;
+				}else{
+					this.{DEFINE_CLASS_NAME}Service.deleteOne(id);
+				}
+			}
+		}
+		//判断标志提示
+		if(flag){
+			model.addAttribute("promptmsg","部分{MODEL}已被引用,被引用的{MODEL}删除失败！");
+		}else{
+			model.addAttribute("promptmsg","{MODEL}删除成功！");
+		}
+		return list(request, model);
+	}
+	
+	/**
+	 * @author {AUTHOR}
+	 * @Description 启用{MODEL}
+	 * @param
+	 * @date 2017-5-3 下午4:04:28
+	 */
+	@RequestMapping("enableState")
+	public String enableState(HttpServletRequest request,Model model){
+		String parameter_id = request.getParameter("parameter_id");
+		if(parameter_id==null ||parameter_id.equals("")) return list(request,model);
+		{CLASS_NAME} {DEFINE_CLASS_NAME}  = this.{DEFINE_CLASS_NAME}Service.get(parameter_id);
+		{DEFINE_CLASS_NAME}.setState("1");
+		this.{DEFINE_CLASS_NAME}Service.update({DEFINE_CLASS_NAME});
+		model.addAttribute("promptmsg","{MODEL}启用成功！");
+		return list(request, model);
+	}
+	
+	
+	/**
+	 * @author {AUTHOR}
+	 * @Description 禁用{MODEL}
+	 * @param
+	 * @date 2017-5-3 下午4:04:28
+	 */
+	@RequestMapping("limitState")
+	public String limitState(HttpServletRequest request,Model model){
+		String parameter_id = request.getParameter("parameter_id");
+		if(parameter_id==null ||parameter_id.equals("")) return list(request,model);
+		{CLASS_NAME} {DEFINE_CLASS_NAME}  = this.{DEFINE_CLASS_NAME}Service.get(parameter_id);
+		{DEFINE_CLASS_NAME}.setState("0");
+		this.{DEFINE_CLASS_NAME}Service.update({DEFINE_CLASS_NAME});
+		model.addAttribute("promptmsg","{MODEL}禁用成功！");
+		return list(request, model);
+	}
+
+	/**
+	 * @author {AUTHOR}
+	 * @Description 批量启用{MODEL}
+	 * @param
+	 * @date {ydt}
+	 */
+	@RequestMapping("batchEnableState")
+	public String batchEnableState(HttpServletRequest request,Model model){
+		String parameter_id = request.getParameter("parameter_id");
+		if(parameter_id==null ||parameter_id.equals("")) return list(request,model);
+		//转成数组更新
+		String[] ids = parameter_id.split(",");
+		for(String id:ids){
+			{CLASS_NAME} {DEFINE_CLASS_NAME}  = this.{DEFINE_CLASS_NAME}Service.get(id);
+			{DEFINE_CLASS_NAME}.setState("1");
+			this.{DEFINE_CLASS_NAME}Service.update({DEFINE_CLASS_NAME});
+		}
+		model.addAttribute("promptmsg","{MODEL}批量启用成功！");
+		return list(request, model);
+	}
+	
+
+	/**
+	 * @author {AUTHOR}
+	 * @Description 批量禁用{MODEL}
+	 * @param
+	 * @date {ydt}
+	 */
+	@RequestMapping("batchLimitState")
+	public String batchLimitState(HttpServletRequest request,Model model){
+		String parameter_id = request.getParameter("parameter_id");
+		if(parameter_id==null ||parameter_id.equals("")) return list(request,model);
+		//转成数组更新
+		String[] ids = parameter_id.split(",");
+		for(String id:ids){
+			{CLASS_NAME} {DEFINE_CLASS_NAME}  = this.{DEFINE_CLASS_NAME}Service.get(id);
+			{DEFINE_CLASS_NAME}.setState("0");
+			this.{DEFINE_CLASS_NAME}Service.update({DEFINE_CLASS_NAME});
+		}
+		model.addAttribute("promptmsg","{MODEL}批量禁用成功！");
+		return list(request, model);
+	}
+	
+	
+	
+	
+	/**
+	 * @author {AUTHOR}
+	 * @Description 验证删除{MODEL}时是否被引用
+	 * @param
+	 * @return true 被引用  false 未引用
+	 * @date 2017-5-9 下午8:53:58
+	 */
+	private boolean checkBrand(String {TABLEKEY}){
+		return false;
+	}
+	
+	
+	
+}

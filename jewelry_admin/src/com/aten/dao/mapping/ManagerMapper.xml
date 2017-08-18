@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.ManagerDao">
+
+	<!-- 数据库映射模型区域 -->
+	<resultMap id="resultManager" type="com.aten.model.orm.Manager">
+		<result property="mana_id" column="mana_id" />
+		<result property="mana_name" column="mana_name" />
+		<result property="password" column="password" />
+		<result property="role_code" column="role_code" />
+		<result property="phone" column="phone" />
+		<result property="email" column="email" />
+		<result property="note" column="note" />
+		<result property="last_login_time" column="last_login_time" />
+		<result property="state" column="state" />
+		<result property="create_time" column="create_time" />
+		<result property="mana_type" column="mana_type" />
+		<result property="role_name" column="role_name" />
+		<result property="ease_id" column="ease_id" />
+		<result property="ease_pwd" column="ease_pwd" />
+		<result property="header_img" column="header_img" />
+		<result property="nike_name" column="nike_name" />
+		<result property="the_org" column="the_org" />
+		<result property="real_name" column="real_name" />
+		<result property="sex" column="sex" />
+		<result property="qq" column="qq" />
+	</resultMap>
+
+	<!-- 新增数据区域 -->
+	<sql id="insertCommon">
+		insert into t_manager(
+		<if test="mana_name != null"> mana_name,</if>
+		<if test="password != null"> password,</if>
+		<if test="role_code != null"> role_code,</if>
+		<if test="phone != null"> phone,</if>
+		<if test="email != null"> email,</if>
+		<if test="note != null"> note,</if>
+		<if test="last_login_time != null"> last_login_time,</if>
+		<if test="state != null"> state,</if>
+		<if test="mana_type != null"> mana_type,</if>
+		<if test="ease_id != null"> ease_id,</if>
+		<if test="ease_pwd != null"> ease_pwd,</if>
+		<if test="header_img != null"> header_img,</if>
+		<if test="nike_name != null"> nike_name,</if>
+		<if test="the_org != null"> the_org,</if>
+		<if test="real_name != null"> real_name,</if>
+		<if test="sex != null"> sex,</if>
+		<if test="qq != null"> qq,</if>
+		create_time
+		)
+		values(
+		<if test="mana_name != null">#{mana_name},</if>
+		<if test="password != null">#{password},</if>
+		<if test="role_code != null">#{role_code},</if>
+		<if test="phone != null">#{phone},</if>
+		<if test="email != null">#{email},</if>
+		<if test="note != null">#{note},</if>
+		<if test="last_login_time != null">#{last_login_time},</if>
+		<if test="state != null">#{state},</if>
+		<if test="mana_type != null">#{mana_type},</if>
+		<if test="ease_id != null">#{ease_id},</if>
+		<if test="ease_pwd != null">#{ease_pwd},</if>
+		<if test="header_img!= null">#{header_img},</if>
+		<if test="nike_name!= null">#{nike_name},</if>
+		<if test="the_org!= null">#{the_org},</if>
+		<if test="real_name!= null">#{real_name},</if>
+		<if test="sex!= null">#{sex},</if>
+		<if test="qq != null"> #{qq},</if>
+		now()
+		)
+	</sql>
+
+	<insert id="insert" parameterType="com.aten.model.orm.Manager">
+		<include refid="insertCommon" />
+	</insert>
+
+	<!-- 更新数据区域 -->
+	<sql id="update_clause">
+		<set>
+			<if test="mana_name != null"> mana_name = #{mana_name}, </if>
+			<if test="password != null"> password = #{password}, </if>
+			<if test="role_code != null"> role_code = #{role_code}, </if>
+			<if test="phone != null"> phone = #{phone}, </if>
+			<if test="email != null"> email = #{email}, </if>
+			<if test="note != null"> note = #{note}, </if>
+			<if test="last_login_time != null"> last_login_time = #{last_login_time}, </if>
+			<if test="state != null"> state = #{state}, </if>
+			<if test="mana_type != null"> mana_type = #{mana_type} ,</if>
+			<if test="ease_id != null"> ease_id = #{ease_id}, </if>
+			<if test="ease_pwd != null"> ease_pwd = #{ease_pwd}, </if>
+			<if test="header_img != null"> header_img = #{header_img},</if>
+			<if test="nike_name != null"> nike_name = #{nike_name},</if>
+			<if test="the_org != null"> the_org = #{the_org} ,</if>
+			<if test="sex != null"> sex = #{sex} ,</if>
+			<if test="real_name != null"> real_name = #{real_name},</if>
+			<if test="qq != null"> qq = #{qq}, </if>
+			<if test="mana_id != null"> mana_id = #{mana_id}</if>
+		</set>
+	</sql>
+
+
+	<update id="update" parameterType="com.aten.model.orm.Manager">
+		update t_manager
+		<include refid="update_clause" />
+		where mana_id = #{mana_id}
+	</update>
+
+	<!-- 删除数据区域 -->
+	<delete id="delete" parameterType="String">
+		delete from t_manager where mana_type='1' and mana_id in
+		<foreach item="idItem" collection="array" index="index" open="("
+			separator="," close=")">
+			#{idItem}
+		</foreach>
+	</delete>
+
+	<!-- 获取对象数据区域 -->
+	<select id="get" parameterType="String" resultMap="resultManager">
+		select
+		mana_id,mana_name,password,role_code,phone,email,note,real_name,sex,qq,
+		last_login_time,state,create_time,mana_type,ease_id,ease_pwd,header_img,nike_name,the_org
+		from t_manager where mana_id = #{mana_id}
+	</select>
+
+	<!-- 搜索数据区域 -->
+	<sql id="where_clause">
+		<if test="mana_id != null"> and t.mana_id = #{mana_id} </if>
+		<if test="mana_name != null"> and t.mana_name=#{mana_name}</if>
+		<if test="mana_name_vange != null"> and instr(t.mana_name,#{mana_name_vange}) > 0</if>
+		<if test="password != null"> and t.password = #{password} </if>
+		<if test="role_code != null"> and t.role_code = #{role_code} </if>
+		<if test="phone != null"> and instr(t.phone,#{phone}) > 0</if>
+		<if test="email != null"> and t.email = #{email} </if>
+		<if test="note != null"> and t.note = #{note} </if>
+		<if test="last_login_time != null"> and t.last_login_time = #{last_login_time} </if>
+		<if test="state != null"> and t.state = #{state} </if>
+		<if test="create_time != null"> and t.create_time = #{create_time} </if>
+		<if test="mana_type != null"> and t.mana_type = #{mana_type} </if>
+		<if test="ease_id != null"> and t.ease_id = #{ease_id} </if>
+		<if test="ease_pwd != null"> and t.ease_pwd = #{ease_pwd} </if>
+		<if test="header_img != null"> and t.header_img = #{header_img} </if>
+		<if test="the_org != null"> and instr(the_org,#{the_org})>0</if>
+		<if test="real_name != null"> and instr(t.real_name,#{real_name}) > 0 </if>
+		<if test="sex != null"> and t.sex = #{sex} </if>
+		<if test="qq != null"> and t.qq= #{qq} </if>
+	</sql>
+
+
+	<select id="getList" parameterType="map" resultMap="resultManager">
+		select
+		t.mana_id,t.mana_name,t.password,t.role_code,t.phone,t.email,t.note,t.ease_id,t.ease_pwd,t.header_img,t.qq,
+		t.last_login_time,t.state,t.create_time,t.mana_type,r.role_name,t.nike_name,t.the_org,t.real_name,t.sex
+		from t_manager t left join t_role r on t.role_code=r.role_code
+		where 1 = 1
+		<include refid="where_clause" />
+		order by t.mana_id desc
+		<if test="start != null">
+			LIMIT ${start},${limit}
+		</if>
+	</select>
+
+	<select id="getCount" parameterType="map" resultType="int">
+		select count(*) ct from t_manager t
+		where 1 = 1
+		<include refid="where_clause" />
+	</select>
+
+</mapper>
+

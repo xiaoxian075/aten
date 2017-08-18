@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.SmslogDao">
+
+	<!-- 数据库映射模型区域 -->
+	<resultMap id="resultSmslog" type="com.aten.model.orm.Smslog">
+		<result property="sms_id" column="sms_id" />
+		<result property="sms_mobile" column="sms_mobile" />
+		<result property="sms_msg" column="sms_msg" />
+		<result property="sms_type" column="sms_type" />
+		<result property="send_time" column="send_time" />
+		<result property="result_content" column="result_content" />
+		<result property="sms_code" column="sms_code" />
+		<result property="state" column="state" />
+		<result property="is_send" column="is_send" />
+		<result property="para_name" column="para_name" />
+	</resultMap>
+
+	<!-- 新增数据区域 -->
+	<sql id="insertCommon">
+		insert into t_sms_log(
+
+		<if test="sms_id != null"> sms_id,</if>
+
+		<if test="sms_mobile != null"> sms_mobile,</if>
+
+		<if test="sms_msg != null"> sms_msg,</if>
+
+		<if test="sms_type != null"> sms_type,</if>
+
+		<if test="result_content != null"> result_content,</if>
+
+		<if test="sms_code != null"> sms_code,</if>
+
+		<if test="state != null"> state,</if>
+
+		<if test="is_send != null"> is_send,</if>
+		send_time
+		)
+		values(
+
+		<if test="sms_id != null">#{sms_id},</if>
+
+		<if test="sms_mobile != null">#{sms_mobile},</if>
+
+		<if test="sms_msg != null">#{sms_msg},</if>
+
+		<if test="sms_type != null">#{sms_type},</if>
+
+		<if test="result_content != null">#{result_content},</if>
+
+		<if test="sms_code != null">#{sms_code},</if>
+
+
+		<if test="state != null">#{state},</if>
+
+		<if test="is_send != null">#{is_send},</if>
+
+		noe()
+		)
+	</sql>
+
+	<insert id="insert" parameterType="com.aten.model.orm.Smslog">
+		<include refid="insertCommon" />
+	</insert>
+
+	<insert id="insertGetPk" parameterType="com.aten.model.orm.Smslog">
+		<include refid="insertCommon" />
+		<selectKey resultType="java.lang.String" order="AFTER"
+			keyProperty="sms_id">
+			select @@IDENTITY AS ID
+		</selectKey>
+	</insert>
+
+
+	<!-- 更新数据区域 -->
+	<sql id="update_clause">
+		<set>
+			<if test="sms_id != null"> sms_id = #{sms_id}, </if>
+			<if test="sms_mobile != null"> sms_mobile = #{sms_mobile}, </if>
+			<if test="sms_msg != null"> sms_msg = #{sms_msg}, </if>
+			<if test="sms_type != null"> sms_type = #{sms_type}, </if>
+			<if test="send_time != null"> send_time = #{send_time}, </if>
+			<if test="result_content != null"> result_content = #{result_content}, </if>
+			<if test="sms_code != null"> sms_code = #{sms_code}, </if>
+
+			<if test="state != null"> state = #{state}, </if>
+			<if test="is_send != null"> is_send = #{is_send} </if>
+
+		</set>
+	</sql>
+
+
+	<update id="update" parameterType="com.aten.model.orm.Smslog">
+		update t_sms_log
+		<include refid="update_clause" />
+		where sms_id = #{sms_id}
+	</update>
+
+	<!-- 删除数据区域 -->
+	<delete id="delete" parameterType="String">
+		delete from t_sms_log where sms_id in
+		<foreach item="idItem" collection="array" index="index" open="("
+			separator="," close=")">
+			#{idItem}
+		</foreach>
+	</delete>
+
+	<!-- 获取对象数据区域 -->
+	<select id="get" parameterType="String" resultMap="resultSmslog">
+		select
+		sms_id,sms_mobile,sms_msg,sms_type,send_time,result_content,sms_code,
+		state,is_send
+		from t_sms_log where sms_id = #{sms_id}
+	</select>
+
+	<!-- 搜索数据区域 -->
+	<sql id="where_clause">
+		<if test="sms_id != null"> and t.sms_id = #{sms_id} </if>
+		<if test="sms_mobile != null"> and t.sms_mobile = #{sms_mobile} </if>
+		<if test="sms_msg != null"> and t.sms_msg = #{sms_msg} </if>
+		<if test="sms_type != null"> and t.sms_type = #{sms_type} </if>
+		<if test="send_time != null"> and t.send_time = #{send_time} </if>
+		<if test="result_content != null"> and t.result_content = #{result_content} </if>
+		<if test="sms_code != null"> and t.sms_code = #{sms_code} </if>
+		<if test="state != null"> and t.state = #{state} </if>
+		<if test="is_send != null"> and t.is_send = #{is_send} </if>
+	</sql>
+
+	<sql id="getCommon">
+		select
+		t.sms_id,t.sms_mobile,t.sms_msg,t.sms_type,t.send_time,t.result_content,
+		t.sms_code,t.state,t.is_send,c.para_name from t_sms_log t
+		left join t_commpara c on t.sms_type=c.para_key where
+		c.para_code='cfg_smslog_type'
+		<include refid="where_clause" />
+		order by t.sms_id desc
+	</sql>
+
+
+
+	<select id="getList" parameterType="map" resultMap="resultSmslog">
+		<include refid="getCommon" />
+		<if test="start != null">
+			LIMIT ${start},${limit}
+		</if>
+	</select>
+
+	<select id="getCount" parameterType="map" resultType="int">
+		select count(*) ct from t_commpara where 1=1
+		<include refid="where_clause" />
+	</select>
+
+
+	<!-- 排序区域 -->
+	<update id="updateBatch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" separator=";">
+			update t_sms_log
+			<set>
+				sort_no = #{item.sort_no}
+			</set>
+			where sms_id = #{item.id}
+		</foreach>
+	</update>
+
+</mapper>
+

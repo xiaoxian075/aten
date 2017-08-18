@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.MessageDao">
+
+	<!-- 数据库映射模型区域 -->
+	<resultMap id="resultMessage" type="com.aten.model.orm.Message">
+		<result property="msg_id" column="msg_id" />
+		<result property="msg_type" column="msg_type" />
+		<result property="msg_title" column="msg_title" />
+		<result property="introduction" column="introduction" />
+		<result property="msg_content" column="msg_content" />
+		<result property="in_date" column="in_date" />
+
+	</resultMap>
+
+	<!-- 新增数据区域 -->
+	<sql id="insertCommon">
+		INSERT INTO t_message
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="msg_id != null"> msg_id,</if>
+			<if test="msg_type != null"> msg_type,</if>
+			<if test="msg_title != null"> msg_title,</if>
+			<if test="introduction != null"> introduction,</if>
+			<if test="msg_content != null"> msg_content,</if>
+			<if test="in_date != null"> in_date</if>
+
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="msg_id != null">#{msg_id},</if>
+			<if test="msg_type != null">#{msg_type},</if>
+			<if test="msg_title != null">#{msg_title},</if>
+			<if test="introduction != null">#{introduction},</if>
+			<if test="msg_content != null">#{msg_content},</if>
+			<if test="in_date != null">#{in_date}</if>
+
+		</trim>
+	</sql>
+
+	<insert id="insert" parameterType="com.aten.model.orm.Message">
+		<include refid="insertCommon" />
+	</insert>
+
+	<insert id="insertGetPk" parameterType="com.aten.model.orm.Message">
+		<include refid="insertCommon" />
+		<selectKey resultType="String" order="AFTER" keyProperty="msg_id">
+			SELECT @@IDENTITY AS ID
+		</selectKey>
+	</insert>
+
+	<!-- 更新数据区域 -->
+	<sql id="update_clause">
+		<set>
+			<trim suffixOverrides=",">
+				<if test="msg_id != null"> msg_id = #{msg_id}, </if>
+				<if test="msg_type != null"> msg_type = #{msg_type}, </if>
+				<if test="msg_title != null"> msg_title = #{msg_title}, </if>
+				<if test="introduction != null"> introduction = #{introduction}, </if>
+				<if test="msg_content != null"> msg_content = #{msg_content}, </if>
+				<if test="in_date != null"> in_date = #{in_date} </if>
+
+			</trim>
+		</set>
+	</sql>
+
+
+
+
+
+	<update id="update" parameterType="com.aten.model.orm.Message">
+		UPDATE t_message
+		<include refid="update_clause" />
+		WHERE msg_id = #{msg_id}
+	</update>
+
+	<!-- 删除数据区域 -->
+	<delete id="delete" parameterType="String">
+		delete from t_message where msg_id in
+		<foreach item="idItem" collection="array" index="index" open="("
+			separator="," close=")">
+			#{idItem}
+		</foreach>
+	</delete>
+
+	<!-- 获取对象数据区域 -->
+	<select id="get" parameterType="String" resultMap="resultMessage">
+		SELECT
+		t.msg_id,t.msg_type,t.msg_title,t.introduction,t.msg_content,t.in_date
+		FROM t_message t WHERE msg_id = #{msg_id}
+	</select>
+
+	<!-- 搜索数据区域 -->
+	<sql id="where_clause">
+		<where>
+			1=1
+			<if test="msg_id != null"> and t.msg_id = #{msg_id} </if>
+			<if test="msg_id_vague != null"> and instr(t.msg_id,#{msg_id_vague})>0 </if>
+			<if test="msg_type != null"> and t.msg_type = #{msg_type} </if>
+			<if test="msg_type_vague != null"> and instr(t.msg_type,#{msg_type_vague})>0 </if>
+			<if test="msg_title != null"> and t.msg_title = #{msg_title} </if>
+			<if test="msg_title_vague != null"> and instr(t.msg_title,#{msg_title_vague})>0 </if>
+			<if test="introduction != null"> and t.introduction = #{introduction} </if>
+			<if test="introduction_vague != null"> and instr(t.introduction,#{introduction_vague})>0 </if>
+			<if test="msg_content != null"> and t.msg_content = #{msg_content} </if>
+			<if test="msg_content_vague != null"> and instr(t.msg_content,#{msg_content_vague})>0 </if>
+			<if test="in_date != null"> and t.in_date = #{in_date} </if>
+			<if test="in_date_vague != null"> and instr(t.in_date#{in_date_vague})>0 </if>
+
+		</where>
+	</sql>
+
+	<sql id="getCommon">
+		select
+		t.msg_id,t.msg_type,t.msg_title,t.introduction,t.msg_content,t.in_date
+		from t_message t
+		<include refid="where_clause" />
+		order by msg_id desc
+	</sql>
+
+
+
+	<select id="getList" parameterType="map" resultMap="resultMessage">
+		<include refid="getCommon" />
+		<if test="start != null">
+			LIMIT ${start},${limit}
+		</if>
+	</select>
+
+	<select id="getCount" parameterType="map" resultType="int">
+		select count(*) ct from t_message t
+		<include refid="where_clause" />
+	</select>
+
+
+	<!-- 排序区域 -->
+	<update id="updateBatch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index"
+			separator=";">
+			update t_message
+			<set>
+				sort_no = #{item.sort_no}
+			</set>
+			WHERE msg_id = #{item.id}
+		</foreach>
+	</update>
+
+</mapper>
+

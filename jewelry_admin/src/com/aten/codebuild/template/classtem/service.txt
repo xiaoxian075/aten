@@ -1,0 +1,9 @@
+package com.aten.service;
+
+import com.aten.model.orm.{CLASS_NAME};
+
+public  interface {CLASS_NAME}Service extends CommonService<{CLASS_NAME}, String>{
+	
+
+	
+}

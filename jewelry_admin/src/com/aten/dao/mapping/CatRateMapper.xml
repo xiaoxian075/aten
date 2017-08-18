@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.CatRateDao">
+	
+	<cache type="org.mybatis.caches.ehcache.EhcacheCache"/> 
+
+	<!-- 数据库映射模型区域 -->
+	<resultMap id="resultCatRate" type="com.aten.model.orm.CatRate">
+		<result property="rate_id" column="rate_id" />
+		<result property="cat_id" column="cat_id" />
+		<result property="divide_rate" column="divide_rate" />
+		<result property="manual_fee" column="manual_fee" />
+	</resultMap>
+
+	<!-- 新增数据区域 -->
+	<sql id="insertCommon">
+		INSERT INTO t_cat_rate(
+		<if test="rate_id != null"> rate_id,</if>
+		<if test="cat_id != null"> cat_id,</if>
+		<if test="manual_fee != null"> manual_fee,</if>
+		<if test="divide_rate != null"> divide_rate</if>
+		)
+		VALUES(
+		<if test="rate_id != null">#{rate_id},</if>
+		<if test="cat_id != null">#{cat_id},</if>
+		<if test="manual_fee != null">#{manual_fee},</if>
+		<if test="divide_rate != null">#{divide_rate}</if>
+		)
+	</sql>
+
+	<insert id="insert" parameterType="com.aten.model.orm.CatRate">
+		<include refid="insertCommon" />
+	</insert>
+
+	<insert id="insertGetPk" parameterType="com.aten.model.orm.CatRate">
+		<include refid="insertCommon" />
+		<selectKey resultType="java.lang.String" order="AFTER"
+			keyProperty="rate_id">
+			SELECT @@IDENTITY AS ID
+		</selectKey>
+
+	</insert>
+
+	<!-- 更新数据区域 -->
+	<sql id="update_clause">
+		<set>
+			<if test="rate_id != null"> rate_id = #{rate_id}, </if>
+			<if test="cat_id != null"> cat_id = #{cat_id}, </if>
+			<if test="manual_fee != null"> manual_fee = #{manual_fee}, </if>
+			<if test="divide_rate != null"> divide_rate = #{divide_rate} </if>
+
+		</set>
+	</sql>
+
+
+	<update id="update" parameterType="com.aten.model.orm.CatRate">
+		UPDATE t_cat_rate
+		<include refid="update_clause" />
+		WHERE rate_id = #{rate_id}
+	</update>
+
+	<!-- 删除数据区域 -->
+	<delete id="delete" parameterType="String">
+		delete from t_cat_rate where rate_id in
+		<foreach item="idItem" collection="array" index="index" open="("
+			separator="," close=")">
+			#{idItem}
+		</foreach>
+	</delete>
+
+	<!-- 获取对象数据区域 -->
+	<select id="get" parameterType="String" resultMap="resultCatRate">
+		SELECT
+		t.rate_id,t.cat_id,t.divide_rate,t.manual_fee
+		FROM t_cat_rate t WHERE rate_id = #{rate_id}
+	</select>
+	<select id="getByCatId" parameterType="String" resultMap="resultCatRate">
+		SELECT
+		t.rate_id,t.cat_id,t.divide_rate,t.manual_fee
+		FROM t_cat_rate t WHERE
+		cat_id = #{cat_id}
+	</select>
+	<!-- 搜索数据区域 -->
+	<sql id="where_clause">
+		<where>
+			1=1
+			<if test="rate_id != null"> and t.rate_id = #{rate_id} </if>
+			<if test="cat_id != null"> and t.cat_id = #{cat_id} </if>
+			<if test="divide_rate != null"> and t.divide_rate = #{divide_rate} </if>
+			<if test="manual_fee != null"> and t.manual_fee = #{manual_fee} </if>
+		</where>
+	</sql>
+
+	<sql id="getCommon">
+		select t.rate_id,t.cat_id,t.divide_rate,t.manual_fee
+		from t_cat_rate t
+		<include refid="where_clause" />
+		order by rate_id asc
+	</sql>
+
+
+
+	<select id="getList" parameterType="map" resultMap="resultCatRate">
+		<include refid="getCommon" />
+		<if test="start != null">
+			LIMIT ${start},${limit}
+		</if>
+	</select>
+
+	<select id="getCount" parameterType="map" resultType="int">
+		select count(*) ct from t_cat_rate t
+		<include refid="where_clause" />
+	</select>
+
+
+	<!-- 排序区域 -->
+	<update id="updateBatch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" open="begin"
+			close=";end;" separator=";">
+			update t_cat_rate
+			<set>
+				sort_no = #{item.sort_no}
+			</set>
+			WHERE rate_id = #{item.id}
+		</foreach>
+	</update>
+
+</mapper>
+

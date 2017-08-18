@@ -1,0 +1,62 @@
+//清空
+function clearSel(show_id){
+	//清空
+	$("#"+show_id).empty();
+	//添加选择项
+	$("#"+show_id).append("<option value=''>请选择</option>");
+}
+
+$(function() {
+		//地区级联
+		$("#area_id_div").cascadeSel({
+			url : "/admin/area/normalList",
+			name : "area_id",
+			init_id : "${cfg_top_area}",
+			li_id : "area_id",
+			li_name : "area_name",
+		});
+
+		//绑定所属酒店
+		$("#ws_id").select({
+			url : "/admin/house/normalList",
+			show_id : "house_id",
+			key : "house_id",
+			value : "house_name",
+			remove_ids : "house_id"
+		});
+		//地区级联酒店
+		subSel();
+	});
+	
+//递归处理涵数
+function subSel(){
+	$("#area_id_div").find("select").change(function(){
+			//alert($(this).val());
+			getWsByAreaId($(this).val());
+			subSel();
+	});
+	//清除房型
+	clearSel("house_id");
+}
+
+//根据地区标识请求到酒店
+function getWsByAreaId(area_id){
+ 	if(area_id=="") return;
+	$.ajax({
+		type : "post",
+		url : "/admin/wineshop/normalList?area_id="+area_id,
+		datatype : "json",
+		async : false,
+		success : function(data) {
+			 var len =data.list.length;
+			//清空
+		    $("#ws_id").empty();
+		    //添加选择项
+		    $("#ws_id").append("<option value=''>请选择</option>");
+		    for ( var i = 0; i < len; i++) {
+			    var jo = data.list[i];
+			    $("#ws_id").append("<option value='"+eval("jo.ws_id")+"'>"+eval("jo.ws_name")+"</option>");
+		    }
+		}
+	});
+}

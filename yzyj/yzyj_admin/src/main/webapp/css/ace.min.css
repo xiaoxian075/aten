@@ -1,0 +1,65 @@
+.icon-double-angle-left{
+	font-family: FontAwesome;
+	font-weight: normal;
+	font-style: normal;
+	text-decoration: inherit;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	*margin-right: .3em;
+}
+.icon-double-angle-right{
+	font-family: FontAwesome;
+	font-weight: normal;
+	font-style: normal;
+	text-decoration: inherit;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	*margin-right: .3em;
+}
+.icon-double-angle-left:before{content:"\f100";}
+.icon-double-angle-right:before{content:"\f101";}
+.dataTables_paginate {
+    text-align: right
+}
+
+.dataTables_paginate .pagination {
+    margin: 0 12px
+}
+
+.dataTables_wrapper label {
+    display: inline-block;
+    font-size: 13px
+}
+
+ 
+.pagination > li > a, .pager > li > a, .pagination > li > span, .pager > li > span {
+    border-width: 1px;
+    border-radius: 0 !important
+}
+
+.pagination > li > a, .pager > li > a {
+    color: #2283c5;
+    background-color: #fafafa;
+    margin: 0 -1px 0 0;
+    border-color: #e0e8eb
+}
+
+.pagination > li > a:hover, .pager > li > a:hover {
+    background-color: #eaeff2
+}
+
+.pagination > li > a:focus, .pager > li > a:focus {
+    background-color: #eaeef2
+}
+
+.pagination > li.disabled > a, .pagination > li.disabled > a:hover, .pager > li.disabled > a, .pager > li.disabled > a:hover {
+    background-color: #f9f9f9;
+    border-color: #d9d9d9
+}
+
+.pagination > li.active > a, .pagination > li.active > a:hover {
+    background-color: #0cf;
+    border-color: #0cf;
+    color: #fff;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25)
+}

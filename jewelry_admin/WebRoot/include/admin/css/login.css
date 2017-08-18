@@ -1,0 +1,82 @@
+.loginWraper {
+	background: url("/include/admin/image/login_bg.jpg") repeat scroll
+		center center;
+	bottom: 0;
+	left: 0;
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: 100%;
+	z-index: 1;
+}
+
+.loginBox {
+	background: rgba(0, 0, 0, 0) url("/include/admin/image/login.png")
+		no-repeat scroll 0 0;
+	height: 330px;
+	left: 50%;
+	margin-left: -309px;
+	margin-top: -184px;
+	padding-top: 38px;
+	position: absolute;
+	top: 50%;
+	width: 617px;
+}
+
+.lg_tb {
+	margin-top: 30px;
+}
+
+.lg_tb td {
+	padding-top: 30px;
+}
+
+.lg_td_left {
+	text-align: right;
+	width: 180px;
+}
+
+.txt_name {
+	font-size: 16px;
+	height: 38px;
+	_height: 22px;
+	vertical-align: middle;
+	width: 260px;
+}
+
+.lg_tb td.login_td {
+	text-align: center;
+	padding-left: 150px;
+	padding-top: 0px;
+}
+
+.login_btn {
+	background-color: #5eb95e;
+	border: 1px solid #5eb95e;
+	color: #fff;
+}
+
+.cancel_btn {
+	background-color: #e6e6e6;
+	border: 1px solid #e6e6e6;
+}
+
+.btn {
+	box-sizing: border-box;
+	padding: 8px 16px;
+	border-radius: 5px;
+	cursor: pointer;
+	font-weight: 400;
+	text-align: center;
+	vertical-align: middle;
+	overflow: hidden;
+	line-height: 31px;
+	line-height: normal !important;
+}
+
+.lg_tb td.lg_msg {
+	text-align: center;
+	padding: 10px 0px 10px 100px;
+	color: red;
+	font-size: 12px;
+}

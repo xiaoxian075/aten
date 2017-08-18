@@ -1,0 +1,1 @@
+<input type="hidden" name="[field_name]" value="${{DEFINE_CLASS_NAME}.[field_name]}"/>

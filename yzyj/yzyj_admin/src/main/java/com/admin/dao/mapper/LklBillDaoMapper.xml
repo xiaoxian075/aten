@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.admin.dao.LklBillDaoMapper">
+   <resultMap id="BaseResultMapTxn" type="com.admin.model.Txn">
+        <result column="ID" property="id" jdbcType="VARCHAR" />
+        <result column="TXN_DATE" property="txnDate" jdbcType="VARCHAR" />
+        <result column="TXN_VIRTUAL_ACCOUNT" property="txnVirtualAccount" jdbcType="VARCHAR" />
+        <result column="TXN_COUNT_BS" property="txnCountBs" jdbcType="TIMESTAMP" />
+        <result column="TXN_JY_MONEY" property="txnJyMoney" jdbcType="VARCHAR" />
+        <result column="TXN_RZ_MONEY" property="txnRzMoney" jdbcType="VARCHAR" />
+        <result column="TXN_HB_MONEY" property="txnHbMoney" jdbcType="VARCHAR" />
+        <result column="TXN_BFJ_MONEY" property="txnBfjMoney" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+   <resultMap id="BaseResultMapTiXian" type="com.admin.model.TiXian">
+        <result column="ID" property="id" jdbcType="DECIMAL" />
+        <result column="TIXIAN_DATE" property="tixianDate" jdbcType="DECIMAL" />
+        <result column="TIXIAN_MONEY" property="tixianMoney" jdbcType="DECIMAL" />
+        <result column="TIXIAN_COUNT_BS" property="tixianCountBs" jdbcType="TIMESTAMP" />
+        <result column="TIXIAN_PT_MONEY" property="tixianPtMoney" jdbcType="VARCHAR" />
+        <result column="TIXIAN_SH_MONEY" property="tixianShMoney" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <sql id="Example_Where_Clause" >
+        <where >
+            <foreach collection="oredCriteria" item="criteria" separator="or" >
+                <if test="criteria.valid" >
+                    <trim prefix="(" suffix=")" prefixOverrides="and" >
+                        <foreach collection="criteria.criteria" item="criterion" >
+                            <choose >
+                                <when test="criterion.noValue" >
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue" >
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue" >
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue" >
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+
+    <select id="selectTxnByExampleAndPage" parameterType="com.admin.model.BaseExample"  resultMap="BaseResultMapTxn">
+        select
+        *
+        from T_LKL_TXN
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+
+    <select id="selectTiXianByExampleAndPage" parameterType="com.admin.model.BaseExample"  resultMap="BaseResultMapTiXian">
+        select
+        *
+        from T_LKL_TIXIAN
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+
+
+    <select id="getTiXianByDay" parameterType="com.admin.model.TiXian" resultType="com.admin.model.TiXian">
+        select * from T_LKL_TIXIAN
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </select>
+
+    <select id="getTxnByDay" parameterType="com.admin.model.Txn" resultType="com.admin.model.Txn">
+        select * from T_LKL_TXN
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+    </select>
+
+
+    <insert id="insertTxn" parameterType="java.util.HashMap">
+        INSERT INTO T_LKL_TXN
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            ID,
+            <if test="txnDate != null">TXN_DATE,</if>
+            <if test="txnVirtualAccount != null">TXN_VIRTUAL_ACCOUNT,</if>
+            <if test="txnCountBs != null">TXN_COUNT_BS,</if>
+            <if test="txnJyMoney != null">TXN_JY_MONEY,</if>
+            <if test="txnRzMoney != null">TXN_RZ_MONEY,</if>
+            <if test="txnHbMoney != null">TXN_HB_MONEY,</if>
+            <if test="txnBfjMoney != null">TXN_BFJ_MONEY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            T_LKL_TXN_SEQUENCE.Nextval,
+            <if test="txnDate != null">#{txnDate},</if>
+            <if test="txnVirtualAccount != null">#{txnVirtualAccount},</if>
+            <if test="txnCountBs != null">#{txnCountBs},</if>
+            <if test="txnJyMoney != null">#{txnJyMoney},</if>
+            <if test="txnRzMoney != null">#{txnRzMoney},</if>
+            <if test="txnHbMoney != null">#{txnHbMoney},</if>
+            <if test="txnBfjMoney != null">#{txnBfjMoney},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <insert id="insertTiXian" parameterType="com.admin.model.TiXian">
+        INSERT INTO T_LKL_TIXIAN
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            ID,
+            <if test="tixianDate != null">TIXIAN_DATE,</if>
+            <if test="tixianMoney != null">TIXIAN_MONEY,</if>
+            <if test="tixianCountBs != null">TIXIAN_COUNT_BS,</if>
+            <if test="tixianPtMoney != null">TIXIAN_PT_MONEY,</if>
+            <if test="tixianShMoney != null">TIXIAN_SH_MONEY,</if>
+            <if test="updateTime != null">UPDATE_TIME,</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            T_LKL_TIXIAN_SEQUENCE.Nextval,
+            <if test="tixianDate != null">#{tixianDate},</if>
+            <if test="tixianMoney != null">#{tixianMoney},</if>
+            <if test="tixianCountBs != null">#{tixianCountBs},</if>
+            <if test="tixianPtMoney != null">#{tixianPtMoney},</if>
+            <if test="tixianShMoney != null">#{tixianShMoney},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateTiXian" parameterType="com.admin.model.TiXian">
+        UPDATE  T_LKL_TIXIAN
+        <set>
+            <if test="tixianDate != null">
+                TIXIAN_DATE = #{tixianDate},
+            </if>
+            <if test="tixianMoney != null">
+                TIXIAN_MONEY = #{tixianMoney},
+            </if>
+            <if test="tixianCountBs != null">
+                TIXIAN_COUNT_BS = #{tixianCountBs},
+            </if>
+            <if test="tixianPtMoney != null">
+                TIXIAN_PT_MONEY = #{tixianPtMoney},
+            </if>
+            <if test="tixianShMoney != null">
+                TIXIAN_SH_MONEY = #{tixianShMoney},
+            </if>
+            <if test="updateTime != null">
+                UPDATE_TIME = #{updateTime},
+            </if>
+        </set>
+        where TIXIAN_DATE = #{tixianDate}
+    </update>
+
+    <delete id="deleteTixian" parameterType="com.admin.model.TiXian">
+        delete from T_LKL_TIXIAN where ID =  #{id}
+    </delete>
+
+    <delete id="deleteTxn" parameterType="com.admin.model.Txn">
+        delete from T_LKL_TXN where ID =  #{id}
+    </delete>
+
+</mapper>

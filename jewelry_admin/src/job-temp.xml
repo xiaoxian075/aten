@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- 设置资讯点赞量更新定时器开始 -->
+	<!-- 资讯点赞量的任务类。 -->
+	<bean id="newsJob" class="com.aten.job.NewsJob">
+	</bean>
+
+	<!-- 资讯点赞量定时任务注入JOB中。 -->
+	<bean id="newsQtzJob"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="newsJob"></property>
+		<!-- 任务类中需要执行的方法 -->
+		<property name="targetMethod" value="updateNewsData"></property>
+		<!-- 上一次未执行完成的，要等待有再执行。 -->
+		<property name="concurrent" value="false"></property>
+	</bean>
+
+	<!--调度触发器绑定资讯点赞量的任务 -->
+	<bean id="newsTrigger"
+		class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+		<property name="jobDetail" ref="newsQtzJob"></property>
+		<!-- <property name="startDelay" value="3000"></property> --> <!-- 延迟加载 -->
+		<property name="repeatInterval" value="10000000"></property>  <!--时间间隔 FREQ=HOURLY 大概2.77个小时 -->
+		<!-- <property name="cronExpression" value="0/5 * * * * ?"></property> 
+			定时表达式 -->
+	</bean>
+	<!-- 设置资讯点赞量更新定时器结束 -->
+
+	<!-- 设置订单未付款更新为关闭订单定时器开始 -->
+	<!-- 订单的任务类。 -->
+	<bean id="orderJob" class="com.aten.job.OrderJob">
+	</bean>
+
+	<!-- 订单定时任务注入JOB中。 -->
+	<bean id="orderQtzJob"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="orderJob"></property>
+		<!-- 任务类中需要执行的方法 -->
+		<property name="targetMethod" value="updateOrderState"></property>
+		<!-- 上一次未执行完成的，要等待有再执行。 -->
+		<property name="concurrent" value="false"></property>
+	</bean>
+
+	<!--调度触发器绑定订单的任务 -->
+	<bean id="orderTrigger"
+		class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+		<property name="jobDetail" ref="orderQtzJob"></property>
+		<!-- <property name="startDelay" value="3000"></property> --> <!-- 延迟加载 -->
+		<property name="repeatInterval" value="300000"></property>  <!--时间间隔 FREQ=HOURLY 5分钟 -->
+		<!-- <property name="cronExpression" value="0/5 * * * * ?"></property> 
+			定时表达式 -->
+	</bean>
+	<!-- 设置订单未付款更新为关闭订单定时器结束 -->
+
+
+	<!-- 设置短信任务定时器开始 -->
+	<!-- 短信的任务类。 -->
+	<bean id="smsTemporaryJob" class="com.aten.job.SmsTemporaryJob">
+	</bean>
+
+	<!-- 临时短信任务注入JOB中。 -->
+	<bean id="smsTemporaryQtzJob"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="smsTemporaryJob"></property>
+		<!-- 任务类中需要执行的方法 -->
+		<property name="targetMethod" value="deleteSmsTemporaryAll"></property>
+		<!-- 上一次未执行完成的，要等待有再执行。 -->
+		<property name="concurrent" value="false"></property>
+	</bean>
+
+	<!--调度触发器绑定订单的任务 -->
+	<bean id="smsTemporaryTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="smsTemporaryQtzJob"></property>
+		<property name="cronExpression" value="0 0 3 * * ?"></property><!-- 每天凌晨三点触发 -->
+	</bean>
+	<!-- 设置短信任务定时器结束 -->
+
+
+
+	<!-- ======================== 调度工厂 ======================== -->
+	<bean id="schedulerFactoryBean"
+		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="newsTrigger"></ref>
+				<ref bean="orderTrigger"></ref>
+				<ref bean="smsTemporaryTrigger"></ref>
+			</list>
+		</property>
+	</bean>
+
+</beans>

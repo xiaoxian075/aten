@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.admin.dao.UserHandleLogDaoMapper">
+    <resultMap id="BaseResultMap" type="com.admin.model.UserHandleLog">
+        <result column="sys_id" jdbcType="VARCHAR" property="sysId"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="user_id" jdbcType="VARCHAR" property="userId"/>
+        <result column="handle_type" jdbcType="VARCHAR" property="handleType"/>
+        <result column="handle_model" jdbcType="VARCHAR" property="handleModel"/>
+        <result column="handle_body" jdbcType="VARCHAR" property="handleBody"/>
+        <result column="ip" jdbcType="VARCHAR" property="ip"/>
+    </resultMap>
+
+
+    <sql id="Example_Where_Clause" >
+        <where >
+            <foreach collection="oredCriteria" item="criteria" separator="or" >
+                <if test="criteria.valid" >
+                    <trim prefix="(" suffix=")" prefixOverrides="and" >
+                        <foreach collection="criteria.criteria" item="criterion" >
+                            <choose >
+                                <when test="criterion.noValue" >
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue" >
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue" >
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue" >
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+ 
+    <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.admin.model.BaseExample">
+        select
+        *
+        from t_user_handle_log
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+    <select id="selectByExampleAndPage" parameterType="com.admin.model.BaseExample"  resultMap="BaseResultMap">
+        select
+        *
+        from t_user_handle_log
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        *
+        from t_user_handle_log
+        where sys_id = #{id,jdbcType=VARCHAR}
+    </select>
+    <insert id="insertSelective" parameterType="com.admin.model.UserHandleLog" >
+        insert into t_user_handle_log
+        <selectKey keyProperty="id" resultType="String" order="BEFORE">
+            select t_user_handle_log_SEQUENCE.nextval from dual
+        </selectKey>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="handleIndex != null">
+                handle_index,
+            </if>
+            <if test="handleType != null">
+                handle_type,
+            </if>
+            <if test="handleModel != null">
+                handle_model,
+            </if>
+            <if test="handleBody != null">
+                handle_body,
+            </if>
+            <if test="ip != null">
+                ip,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=VARCHAR},
+            </if>
+            <if test="handleIndex != null">
+                #{handleIndex,jdbcType=VARCHAR},
+            </if>
+            <if test="handleType != null">
+                #{handleType,jdbcType=VARCHAR},
+            </if>
+            <if test="handleModel != null">
+                #{handleModel,jdbcType=VARCHAR},
+            </if>
+            <if test="handleBody != null">
+                #{handleBody,jdbcType=VARCHAR},
+            </if>
+            <if test="ip != null">
+                #{ip,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+</mapper>

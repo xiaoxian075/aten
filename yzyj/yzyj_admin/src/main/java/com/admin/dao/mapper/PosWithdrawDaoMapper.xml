@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.admin.dao.PosWithdrawDaoMapper">
+    <resultMap id="BaseResultMap" type="com.admin.model.PosWithdrawRecord">
+        <result column="PID" property="pid" jdbcType="DECIMAL" />
+        <result column="YFT_NUMBER" property="yftNumber" jdbcType="VARCHAR" />
+        <result column="ACCOUNT_NAME" property="accountName" jdbcType="VARCHAR" />
+        <result column="AMOUNT" property="amount" jdbcType="VARCHAR" />
+        <result column="AUDIT_TIME" property="auditTime" jdbcType="TIMESTAMP" />
+        <result column="BANK_ACCOUNT" property="bankAccount" jdbcType="VARCHAR" />
+        <result column="BANK_NAME" property="bankName" jdbcType="VARCHAR" />
+        <result column="LOGIN_NAME" property="loginName" jdbcType="VARCHAR" />
+        <result column="WITHDRAW_NOTE" property="withdrawNote" jdbcType="VARCHAR" />
+        <result column="WITHDRAW_TIME" property="withdrawTime" jdbcType="TIMESTAMP" />
+        <result column="AUDIT_STATUS" property="auditStatus" jdbcType="DECIMAL" />
+        <result column="IS_SEND" property="isSend" jdbcType="DECIMAL" />
+        <result column="IS_SEND_TIME" property="isSendTime" jdbcType="TIMESTAMP" />
+        <result column="IS_SEND_MONEY" property="isSendMoney" jdbcType="VARCHAR" />
+        <result column="ALL_WITHDRAW" property="allWithdraw" jdbcType="VARCHAR"/>
+        <result column="ALL_SEND" property="allSend" jdbcType="VARCHAR"/>
+        <result column="ORDER_LOG_NO" property="orderLogNo" jdbcType="VARCHAR"/>
+        <result column="LKL_MERCHANT_CODE" property="lklMerchantCode" jdbcType="VARCHAR"/>
+        <result column="LKL_TERMINAL_CODE" property="lklTerminalCode" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Example_Where_Clause" >
+        <where >
+            <foreach collection="oredCriteria" item="criteria" separator="or" >
+                <if test="criteria.valid" >
+                    <trim prefix="(" suffix=")" prefixOverrides="and" >
+                        <foreach collection="criteria.criteria" item="criterion" >
+                            <choose >
+                                <when test="criterion.noValue" >
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue" >
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue" >
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue" >
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+
+    <select id="selectByExampleAndPage" parameterType="com.admin.model.BaseExample"  resultMap="BaseResultMap">
+        select
+        *
+        from T_POS_WITHDRAW
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+
+    <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.admin.model.BaseExample">
+        select
+        *
+        from T_BUSINESS_INFO
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+
+
+    <insert id="inserBatchPosWithdraw" parameterType="java.util.List">
+        insert into T_POS_WITHDRAW
+        (
+        PID,
+        YFT_NUMBER,
+        ACCOUNT_NAME,
+        AMOUNT,
+        BANK_ACCOUNT,
+        LOGIN_NAME,
+        WITHDRAW_NOTE,
+        AUDIT_STATUS,
+        BANK_NAME,
+        WITHDRAW_TIME,
+        AUDIT_TIME,
+        IS_SEND
+        )
+        select T_POS_WITHDRAW_SEQUENCE.NEXTVAL,A.* from(
+        <foreach collection="list" item="item" index="index" separator="UNION">
+            select
+            #{item.yftNumber},
+            #{item.accountName},
+            #{item.amount},
+            #{item.bankAccount},
+            #{item.loginName},
+            #{item.withdrawNote},
+            #{item.auditStatus},
+            #{item.bankName},
+            #{item.withdrawTime},
+            #{item.auditTime},
+            #{item.isSend}
+            from dual
+        </foreach>
+        ) A
+    </insert>
+
+    <select id="getPosWithdrawRecordById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select * from T_POS_WITHDRAW where pid = #{id,jdbcType=DECIMAL} and is_send = 0
+    </select>
+
+    <update id="updateResult" parameterType="com.admin.model.PosWithdrawRecord" >
+        UPDATE  T_POS_WITHDRAW
+        <set>
+            <if test="isSend != null">
+                IS_SEND = #{isSend,jdbcType=DECIMAL},
+            </if>
+            <if test="isSendTime != null">
+                IS_SEND_TIME = #{isSendTime,jdbcType=VARCHAR},
+            </if>
+            <if test="isSendMoney != null">
+                IS_SEND_MONEY = #{isSendMoney,jdbcType=VARCHAR},
+            </if>
+            <if test="orderLogNo != null">
+                ORDER_LOG_NO = #{orderLogNo,jdbcType=VARCHAR},
+            </if>
+            <if test="lklMerchantCode != null">
+                LKL_MERCHANT_CODE = #{lklMerchantCode,jdbcType=VARCHAR},
+            </if>
+            <if test="lklTerminalCode != null">
+                LKL_TERMINAL_CODE = #{lklTerminalCode,jdbcType=VARCHAR},
+            </if>
+        </set>
+        WHERE pid = #{pid,jdbcType=DECIMAL}
+    </update>
+
+    <select id="deleteSend" parameterType="java.lang.Integer">
+        delete from T_POS_WITHDRAW  WHERE pid = #{pid,jdbcType=DECIMAL}
+    </select>
+
+    <select id="getCountWithdraw" resultMap="BaseResultMap">
+        select
+        NVL(sum(t.AMOUNT),0) as ALL_WITHDRAW,
+        NVL(sum(t.IS_SEND_MONEY),0) as ALL_SEND
+        from T_POS_WITHDRAW t
+        where IS_SEND = 1
+    </select>
+
+    <select id="searchSendRecordList" parameterType="com.admin.model.PosWithdrawRecord" resultMap="BaseResultMap">
+        select * from  T_POS_WITHDRAW where 1=1
+        <if test="loginName != null and loginName != ''">
+            AND LOGIN_NAME = #{loginName}
+        </if>
+        <if test="strSdate != null and strSdate != ''">
+            AND TO_CHAR(IS_SEND_TIME,'yyyy-mm-dd hh24:mi:ss') &gt;= #{strSdate}
+        </if>
+        <if test="strEdate != null and strEdate != ''">
+            AND TO_CHAR(IS_SEND_TIME,'yyyy-mm-dd hh24:mi:ss') &lt;= #{strEdate}
+        </if>
+        <if test="accountName != null and accountName != ''">
+            AND ACCOUNT_NAME = #{accountName}
+        </if>
+        <if test="yftNumber != null and yftNumber != ''">
+            AND YFT_NUMBER= #{yftNumber}
+        </if>
+        <if test="orderLogNo != null and orderLogNo != ''">
+            AND ORDER_LOG_NO= #{orderLogNo}
+        </if>
+        and IS_SEND = 1  order by IS_SEND_TIME desc
+    </select>
+</mapper>

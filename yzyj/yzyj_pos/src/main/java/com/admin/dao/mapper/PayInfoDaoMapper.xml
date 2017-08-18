@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.admin.dao.PayInfoDaoMapper">
+    <resultMap id="BaseResultMap" type="com.admin.model.PayInfo">
+        <result column="mch_id" jdbcType="VARCHAR" property="mchId"/>
+        <result column="device_info" jdbcType="VARCHAR" property="deviceInfo"/>
+        <result column="nonce_str" jdbcType="VARCHAR" property="nonceStr"/>
+        <result column="sign" jdbcType="VARCHAR" property="sign"/>
+        <result column="result_code" jdbcType="VARCHAR" property="resultCode"/>
+        <result column="err_code" jdbcType="VARCHAR" property="errCode"/>
+        <result column="err_code_des" jdbcType="VARCHAR" property="errCodeDes"/>
+        <result column="openid" jdbcType="VARCHAR" property="openid"/>
+        <result column="trade_type" jdbcType="VARCHAR" property="tradeType"/>
+        <result column="total_fee" jdbcType="VARCHAR" property="totalFee"/>
+        <result column="transaction_id" jdbcType="VARCHAR" property="transactionId"/>
+        <result column="out_trade_no" jdbcType="VARCHAR" property="outTradeNo"/>
+        <result column="attach" jdbcType="VARCHAR" property="attach"/>
+        <result column="time_end" jdbcType="TIMESTAMP" property="timeEnd"/>
+        <result column="pay_type" jdbcType="VARCHAR" property="payType"/>
+        <result column="card_no" jdbcType="VARCHAR" property="cardNo"/>
+        <result column="pay_amt" jdbcType="VARCHAR" property="payAmt"/>
+        <result column="batchbillno" jdbcType="VARCHAR" property="batchbillno"/>
+        <result column="systraceno" jdbcType="VARCHAR" property="systraceno"/>
+        <result column="orderid_scan" jdbcType="VARCHAR" property="orderidScan"/>
+        <result column="refernumber" jdbcType="VARCHAR" property="refernumber"/>
+        <result column="bank_type" jdbcType="VARCHAR" property="bankType"/>
+        <result column="fee_type" jdbcType="VARCHAR" property="feeType"/>
+        <result column="cash_fee" jdbcType="VARCHAR" property="cashFee"/>
+        <result column="cash_fee_type" jdbcType="VARCHAR" property="cashFeeType"/>
+        <result column="coupon_fee" jdbcType="VARCHAR" property="couponFee"/>
+        <result column="coupon_count" jdbcType="VARCHAR" property="couponCount"/>
+        <result column="coupon_id" jdbcType="VARCHAR" property="couponId"/>
+        <result column="coupon_fee_n" jdbcType="VARCHAR" property="couponFeeN"/>
+        <result column="is_subscribe" jdbcType="VARCHAR" property="isSubscribe"/>
+        <result column="state" jdbcType="VARCHAR" property="state"/>
+        <result column="yun_id" jdbcType="VARCHAR" property="yunId"/>
+    </resultMap>
+
+    <sql id="Example_Where_Clause">
+        <where>
+            <foreach collection="oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" suffix=")" prefixOverrides="and">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")"
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.admin.model.BaseExample">
+        select
+        *
+        from t_pay_info_list
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+    <select id="selectByExampleAndPage" parameterType="com.admin.model.BaseExample" resultMap="BaseResultMap">
+        select
+        *
+        from t_pay_info_list
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+
+
+</mapper>

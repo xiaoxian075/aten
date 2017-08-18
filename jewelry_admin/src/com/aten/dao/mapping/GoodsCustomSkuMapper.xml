@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.GoodsCustomSkuDao">
+
+	<!-- 数据库映射模型区域 -->
+	<resultMap id="resultGoodsCustomSku" type="com.aten.model.orm.GoodsCustomSku">
+		<result property="sku_id" column="sku_id" />
+		<result property="goods_id" column="goods_id" />
+		<result property="sku_name" column="sku_name" />
+		<result property="sku_str" column="sku_str" />
+		<result property="price" column="price" />
+		<result property="manual_fee" column="manual_fee" />
+		<result property="sale_price" column="sale_price" />
+		<result property="stock" column="stock" />
+	</resultMap>
+
+	<!-- 新增数据区域 -->
+	<sql id="insertCommon">
+		INSERT INTO t_sku
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="goods_id != null"> goods_id,</if>
+			<if test="sku_name != null"> sku_name,</if>
+			<if test="sku_str != null"> sku_str,</if>
+			<if test="price != null"> price,</if>
+			<if test="manual_fee != null"> manual_fee,</if>
+			<if test="sale_price != null"> sale_price,</if>
+			<if test="stock != null"> stock</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="goods_id != null">#{goods_id},</if>
+			<if test="sku_name != null">#{sku_name},</if>
+			<if test="sku_str != null">#{sku_str},</if>
+			<if test="price != null">#{price},</if>
+			<if test="manual_fee != null">#{manual_fee},</if>
+			<if test="sale_price != null">#{sale_price},</if>
+			<if test="stock != null">#{stock}</if>
+		</trim>
+	</sql>
+
+	<insert id="insert" parameterType="com.aten.model.orm.GoodsCustomSku">
+		<include refid="insertCommon" />
+	</insert>
+
+	<insert id="insertGetPk" parameterType="com.aten.model.orm.GoodsCustomSku"
+		useGeneratedKeys="true" keyProperty="sku_id">
+		<include refid="insertCommon" />
+	</insert>
+
+	<!-- 更新数据区域 -->
+	<sql id="update_clause">
+		<set>
+			<trim suffixOverrides=",">
+				<if test="sku_id != null"> sku_id = #{sku_id}, </if>
+				<if test="goods_id != null"> goods_id = #{goods_id}, </if>
+				<if test="sku_name != null"> sku_name = #{sku_name}, </if>
+				<if test="sku_str != null"> sku_str = #{sku_str}, </if>
+				<if test="price != null"> price = #{price}, </if>
+				<if test="manual_fee != null"> manual_fee = #{manual_fee}, </if>
+				<if test="sale_price != null"> sale_price = #{sale_price}, </if>
+				<if test="stock != null"> stock = #{stock} </if>
+
+			</trim>
+		</set>
+	</sql>
+
+
+	<update id="update" parameterType="com.aten.model.orm.GoodsCustomSku">
+		UPDATE t_sku
+		<include refid="update_clause" />
+		WHERE sku_id = #{sku_id}
+	</update>
+
+	<!-- 删除数据区域 -->
+	<delete id="delete" parameterType="String">
+		delete from t_sku where sku_id in
+		<foreach item="idItem" collection="array" index="index" open="("
+			separator="," close=")">
+			#{idItem}
+		</foreach>
+	</delete>
+
+	<!-- 获取对象数据区域 -->
+	<select id="get" parameterType="String" resultMap="resultGoodsCustomSku">
+		SELECT
+		t.sku_id,t.goods_id,t.sku_name,t.sku_str,t.price,t.manual_fee,t.sale_price,t.stock
+		FROM t_sku t WHERE sku_id = #{sku_id}
+	</select>
+
+	<select id="getOneById" parameterType="String" resultMap="resultGoodsCustomSku">
+		SELECT
+		t.sku_id,t.goods_id,t.sku_name,t.sku_str,t.price,t.manual_fee,t.sale_price,t.stock
+		FROM t_sku t WHERE sku_id = #{sku_id} and goods_id = #{goods_id}
+	</select>
+
+	<!-- 搜索数据区域 -->
+	<sql id="where_clause">
+		<where>
+			1=1
+			<if test="sku_id != null"> and t.sku_id = #{sku_id} </if>
+			<if test="sku_id_vague != null"> and instr(t.sku_id,#{sku_id_vague})>0 </if>
+			<if test="goods_id != null"> and t.goods_id = #{goods_id} </if>
+			<if test="goods_id_vague != null"> and instr(t.goods_id,#{goods_id_vague})>0 </if>
+			<if test="sku_name != null"> and t.sku_name = #{sku_name} </if>
+			<if test="sku_name_vague != null"> and instr(t.sku_name,#{sku_name_vague})>0 </if>
+			<if test="sku_str != null"> and t.sku_str = #{sku_str} </if>
+			<if test="sku_str_vague != null"> and instr(t.sku_str,#{sku_str_vague})>0 </if>
+			<if test="price != null"> and t.price = #{price} </if>
+			<if test="price_vague != null"> and instr(t.price,#{price_vague})>0 </if>
+			<if test="manual_fee != null"> and t.manual_fee = #{manual_fee} </if>
+			<if test="manual_fee_vague != null"> and instr(t.manual_fee,#{manual_fee_vague})>0 </if>
+			<if test="sale_price != null"> and t.sale_price = #{sale_price} </if>
+			<if test="sale_price_vague != null"> and instr(t.sale_price,#{sale_price_vague})>0 </if>
+			<if test="stock != null"> and t.stock = #{stock} </if>
+			<if test="stock_vague != null"> and instr(t.stock#{stock_vague})>0 </if>
+
+		</where>
+	</sql>
+
+	<sql id="getCommon">
+		select
+		t.sku_id,t.goods_id,t.sku_name,t.sku_str,t.price,t.manual_fee,t.sale_price,t.stock
+		from t_sku t
+		<include refid="where_clause" />
+		order by sku_id desc
+	</sql>
+
+
+
+	<select id="getList" parameterType="map" resultMap="resultGoodsCustomSku">
+		<include refid="getCommon" />
+		<if test="start != null">
+			LIMIT ${start},${limit}
+		</if>
+	</select>
+
+	<select id="getCount" parameterType="map" resultType="int">
+		select count(*) ct from t_sku t
+		<include refid="where_clause" />
+	</select>
+
+
+	<!-- 排序区域 -->
+	<update id="updateBatch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index"
+			separator=";">
+			update t_sku
+			<set>
+				sort_no = #{item.sort_no}
+			</set>
+			WHERE sku_id = #{item.id}
+		</foreach>
+	</update>
+
+	<update id="updateCustomSku" parameterType="com.aten.model.orm.GoodsCustomSku">
+		update t_sku
+		<set>
+			<if test="sku_name != null"> sku_name = #{sku_name}, </if>
+			<if test="sku_str != null"> sku_str = #{sku_str}, </if>
+			<if test="price != null"> price = #{price}, </if>
+			<if test="manual_fee != null"> manual_fee = #{manual_fee}, </if>
+			<if test="sale_price != null"> sale_price = #{sale_price}, </if>
+			<if test="stock != null"> stock = #{stock} </if>
+		</set>
+		where goods_id = #{goods_id} and sku_id = #{sku_id}
+	</update>
+
+	<delete id="batchDeleteNotIncludeOldSku">
+		delete from t_sku where sku_id not in
+		<foreach collection="list" index="index" item="item" open="("
+			close=")" separator=",">
+			#{item}
+		</foreach>
+		and goods_id = #{goods_id}
+	</delete>
+</mapper>
+

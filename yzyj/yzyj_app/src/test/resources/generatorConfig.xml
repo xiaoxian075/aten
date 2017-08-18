@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<!-- 配置Run As Maven build : Goals 参数 : mybatis-generator:generate -Dmybatis.generator.overwrite=true -->
+<!-- 配置 tableName,使用 Run As Maven build 生成 dao model 层 -->
+<generatorConfiguration>
+    <!-- 配置文件路径 -->
+    <properties url="${mybatis.generator.generatorConfig.properties}"/>
+
+    <!--数据库驱动包路径 -->
+    <classPathEntry location="${drive.class.path}"/>
+
+    <context id="DB2Tables" targetRuntime="MyBatis3">
+        <!--关闭注释 -->
+        <commentGenerator>
+            <property name="suppressAllComments" value="true"/>
+        </commentGenerator>
+
+        <!--数据库连接信息 -->
+        <jdbcConnection driverClass="${jdbc.driver}" connectionURL="${jdbc.url}" userId="${jdbc.username}"
+                        password="${jdbc.password}">
+        </jdbcConnection>
+
+        <!--生成的model 包路径 -->
+        <javaModelGenerator targetPackage="${model.package}" targetProject="${target.project}">
+            <property name="enableSubPackages" value="ture"/>
+            <property name="trimStrings" value="true"/>
+            <property name="rootClass" value="${rootClass}"/>
+        </javaModelGenerator>
+
+        <!--生成xml mapper文件 路径 -->
+        <sqlMapGenerator targetPackage="${xml.mapper.package}" targetProject="${target.project}">
+            <property name="enableSubPackages" value="ture"/>
+        </sqlMapGenerator>
+
+        <!-- 生成的Dao接口 的包路径 -->
+        <javaClientGenerator type="XMLMAPPER" targetPackage="${dao.package}" targetProject="${target.project}">
+            <property name="enableSubPackages" value="ture"/>
+            <property name="rootInterface" value="${rootInterface}"/>
+        </javaClientGenerator>
+
+        <!--对应数据库表名 -->
+        <!--<table schema="quickAdmin" tableName="T_USER" domainObjectName="User"/>-->
+        <!--<table schema="quickAdmin" tableName="T_ROLE" domainObjectName="Role"/>-->
+        <!--<table schema="quickAdmin" tableName="T_PERMISSION" domainObjectName="Permission"/>-->
+
+        <!--业务表-->
+        <!--<table schema="quickAdmin" tableName="T_ST_JBXX" domainObjectName="ClubBaseInfo">-->
+            <!--<property name="ignoreQualifiersAtRuntime" value="true"/>-->
+        <!--</table>-->
+        <!--<table schema="quickAdmin" tableName="T_ST_ZDRW" domainObjectName="ClubKeyPerson">-->
+            <!--<property name="ignoreQualifiersAtRuntime" value="true"/>-->
+        <!--</table>-->
+        <!--<table schema="quickAdmin" tableName="T_ST_HDJBXX" domainObjectName="ClubFriendShipInfo">-->
+            <!--<property name="ignoreQualifiersAtRuntime" value="true"/>-->
+        <!--</table>-->
+        <!--<table schema="quickAdmin" tableName="T_ST_HDXX" domainObjectName="ActivityInfo">-->
+            <!--<property name="ignoreQualifiersAtRuntime" value="true"/>-->
+        <!--</table>-->
+        <!--<table schema="quickAdmin" tableName="T_ST_HDXX_M" domainObjectName="ClubActivity">-->
+            <!--<property name="ignoreQualifiersAtRuntime" value="true"/>-->
+        <!--</table>-->
+        <!--<table schema="quickAdmin" tableName="T_ST_MTBDQK" domainObjectName="MediaReportInfo">-->
+            <!--<property name="ignoreQualifiersAtRuntime" value="true"/>-->
+        <!--</table>-->
+        <!--<table schema="quickAdmin" tableName="T_ST_BMPJ" domainObjectName="DepartmentEvaluate">-->
+            <!--<property name="ignoreQualifiersAtRuntime" value="true"/>-->
+        <!--</table>-->
+        <!--&lt;!&ndash;字典表&ndash;&gt;-->
+        <!--<table schema="quickAdmin" tableName="T_GJDQ_C" domainObjectName="RegionCode">-->
+            <!--<property name="ignoreQualifiersAtRuntime" value="true"/>-->
+        <!--</table>-->
+        <!--<table schema="quickAdmin" tableName="T_HDLX_C" domainObjectName="ActivityCode">-->
+            <!--<property name="ignoreQualifiersAtRuntime" value="true"/>-->
+        <!--</table>-->
+        <!--<table schema="quickAdmin" tableName="T_JB_C" domainObjectName="LevelCode">-->
+            <!--<property name="ignoreQualifiersAtRuntime" value="true"/>-->
+        <!--</table>-->
+        <!--<table schema="quickAdmin" tableName="T_JS_C" domainObjectName="RoleCode">-->
+            <!--<property name="ignoreQualifiersAtRuntime" value="true"/>-->
+        <!--</table>-->
+        <!--<table schema="quickAdmin" tableName="T_PJLX_C" domainObjectName="EvaluateCode">-->
+            <!--<property name="ignoreQualifiersAtRuntime" value="true"/>-->
+        <!--</table>-->
+        <!--<table schema="quickAdmin" tableName="T_QX_C" domainObjectName="PermissionCode">-->
+            <!--<property name="ignoreQualifiersAtRuntime" value="true"/>-->
+        <!--</table>-->
+        <!--<table schema="quickAdmin" tableName="T_SJYZ_C" domainObjectName="LanguageCode">-->
+            <!--<property name="ignoreQualifiersAtRuntime" value="true"/>-->
+        <!--</table>-->
+        <!--<table schema="quickAdmin" tableName="T_SLG_C" domainObjectName="EmbassyCode">-->
+            <!--<property name="ignoreQualifiersAtRuntime" value="true"/>-->
+        <!--</table>-->
+        <!--<table schema="quickAdmin" tableName="T_STJFLY_C" domainObjectName="FundsSourceCode">-->
+            <!--<property name="ignoreQualifiersAtRuntime" value="true"/>-->
+        <!--</table>-->
+        <!--<table schema="quickAdmin" tableName="T_STLB_C" domainObjectName="TypeCode">-->
+            <!--<property name="ignoreQualifiersAtRuntime" value="true"/>-->
+        <!--</table>-->
+        <!--<table schema="quickAdmin" tableName="T_XZQH_C" domainObjectName="AreaCode">-->
+            <!--<property name="ignoreQualifiersAtRuntime" value="true"/>-->
+        <!--</table>-->
+        <!--<table schema="quickAdmin" tableName="T_ZBFQ_C" domainObjectName="ContinentCode">-->
+            <!--<property name="ignoreQualifiersAtRuntime" value="true"/>-->
+        <!--</table>-->
+        <!--<table schema="quickAdmin" tableName="T_ZWJB_C" domainObjectName="JobLevelCode">-->
+            <!--<property name="ignoreQualifiersAtRuntime" value="true"/>-->
+        <!--</table>-->
+        <!--<table schema="quickAdmin" tableName="T_ZWLX_C" domainObjectName="JobTypeCode">-->
+            <!--<property name="ignoreQualifiersAtRuntime" value="true"/>-->
+        <!--</table>-->
+        <!--<table schema="quickAdmin" tableName="T_ZZ_C" domainObjectName="OrganizationCode">-->
+            <!--<property name="ignoreQualifiersAtRuntime" value="true"/>-->
+        <!--</table>-->
+        <!--&lt;!&ndash;系统表&ndash;&gt;-->
+        <!--<table schema="quickAdmin" tableName="T_GN_C" domainObjectName="Function">-->
+            <!--<property name="ignoreQualifiersAtRuntime" value="true"/>-->
+        <!--</table>-->
+        <!--<table schema="quickAdmin" tableName="T_JSGN_M" domainObjectName="RoleFunction">-->
+            <!--<property name="ignoreQualifiersAtRuntime" value="true"/>-->
+        <!--</table>-->
+        <!--<table schema="quickAdmin" tableName="T_YH" domainObjectName="User">-->
+            <!--<property name="ignoreQualifiersAtRuntime" value="true"/>-->
+        <!--</table>-->
+        <!--<table schema="quickAdmin" tableName="T_YHJS_M" domainObjectName="UserRole">-->
+            <!--<property name="ignoreQualifiersAtRuntime" value="true"/>-->
+        <!--</table>-->
+        <!--<table schema="quickAdmin" tableName="T_YHST_M" domainObjectName="UserClub">-->
+            <!--<property name="ignoreQualifiersAtRuntime" value="true"/>-->
+        <!--</table>-->
+        <!--<table schema="quickAdmin" tableName="T_YHZZ_M" domainObjectName="UserOrganization">-->
+            <!--<property name="ignoreQualifiersAtRuntime" value="true"/>-->
+        <!--</table>-->
+        <!--<table schema="quickAdmin" tableName="T_LCJL" domainObjectName="ProcessLog">-->
+            <!--<property name="ignoreQualifiersAtRuntime" value="true"/>-->
+        <!--</table>-->
+        <!--<table schema="quickAdmin" tableName="T_DLRZ" domainObjectName="LoginLog">-->
+            <!--<property name="ignoreQualifiersAtRuntime" value="true"/>-->
+        <!--</table>-->
+        <!--<table schema="quickAdmin" tableName="T_XXBGRZ" domainObjectName="ModifyLog">-->
+            <!--<property name="ignoreQualifiersAtRuntime" value="true"/>-->
+        <!--</table>-->
+        <!--<table schema="quickAdmin" tableName="T_JSQ" domainObjectName="SequenceCount">-->
+            <!--<property name="ignoreQualifiersAtRuntime" value="true"/>-->
+        <!--</table>-->
+        <!--<table schema="quickAdmin" tableName="T_IP" domainObjectName="AuthIP">-->
+            <!--<property name="ignoreQualifiersAtRuntime" value="true"/>-->
+        <!--</table>-->
+        <!--<table schema="quickAdmin" tableName="T_SHSQ" domainObjectName="AuditInfo">-->
+            <!--<property name="ignoreQualifiersAtRuntime" value="true"/>-->
+        <!--</table>-->
+        <!--<table schema="quickAdmin" tableName="T_SQJSR_M" domainObjectName="AuditUser">-->
+            <!--<property name="ignoreQualifiersAtRuntime" value="true"/>-->
+        <!--</table>-->
+        <!--<table schema="quickAdmin" tableName="T_SHLC" domainObjectName="AuditProcess">-->
+            <!--<property name="ignoreQualifiersAtRuntime" value="true"/>-->
+        <!--</table>-->
+        <!--<table schema="quickAdmin" tableName="T_XX" domainObjectName="Message">-->
+            <!--<property name="ignoreQualifiersAtRuntime" value="true"/>-->
+        <!--</table>-->
+        <!--<table schema="quickAdmin" tableName="T_QJRZ" domainObjectName="LogInfo">-->
+            <!--<property name="ignoreQualifiersAtRuntime" value="true"/>-->
+        <!--</table>-->
+        <!--<table schema="quickAdmin" tableName="T_DLMBPZ" domainObjectName="ImportTemplate">-->
+            <!--<property name="ignoreQualifiersAtRuntime" value="true"/>-->
+        <!--</table>-->
+        <!--<table schema="quickAdmin" tableName="T_ZDZB" domainObjectName="Dictionary">-->
+            <!--<property name="ignoreQualifiersAtRuntime" value="true"/>-->
+        <!--</table>-->
+        <!--<table schema="quickAdmin" tableName="T_BM_C" domainObjectName="DepartmentCode">-->
+            <!--<property name="ignoreQualifiersAtRuntime" value="true"/>-->
+        <!--</table>-->
+        <!--<table schema="quickAdmin" tableName="T_YHPJ_M" domainObjectName="UserEvaluate">-->
+            <!--<property name="ignoreQualifiersAtRuntime" value="true"/>-->
+        <!--</table>-->
+        <!--<table schema="quickAdmin" tableName="T_DLCWRZ" domainObjectName="ImportErrorMsg">-->
+            <!--<property name="ignoreQualifiersAtRuntime" value="true"/>-->
+        <!--</table>-->
+        <!--<table schema="quickAdmin" tableName="T_ST_JBXX_TEMP" domainObjectName="ImportClubTemp">-->
+            <!--<property name="ignoreQualifiersAtRuntime" value="true"/>-->
+        <!--</table>-->
+        <!--<table schema="quickAdmin" tableName="T_ST_HDXX_TEMP" domainObjectName="ImportActivityTemp">-->
+            <!--<property name="ignoreQualifiersAtRuntime" value="true"/>-->
+        <!--</table>-->
+        <table schema="test" tableName="t_user" domainObjectName="User">
+            <property name="ignoreQualifiersAtRuntime" value="true"/>
+        </table>
+
+    </context>
+</generatorConfiguration>

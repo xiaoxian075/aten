@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.OrderRefundDao">
+
+	<!-- t_order_refund -->
+	<resultMap id="resultlistRefund" type="com.aten.model.orm.OrderRefundNode">
+		<result property="refund_id" column="refund_id" />
+		<result property="detail_id" column="detail_id" />
+		<result property="goods_name" column="goods_name" />
+		<result property="seller_id" column="seller_id" />
+		<result property="seller_nick" column="seller_nick" />
+		<result property="account_id" column="account_id" />
+		<result property="buyer_nick" column="buyer_nick" />
+		<result property="refund_type" column="refund_type" />
+		<result property="refund_reason" column="refund_reason" />
+		<result property="refund_amount" column="refund_amount" />
+		<result property="refund_state" column="refund_state" />
+		<result property="refund_time" column="refund_time" />
+		<result property="time_out" column="time_out" />
+	</resultMap>
+
+	<!-- t_order_refund_logs -->
+	<resultMap id="resultlistRefundLogs" type="com.aten.model.orm.OrderRefundLogsNode">
+		<result property="refund_log_id" column="refund_log_id" />
+		<result property="refund_id" column="refund_id" />
+		<result property="seller_nick" column="seller_nick" />
+		<result property="buyer_nick" column="buyer_nick" />
+		<result property="refund_img" column="refund_img" />
+		<result property="record_explain" column="record_explain" />
+		<result property="record_title" column="record_title" />
+		<result property="record_time" column="record_time" />
+		<result property="type" column="type" />
+	</resultMap>
+
+	<select id="selectcountRefundByPage" parameterType="map"
+		resultType="Integer">
+		SELECT
+		COUNT(`refund_id`)
+		FROM
+		`t_order_refund`
+		WHERE
+		1=1
+		<if test="refund_id != null">
+			AND `refund_id`=#{refund_id}
+		</if>
+		<if test="detail_id != null">
+			AND `detail_id` in
+			<foreach item="item" index="index" collection="detail_id" open="(" separator="," close=")" >
+				#{item}
+			</foreach>
+		</if>
+		<if test="refund_type != null">
+			AND `refund_type`=#{refund_type}
+		</if>
+		<if test="refund_state != null">
+			AND `refund_state`=#{refund_state}
+		</if>
+	</select>
+
+	<select id="selectlistRefundByPage" parameterType="map"
+		resultMap="resultlistRefund">
+		SELECT
+		`refund_id`,
+		`detail_id`,
+		`goods_name`,
+		`seller_id`,
+		`seller_nick`,
+		`account_id`,
+		`buyer_nick`,
+		`login_name`,
+		`refund_type`,
+		`refund_reason`,
+		`refund_amount`,
+		`refund_state`,
+		`refund_time`,
+		`time_out`
+		FROM
+		`t_order_refund`
+		WHERE
+		1=1
+		<if test="refund_id != null">
+			AND `refund_id`=#{refund_id}
+		</if>
+		<if test="detail_id != null">
+			AND `detail_id` in
+			<foreach item="item" index="index" collection="detail_id" open="(" separator="," close=")" >
+				#{item}
+			</foreach>
+		</if>
+		<if test="refund_type != null">
+			AND `refund_type`=#{refund_type}
+		</if>
+		<if test="refund_state != null">
+			AND `refund_state`=#{refund_state}
+		</if>
+		ORDER BY `refund_id` DESC
+		LIMIT ${page},${count}
+	</select>
+
+	<select id="selectoneRefundById" parameterType="String"
+		resultType="com.aten.model.orm.OrderRefundNode">
+		SELECT
+		`refund_id`,
+		`detail_id`,
+		`goods_name`,
+		`seller_id`,
+		`seller_nick`,
+		`account_id`,
+		`buyer_nick`,
+		`login_name`,
+		`refund_type`,
+		`refund_reason`,
+		`refund_amount`,
+		`refund_state`,
+		`refund_time`,
+		`time_out`
+		FROM
+		`t_order_refund`
+		WHERE
+		`refund_id`=#{refund_id}
+		LIMIT 1
+	</select>
+
+	<select id="selectlistRefundLogsByRefundid" parameterType="String"
+		resultMap="resultlistRefundLogs">
+		SELECT
+		`refund_log_id`,
+		`refund_id`,
+		`seller_nick`,
+		`buyer_nick`,
+		`refund_img`,
+		`record_explain`,
+		`record_title`,
+		`record_time`,
+		`type`
+		FROM
+		`t_order_refund_logs`
+		WHERE
+		`refund_id`=#{refund_id}
+	</select>
+
+
+	<update id="updateoneRefundForGrant" parameterType="map">
+		UPDATE
+		`t_order_refund`
+		<set>
+			<trim suffixOverrides=",">
+				<if test="refund_state != null">`refund_state`=#{refund_state},</if>
+				<if test="time_out != null"> `time_out` = #{time_out},</if>
+				<if test="refund_end_time != null"> `refund_end_time` = #{refund_end_time},</if>
+			</trim>
+		</set>
+		WHERE
+		`refund_id`=#{refund_id}
+		LIMIT 1
+	</update>
+
+	<select id="selectoneRefundLogsById" parameterType="BigInteger"
+		resultType="com.aten.model.orm.OrderRefundLogsNode">
+		SELECT
+		`refund_log_id`,
+		`refund_id`,
+		`seller_nick`,
+		`buyer_nick`,
+		`refund_img`,
+		`record_explain`,
+		`record_title`,
+		`record_time`,
+		`type`
+		FROM
+		`t_order_refund_logs`
+		WHERE
+		`refund_log_id`=#{refund_log_id}
+		LIMIT 1
+	</select>
+
+
+
+
+	<insert id="insertoneRefundLogs" parameterType="com.aten.model.orm.OrderRefundLogsNode">
+		INSERT INTO
+		`t_order_refund_logs`
+		(
+		`refund_id`,
+		`seller_nick`,
+		`buyer_nick`,
+		`refund_img`,
+		`record_explain`,
+		`record_title`,
+		`record_time`,
+		`type`
+		)
+		VALUES
+		(
+		#{refund_id},
+		#{seller_nick},
+		#{buyer_nick},
+		#{refund_img},
+		#{record_explain},
+		#{record_title},
+		#{record_time},
+		#{type}
+		)
+	</insert>
+
+</mapper>
+

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.admin.dao.DeviceListDaoMapper">
+    <resultMap id="BaseResultMap" type="com.admin.model.DeviceList">
+        <result column="id" property="id" jdbcType="DECIMAL" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="agent_unique" property="agentUnique" jdbcType="VARCHAR" />
+        <result column="device_code" property="deviceCode" jdbcType="VARCHAR" />
+        <result column="activation_code" property="activationCode" jdbcType="VARCHAR" />
+        <result column="device_name" property="deviceName" jdbcType="VARCHAR" />
+        <result column="device_type" property="deviceType" jdbcType="DECIMAL" />
+        <result column="merchant_name" property="merchantName" jdbcType="VARCHAR" />
+        <result column="merchant_yun_pay_account" property="merchantYunPayAccount" jdbcType="VARCHAR" />
+        <result column="merchant_phone" property="merchantPhone" jdbcType="VARCHAR" />
+        <result column="state" property="state" jdbcType="VARCHAR" />
+        <result column="device_unique" property="deviceUnique" jdbcType="VARCHAR" />
+        <result column="REALNAME" property="realName" jdbcType="VARCHAR" />
+        <result column="MONEYCOUNT" property="moneyCount" jdbcType="VARCHAR" />
+        <result column="MACHINECODE" property="machineCode" jdbcType="VARCHAR" />
+        <result column="MERCHANT_ID" property="merchantId" jdbcType="VARCHAR" />
+        <result column="QUOTA_GROUP" property="quotaGroup" jdbcType="DECIMAL" />
+        <result column="APPROVAL_STATUS" property="approvalStatus" jdbcType="DECIMAL" />
+        <result column="SUBSIDY_STATUS" property="subsidyStatus" jdbcType="DECIMAL" />
+        <result column="SUBSIDY_TIME" property="subsidyTime" jdbcType="VARCHAR" />
+        <result column="LKL_MERCHANT_CODE" property="lklMerchantCode" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <sql id="Example_Where_Clause" >
+        <where >
+            <foreach collection="oredCriteria" item="criteria" separator="or" >
+                <if test="criteria.valid" >
+                    <trim prefix="(" suffix=")" prefixOverrides="and" >
+                        <foreach collection="criteria.criteria" item="criterion" >
+                            <choose >
+                                <when test="criterion.noValue" >
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue" >
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue" >
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue" >
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.admin.model.BaseExample">
+        select
+        *
+        from t_device_list
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+
+
+    <select id="selectByExampleAndPage" parameterType="com.admin.model.BaseExample"  resultMap="BaseResultMap">
+        select device.*,agent.REALNAME from  t_device_list device
+        left join Z_AGENCY_PERSON agent on agent.agent_unique = device.agent_unique
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+
+    <update id="updateState" parameterType="java.lang.String">
+        update T_DEVICE_LIST t set t.state = 1 where t.DEVICE_CODE = #{machineCode,jdbcType=VARCHAR}
+    </update>
+
+</mapper>

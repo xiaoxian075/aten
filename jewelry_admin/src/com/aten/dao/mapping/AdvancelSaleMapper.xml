@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.AdvancelSaleDao">
+
+	<!-- 数据库映射模型区域 -->
+	<resultMap id="resultAdvancelSale" type="com.aten.model.orm.AdvancelSale">
+		<result property="advancel_id" column="advancel_id" />
+		<result property="goods_id" column="goods_id" />
+		<result property="presale_endtime" column="presale_endtime" />
+		<result property="pre_send_time_type" column="pre_send_time_type" />
+		<result property="pre_send_time" column="pre_send_time" />
+		<result property="pre_hold_time" column="pre_hold_time" />
+		<result property="pre_limit_buy_num" column="pre_limit_buy_num" />
+
+	</resultMap>
+
+	<!-- 新增数据区域 -->
+	<sql id="insertCommon">
+		INSERT INTO t_advancel_sale
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="goods_id != null"> goods_id,</if>
+			<if test="presale_endtime != null"> presale_endtime,</if>
+			<if test="pre_send_time_type != null"> pre_send_time_type,</if>
+			<if test="pre_send_time != null"> pre_send_time,</if>
+			<if test="pre_hold_time != null"> pre_hold_time,</if>
+			<if test="pre_limit_buy_num != null"> pre_limit_buy_num</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="goods_id != null">#{goods_id},</if>
+			<if test="presale_endtime != null">#{presale_endtime},</if>
+			<if test="pre_send_time_type != null">#{pre_send_time_type},</if>
+			<if test="pre_send_time != null">#{pre_send_time},</if>
+			<if test="pre_hold_time != null">#{pre_hold_time},</if>
+			<if test="pre_limit_buy_num != null">#{pre_limit_buy_num}</if>
+
+		</trim>
+	</sql>
+
+	<insert id="insert" parameterType="com.aten.model.orm.AdvancelSale">
+		<include refid="insertCommon" />
+	</insert>
+
+	<insert id="insertGetPk" parameterType="com.aten.model.orm.AdvancelSale"
+		useGeneratedKeys="true" keyProperty="advancel_id">
+		<include refid="insertCommon" />
+	</insert>
+
+	<!-- 更新数据区域 -->
+	<sql id="update_clause">
+		<set>
+			<trim suffixOverrides=",">
+				<if test="advancel_id != null"> advancel_id = #{advancel_id}, </if>
+				<if test="goods_id != null"> goods_id = #{goods_id}, </if>
+				<if test="presale_endtime != null"> presale_endtime = #{presale_endtime}, </if>
+				<if test="pre_send_time_type != null"> pre_send_time_type = #{pre_send_time_type}, </if>
+				<if test="pre_send_time != null"> pre_send_time = #{pre_send_time}, </if>
+				<if test="pre_hold_time != null"> pre_hold_time = #{pre_hold_time}, </if>
+				<if test="pre_limit_buy_num != null"> pre_limit_buy_num = #{pre_limit_buy_num} </if>
+			</trim>
+		</set>
+	</sql>
+
+
+	<update id="update" parameterType="com.aten.model.orm.AdvancelSale">
+		UPDATE t_advancel_sale
+		<include refid="update_clause" />
+		WHERE advancel_id = #{advancel_id}
+	</update>
+
+	<!-- 删除数据区域 -->
+	<delete id="delete" parameterType="String">
+		delete from t_advancel_sale where advancel_id in
+		<foreach item="idItem" collection="array" index="index" open="("
+			separator="," close=")">
+			#{idItem}
+		</foreach>
+	</delete>
+
+	<!-- 获取对象数据区域 -->
+	<select id="get" parameterType="String" resultMap="resultAdvancelSale">
+		SELECT
+		t.advancel_id,t.goods_id,t.presale_endtime,t.pre_send_time_type,t.pre_send_time,t.pre_hold_time,t.pre_limit_buy_num
+		FROM t_advancel_sale t WHERE advancel_id = #{advancel_id}
+	</select>
+
+	<!-- 搜索数据区域 -->
+	<sql id="where_clause">
+		<where>
+			1=1
+			<if test="advancel_id != null"> and t.advancel_id = #{advancel_id} </if>
+			<if test="advancel_id_vague != null"> and instr(t.advancel_id,#{advancel_id_vague})>0 </if>
+			<if test="goods_id != null"> and t.goods_id = #{goods_id} </if>
+			<if test="goods_id_vague != null"> and instr(t.goods_id,#{goods_id_vague})>0 </if>
+			<if test="presale_endtime != null"> and t.presale_endtime = #{presale_endtime} </if>
+			<if test="presale_endtime_vague != null"> and instr(t.presale_endtime,#{presale_endtime_vague})>0
+			</if>
+			<if test="pre_send_time_type != null"> and t.pre_send_time_type = #{pre_send_time_type} </if>
+			<if test="pre_send_time_type_vague != null"> and
+				instr(t.pre_send_time_type,#{pre_send_time_type_vague})>0 </if>
+			<if test="pre_send_time != null"> and t.pre_send_time = #{pre_send_time} </if>
+			<if test="pre_send_time_vague != null"> and instr(t.pre_send_time,#{pre_send_time_vague})>0 </if>
+			<if test="pre_hold_time != null"> and t.pre_hold_time = #{pre_hold_time} </if>
+			<if test="pre_hold_time_vague != null"> and instr(t.pre_hold_time,#{pre_hold_time_vague})>0 </if>
+			<if test="pre_limit_buy_num != null"> and t.pre_limit_buy_num = #{pre_limit_buy_num} </if>
+			<if test="pre_limit_buy_num_vague != null"> and
+				instr(t.pre_limit_buy_num#{pre_limit_buy_num_vague})>0 </if>
+
+		</where>
+	</sql>
+
+	<sql id="getCommon">
+		select
+		t.advancel_id,t.goods_id,t.presale_endtime,t.pre_send_time_type,t.pre_send_time,t.pre_hold_time,t.pre_limit_buy_num
+		from t_advancel_sale t
+		<include refid="where_clause" />
+		order by advancel_id desc
+	</sql>
+
+
+
+	<select id="getList" parameterType="map" resultMap="resultAdvancelSale">
+		<include refid="getCommon" />
+		<if test="start != null">
+			LIMIT ${start},${limit}
+		</if>
+	</select>
+
+	<select id="getCount" parameterType="map" resultType="int">
+		select count(*) ct from t_advancel_sale t
+		<include refid="where_clause" />
+	</select>
+
+
+	<!-- 排序区域 -->
+	<update id="updateBatch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index"
+			separator=";">
+			update t_advancel_sale
+			<set>
+				sort_no = #{item.sort_no}
+			</set>
+			WHERE advancel_id = #{item.id}
+		</foreach>
+	</update>
+
+	<select id="getByGoodsid" parameterType="String"
+		resultType="com.aten.model.orm.AdvancelSale">
+		SELECT
+		`advancel_id`,
+		`goods_id`,
+		`presale_endtime`,
+		`pre_send_time_type`,
+		`pre_send_time`,
+		`pre_hold_time`,
+		`pre_limit_buy_num`
+		FROM
+		`t_advancel_sale`
+		WHERE
+		`goods_id`=#{goods_id}
+		LIMIT 1
+	</select>
+
+	<update id="updateInfoByGoodsId" parameterType="com.aten.model.orm.AdvancelSale">
+		update t_advancel_sale
+		<set>
+			<if test="presale_endtime != null"> presale_endtime = #{presale_endtime}, </if>
+			<if test="pre_send_time_type != null"> pre_send_time_type = #{pre_send_time_type}, </if>
+			<if test="pre_send_time != null"> pre_send_time = #{pre_send_time}, </if>
+			<if test="pre_hold_time != null"> pre_hold_time = #{pre_hold_time}, </if>
+			<if test="pre_limit_buy_num != null"> pre_limit_buy_num = #{pre_limit_buy_num} </if>
+		</set>
+		where goods_id = #{goods_id}
+	</update>
+
+	<delete id="deleteByGoodsId" parameterType="String">
+		delete from t_advancel_sale where goods_id = #{goods_id}
+	</delete>
+</mapper>
+

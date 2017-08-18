@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.SysmenuDao">
+
+	<!-- 可打印日志 -->
+	<!-- <cache type="org.mybatis.caches.ehcache.LoggingEhcache" /> -->
+	<cache type="org.mybatis.caches.ehcache.EhcacheCache" />
+
+	<!-- 数据库映射模型区域 -->
+	<resultMap id="resultSysmenu" type="com.aten.model.orm.Sysmenu">
+		<result property="menu_id" column="menu_id" />
+		<result property="menu_name" column="menu_name" />
+		<result property="parent_menu_id" column="parent_menu_id" />
+		<result property="menu_level" column="menu_level" />
+		<result property="sort_no" column="sort_no" />
+		<result property="is_show" column="is_show" />
+		<result property="menu_url" column="menu_url" />
+		<result property="icon" column="icon" />
+		<result property="target" column="target" />
+		<result property="level_menu" column="level_menu" />
+		<result property="note" column="note" />
+		<result property="plat_role" column="plat_role" />
+	</resultMap>
+
+	<!-- 新增数据区域 -->
+	<sql id="insertCommon">
+		insert into t_sysmenu(
+		<if test="menu_name != null"> menu_name,</if>
+		<if test="parent_menu_id != null"> parent_menu_id,</if>
+		<if test="menu_level != null"> menu_level,</if>
+		<if test="sort_no != null"> sort_no,</if>
+		<if test="is_show != null"> is_show,</if>
+		<if test="menu_url != null"> menu_url,</if>
+		<if test="icon != null"> icon,</if>
+		<if test="target != null"> target,</if>
+		<if test="level_menu != null"> level_menu,</if>
+		<if test="note != null"> note,</if>
+		<if test="plat_role != null"> plat_role,</if>
+		<if test="menu_id != null"> menu_id</if>
+
+		)
+		values(
+		<if test="menu_name != null">#{menu_name},</if>
+		<if test="parent_menu_id != null">#{parent_menu_id},</if>
+		<if test="menu_level != null">#{menu_level},</if>
+		<if test="sort_no != null">#{sort_no},</if>
+		<if test="is_show != null">#{is_show},</if>
+		<if test="menu_url != null">#{menu_url},</if>
+		<if test="icon != null">#{icon},</if>
+		<if test="target != null">#{target},</if>
+		<if test="level_menu != null">#{level_menu},</if>
+		<if test="note != null">#{note},</if>
+		<if test="plat_role != null"> #{plat_role},</if>
+		<if test="menu_id != null"> #{menu_id}</if>
+		)
+	</sql>
+
+	<insert id="insert" parameterType="com.aten.model.orm.Sysmenu">
+		<include refid="insertCommon" />
+	</insert>
+
+	<insert id="insertGetPk" parameterType="com.aten.model.orm.Sysmenu">
+		<include refid="insertCommon" />
+		<selectKey resultType="java.lang.String" order="AFTER"
+			keyProperty="menu_id">
+			select @@IDENTITY AS ID
+		</selectKey>
+	</insert>
+
+
+	<!-- 更新数据区域 -->
+	<sql id="update_clause">
+		<set>
+			<if test="menu_name != null"> menu_name = #{menu_name}, </if>
+			<if test="parent_menu_id != null"> parent_menu_id = #{parent_menu_id}, </if>
+			<if test="menu_level != null"> menu_level = #{menu_level}, </if>
+			<if test="sort_no != null"> sort_no = #{sort_no}, </if>
+			<if test="is_show != null"> is_show = #{is_show}, </if>
+			<if test="menu_url != null"> menu_url = #{menu_url}, </if>
+			<if test="icon != null"> icon = #{icon}, </if>
+			<if test="target != null"> target = #{target}, </if>
+			<if test="level_menu != null"> level_menu = #{level_menu}, </if>
+			<if test="note != null"> note = #{note},</if>
+			<if test="plat_role != null"> plat_role = #{plat_role},</if>
+			<if test="menu_id != null"> menu_id = #{menu_id}</if>
+		</set>
+	</sql>
+
+
+	<update id="update" parameterType="com.aten.model.orm.Sysmenu">
+		update t_sysmenu
+		<include refid="update_clause" />
+		where menu_id = #{menu_id}
+	</update>
+
+	<!-- 删除数据区域 -->
+	<delete id="delete" parameterType="String">
+		delete from t_sysmenu where menu_id in
+		<foreach item="idItem" collection="array" index="index" open="("
+			separator="," close=")">
+			#{idItem}
+		</foreach>
+	</delete>
+
+	<!-- 获取对象数据区域 -->
+	<select id="get" parameterType="String" resultMap="resultSysmenu">
+		select
+		menu_id,menu_name,parent_menu_id,menu_level,sort_no,is_show,menu_url,plat_role,
+		icon,target,level_menu,note
+		from t_sysmenu where menu_id = #{menu_id}
+	</select>
+
+	<!-- 搜索数据区域 -->
+	<sql id="where_clause">
+		<if test="menu_id != null"> and menu_id = #{menu_id} </if>
+		<if test="menu_name != null"> and menu_name = #{menu_name} </if>
+		<if test="parent_menu_id != null"> and parent_menu_id = #{parent_menu_id} </if>
+		<if test="menu_level != null"> and menu_level = #{menu_level} </if>
+		<if test="sort_no != null"> and sort_no = #{sort_no} </if>
+		<if test="is_show != null"> and is_show = #{is_show} </if>
+		<if test="menu_url != null"> and menu_url = #{menu_url} </if>
+		<if test="menu_url_vague != null"> and #{menu_url_vague} like CONCAT(menu_url,'/%')</if>
+		<if test="icon != null"> and icon = #{icon} </if>
+		<if test="target != null"> and target = #{target} </if>
+		<if test="level_menu != null"> and level_menu = #{level_menu} </if>
+		<if test="note != null"> and note = #{note} </if>
+		<if test="plat_role != null"> and plat_role = #{plat_role} </if>
+	</sql>
+
+	<sql id="getCommon">
+		select * from t_sysmenu where 1=1
+		<include refid="where_clause" />
+		order by sort_no desc ,menu_id desc
+	</sql>
+
+
+	<select id="getList" parameterType="map" resultMap="resultSysmenu">
+		<include refid="getCommon" />
+		<if test="start != null">
+			LIMIT ${start},${limit}
+		</if>
+	</select>
+
+	<select id="getCount" parameterType="map" resultType="int">
+		select count(*) ct from t_sysmenu t where 1=1
+		<include refid="where_clause" />
+	</select>
+
+
+	<!-- 排序区域 -->
+	<update id="updateBatch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index"
+			separator=";">
+			update t_sysmenu
+			<set>
+				sort_no = #{item.sort_no}
+			</set>
+			where menu_id = #{item.id}
+		</foreach>
+	</update>
+
+</mapper>
+

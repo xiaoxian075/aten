@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.admin.dao.AgencyPersonDaoMapper">
+    <resultMap id="BaseResultMap" type="com.admin.model.AgencyPerson">
+        <result column="id" property="id" jdbcType="VARCHAR" />
+        <result column="realname" property="realName" jdbcType="VARCHAR" />
+        <result column="phone" property="phone" jdbcType="VARCHAR" />
+        <result column="address" property="address" jdbcType="VARCHAR" />
+        <result column="paperstype" property="papersType" jdbcType="VARCHAR" />
+        <result column="papersnumber" property="papersNumber" jdbcType="VARCHAR" />
+        <result column="province" property="province" jdbcType="VARCHAR" />
+        <result column="city" property="city" jdbcType="VARCHAR" />
+        <result column="yunpayloginname" property="yunPayLoginName" jdbcType="VARCHAR" />
+        <result column="note" property="note" jdbcType="VARCHAR" />
+        <result column="jointime" property="joinTime" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="VARCHAR" />
+        <result column="agent_unique" property="agentUnique" jdbcType="VARCHAR" />
+        <result column="total_fee" property="totalFee" jdbcType="DECIMAL" />
+        <result column="remaining_sum" property="remainingSum" jdbcType="DECIMAL" />
+        <result column="HEADURL" property="headUrl" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <resultMap id="BaseResultMap1" type="com.admin.model.InComeRecord">
+        <result column="ID" property="id" jdbcType="DECIMAL" />
+        <result column="MONEY" property="money" jdbcType="DECIMAL" />
+        <result column="AGENT_UNIQUE" property="agentUnique" jdbcType="DECIMAL" />
+        <result column="TIME" property="time" jdbcType="TIMESTAMP" />
+        <result column="REALNAME" property="agentName" jdbcType="VARCHAR" />
+        <result column="YUNPAYLOGINNAME" property="agentYPLoginName" jdbcType="VARCHAR" />
+        <result column="CHECKDAY" property="checkDay" jdbcType="VARCHAR" />
+        <result column="type" property="type" jdbcType="DECIMAL" />
+    </resultMap>
+
+    <sql id="Example_Where_Clause" >
+        <where >
+            <foreach collection="oredCriteria" item="criteria" separator="or" >
+                <if test="criteria.valid" >
+                    <trim prefix="(" suffix=")" prefixOverrides="and" >
+                        <foreach collection="criteria.criteria" item="criterion" >
+                            <choose >
+                                <when test="criterion.noValue" >
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue" >
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue" >
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue" >
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.admin.model.BaseExample">
+        select
+        *
+        from z_agency_person
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+    <select id="selectByExampleAndPage" parameterType="com.admin.model.BaseExample"  resultMap="BaseResultMap">
+        select
+        *
+        from z_agency_person
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        *
+        from z_agency_person
+        where agent_unique = #{agentUnique,jdbcType=VARCHAR}
+    </select>
+
+    <update id="updateAgentTotalFee" parameterType="com.admin.model.AgencyPerson">
+        update z_agency_person
+        <set>
+            <if test="remainingSum != null">
+                REMAINING_SUM = REMAINING_SUM - #{remainingSum,jdbcType=DECIMAL},
+            </if>
+        </set>
+        where agent_unique = #{agentUnique,jdbcType=VARCHAR}
+        and remaining_sum >=  #{remainingSum,jdbcType=DECIMAL}
+    </update>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.admin.model.BaseExample">
+        update z_agency_person
+        <set>
+            <if test="realName != null">
+                realname= #{realName,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                phone= #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="address != null">
+                address= #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="papersType != null">
+                paperstype= #{papersType,jdbcType=VARCHAR},
+            </if>
+            <if test="papersNumber != null">
+                papersnumber= #{papersNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="province != null">
+                province= #{province,jdbcType=VARCHAR},
+            </if>
+            <if test="city != null">
+                city= #{city,jdbcType=VARCHAR},
+            </if>
+            <if test="yunPayLoginName != null">
+                yunpayloginname= #{yunPayLoginName,jdbcType=VARCHAR},
+            </if>
+            <if test="note != null">
+                note= #{note,jdbcType=VARCHAR},
+            </if>
+            <if test="joinTime != null">
+                jointime= #{joinTime,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status= #{status,jdbcType=DECIMAL},
+            </if>
+        </set>
+        where agent_unique = #{agentUnique,jdbcType=VARCHAR}
+    </update>
+
+    <select id="getInComeRecord" parameterType="Map" resultMap="BaseResultMap1">
+        SELECT *  FROM (SELECT ROWNUM R, A.* FROM (SELECT * FROM T_AGENT_INCOME_RECORD  WHERE 1=1
+        <if test="agentUnique != null">
+            AND AGENT_UNIQUE= #{agentUnique,jdbcType=VARCHAR}
+        </if>
+        <if test="type != null">
+            AND type= #{type}
+        </if>
+        <if test="startDay != null">
+            AND CHECKDAY &gt;= #{startDay}
+        </if>
+        <if test="endDay != null">
+            AND CHECKDAY &lt;= #{endDay}
+        </if>
+            ORDER BY CHECKDAY DESC) A
+        <if test="pageEnd != null">
+            WHERE ROWNUM &lt; = #{pageEnd})
+        </if>
+        <if test="pageStart != null">
+            WHERE R &gt;= #{pageStart}
+        </if>
+    </select>
+
+    <select id="getAgencyPersonByInfo" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select t.* from Z_AGENCY_PERSON t left join T_USER u on t.AGENT_UNIQUE = u.AGENT_UNIQUE  where t.PHONE = #{mobile,jdbcType=VARCHAR}
+    </select>
+
+    <update id="updatePass" parameterType="java.lang.String">
+        update T_USER  t set t.PASSWORD = #{pass,jdbcType=VARCHAR} where t.AGENT_UNIQUE = #{agentUnique,jdbcType=VARCHAR}
+    </update>
+
+    <select id="getAgencyInfo" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select t.*,u.HEADURL from Z_AGENCY_PERSON t left join T_USER u on t.AGENT_UNIQUE = u.AGENT_UNIQUE where t.AGENT_UNIQUE = #{agentUnique,jdbcType=VARCHAR}
+    </select>
+
+    <update id="updateHeadPic" parameterType="java.lang.String">
+        update  T_USER  t set t.HEADURL  = #{fileName,jdbcType=VARCHAR} where t.AGENT_UNIQUE = #{agentUnique,jdbcType=VARCHAR}
+    </update>
+</mapper>

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.IdentifyDao">
+
+	<!-- 数据库映射模型区域 -->
+	<resultMap id="resultIdentify" type="com.aten.model.orm.Identify">
+		<result property="iden_id" column="iden_id" />
+		<result property="iden_number" column="iden_number" />
+		<result property="iden_name" column="iden_name" />
+		<result property="iden_province" column="iden_province" />
+		<result property="iden_city" column="iden_city" />
+		<result property="iden_county" column="iden_county" />
+		<result property="iden_contacts" column="iden_contacts" />
+		<result property="iden_contacts_way" column="iden_contacts_way" />
+		<result property="sort" column="sort" />
+		<result property="status" column="status" />
+		<result property="create_time" column="create_time" />
+
+	</resultMap>
+
+	<!-- 新增数据区域 -->
+	<sql id="insertCommon">
+		INSERT INTO t_identify(
+		<if test="iden_id != null"> iden_id,</if>
+		<if test="iden_number != null"> iden_number,</if>
+		<if test="iden_name != null"> iden_name,</if>
+		<if test="iden_province != null"> iden_province,</if>
+		<if test="iden_city != null"> iden_city,</if>
+		<if test="iden_county != null"> iden_county,</if>
+		<if test="iden_contacts != null"> iden_contacts,</if>
+		<if test="iden_contacts_way != null"> iden_contacts_way,</if>
+		<if test="sort != null"> sort,</if>
+		<if test="status != null"> status,</if>
+		<if test="create_time != null"> create_time</if>
+		)
+		VALUES(
+		<if test="iden_id != null">#{iden_id},</if>
+		<if test="iden_number != null">#{iden_number},</if>
+		<if test="iden_name != null">#{iden_name},</if>
+		<if test="iden_province != null">#{iden_province},</if>
+		<if test="iden_city != null">#{iden_city},</if>
+		<if test="iden_county != null">#{iden_county},</if>
+		<if test="iden_contacts != null">#{iden_contacts},</if>
+		<if test="iden_contacts_way != null">#{iden_contacts_way},</if>
+		<if test="sort != null">#{sort},</if>
+		<if test="status != null">#{status},</if>
+		<if test="create_time != null">#{create_time}</if>
+		)
+	</sql>
+
+	<insert id="insert" parameterType="com.aten.model.orm.Identify">
+		<include refid="insertCommon" />
+	</insert>
+
+	<insert id="insertGetPk" parameterType="com.aten.model.orm.Identify">
+		<selectKey resultType="String" order="BEFORE" keyProperty="iden_id">
+			SELECT t_identify_sequence.Nextval from DUAL
+		</selectKey>
+		<include refid="insertCommon" />
+	</insert>
+
+	<!-- 更新数据区域 -->
+	<sql id="update_clause">
+		<set>
+			<if test="iden_id != null"> iden_id = #{iden_id}, </if>
+			<if test="iden_number != null"> iden_number = #{iden_number}, </if>
+			<if test="iden_name != null"> iden_name = #{iden_name}, </if>
+			<if test="iden_province != null"> iden_province = #{iden_province}, </if>
+			<if test="iden_city != null"> iden_city = #{iden_city}, </if>
+			<if test="iden_county != null"> iden_county = #{iden_county}, </if>
+			<if test="iden_contacts != null"> iden_contacts = #{iden_contacts}, </if>
+			<if test="iden_contacts_way != null"> iden_contacts_way = #{iden_contacts_way}, </if>
+			<if test="sort != null"> sort = #{sort}, </if>
+			<if test="status != null"> status = #{status}, </if>
+			<if test="create_time != null"> create_time = #{create_time} </if>
+
+		</set>
+	</sql>
+
+
+	<update id="update" parameterType="com.aten.model.orm.Identify">
+		UPDATE t_identify
+		<include refid="update_clause" />
+		WHERE iden_id = #{iden_id}
+	</update>
+
+	<!-- 删除数据区域 -->
+	<delete id="delete" parameterType="String">
+		delete from t_identify where iden_id in
+		<foreach item="idItem" collection="array" index="index" open="("
+			separator="," close=")">
+			#{idItem}
+		</foreach>
+	</delete>
+
+	<!-- 获取对象数据区域 -->
+	<select id="get" parameterType="String" resultMap="resultIdentify">
+		SELECT
+		iden_id,iden_number,iden_name,iden_province,iden_city,iden_county,iden_contacts,iden_contacts_way,sort,status,create_time
+		FROM t_identify WHERE iden_id = #{iden_id}
+	</select>
+
+	<!-- 搜索数据区域 -->
+	<sql id="where_clause">
+		<if test="iden_id != null"> and t.iden_id = #{iden_id} </if>
+		<if test="iden_number != null"> and t.iden_number = #{iden_number} </if>
+		<if test="iden_name != null"> and t.iden_name = #{iden_name} </if>
+		<if test="iden_province != null"> and t.iden_province = #{iden_province} </if>
+		<if test="iden_city != null"> and t.iden_city = #{iden_city} </if>
+		<if test="iden_county != null"> and t.iden_county = #{iden_county} </if>
+		<if test="iden_contacts != null"> and t.iden_contacts = #{iden_contacts} </if>
+		<if test="iden_contacts_way != null"> and t.iden_contacts_way = #{iden_contacts_way} </if>
+		<if test="sort != null"> and t.sort = #{sort} </if>
+		<if test="status != null"> and t.status = #{status} </if>
+		<if test="create_time != null"> and t.create_time = #{create_time} </if>
+
+	</sql>
+
+	<sql id="getCommon">
+		select
+		t.iden_id,t.iden_number,t.iden_name,t.iden_province,t.iden_city,t.iden_county,t.iden_contacts,t.iden_contacts_way,t.sort,t.status,t.create_time
+		from t_identify t
+		where 1 = 1
+		<include refid="where_clause" />
+		order by iden_id desc
+	</sql>
+
+
+
+	<select id="getList" parameterType="map" resultMap="resultIdentify">
+		<include refid="getCommon" />
+		<if test="start != null">
+			LIMIT ${start},${limit}
+		</if>
+	</select>
+
+	<select id="getCount" parameterType="map" resultType="int">
+		select count(*) ct from t_identify t where 1=1
+		<include refid="where_clause" />
+	</select>
+
+
+	<!-- 排序区域 -->
+	<update id="updateBatch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" open="begin"
+			close=";end;" separator=";">
+			update t_identify
+			<set>
+				sort_no = #{item.sort_no}
+			</set>
+			WHERE iden_id = #{item.id}
+		</foreach>
+	</update>
+
+</mapper>
+

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.SysmsgDao">
+
+	<!-- 数据库映射模型区域 -->
+	<resultMap id="resultSysmsg" type="com.aten.model.orm.Sysmsg">
+		<result property="sysmsg_id" column="sysmsg_id" />
+		<result property="account_id" column="account_id" />
+		<result property="sysmsg_title" column="sysmsg_title" />
+		<result property="introduction" column="introduction" />
+		<result property="sysmsg_content" column="sysmsg_content" />
+		<result property="in_date" column="in_date" />
+		<result property="is_read" column="is_read" />
+		<result property="skip_type" column="skip_type" />
+		<result property="relation_id" column="relation_id" />
+
+	</resultMap>
+
+	<!-- 新增数据区域 -->
+	<sql id="insertCommon">
+		INSERT INTO t_sysmsg
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="sysmsg_id != null"> sysmsg_id,</if>
+			<if test="account_id != null"> account_id,</if>
+			<if test="sysmsg_title != null"> sysmsg_title,</if>
+			<if test="introduction != null"> introduction,</if>
+			<if test="sysmsg_content != null"> sysmsg_content,</if>
+			<if test="in_date != null"> in_date,</if>
+			<if test="is_read != null"> is_read,</if>
+			<if test="skip_type != null"> skip_type,</if>
+			<if test="relation_id != null"> relation_id</if>
+
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="sysmsg_id != null">#{sysmsg_id},</if>
+			<if test="account_id != null">#{account_id},</if>
+			<if test="sysmsg_title != null">#{sysmsg_title},</if>
+			<if test="introduction != null">#{introduction},</if>
+			<if test="sysmsg_content != null">#{sysmsg_content},</if>
+			<if test="in_date != null">#{in_date},</if>
+			<if test="is_read != null">#{is_read},</if>
+			<if test="skip_type != null">#{skip_type},</if>
+			<if test="relation_id != null">#{relation_id}</if>
+
+		</trim>
+	</sql>
+
+	<insert id="insert" parameterType="com.aten.model.orm.Sysmsg">
+		<include refid="insertCommon" />
+	</insert>
+
+	<insert id="insertGetPk" parameterType="com.aten.model.orm.Sysmsg">
+		<include refid="insertCommon" />
+		<selectKey resultType="String" order="AFTER" keyProperty="sysmsg_id">
+			SELECT @@IDENTITY AS ID
+		</selectKey>
+	</insert>
+
+	<!-- 更新数据区域 -->
+	<sql id="update_clause">
+		<set>
+			<trim suffixOverrides=",">
+				<if test="sysmsg_id != null"> sysmsg_id = #{sysmsg_id}, </if>
+				<if test="account_id != null"> account_id = #{account_id}, </if>
+				<if test="sysmsg_title != null"> sysmsg_title = #{sysmsg_title}, </if>
+				<if test="introduction != null"> introduction = #{introduction}, </if>
+				<if test="sysmsg_content != null"> sysmsg_content = #{sysmsg_content}, </if>
+				<if test="in_date != null"> in_date = #{in_date}, </if>
+				<if test="is_read != null"> is_read = #{is_read}, </if>
+				<if test="skip_type != null"> skip_type = #{skip_type}, </if>
+				<if test="relation_id != null"> relation_id = #{relation_id} </if>
+
+			</trim>
+		</set>
+	</sql>
+
+
+
+
+
+	<update id="update" parameterType="com.aten.model.orm.Sysmsg">
+		UPDATE t_sysmsg
+		<include refid="update_clause" />
+		WHERE sysmsg_id = #{sysmsg_id}
+	</update>
+
+	<!-- 删除数据区域 -->
+	<delete id="delete" parameterType="String">
+		delete from t_sysmsg where sysmsg_id in
+		<foreach item="idItem" collection="array" index="index" open="("
+			separator="," close=")">
+			#{idItem}
+		</foreach>
+	</delete>
+
+	<!-- 获取对象数据区域 -->
+	<select id="get" parameterType="String" resultMap="resultSysmsg">
+		SELECT
+		t.sysmsg_id,t.account_id,t.sysmsg_title,t.introduction,t.sysmsg_content,t.in_date,t.is_read,t.skip_type,t.relation_id
+		FROM t_sysmsg t WHERE sysmsg_id = #{sysmsg_id}
+	</select>
+
+	<!-- 搜索数据区域 -->
+	<sql id="where_clause">
+		<where>
+			1=1
+			<if test="sysmsg_id != null"> and t.sysmsg_id = #{sysmsg_id} </if>
+			<if test="sysmsg_id_vague != null"> and instr(t.sysmsg_id,#{sysmsg_id_vague})>0 </if>
+			<if test="account_id != null"> and t.account_id = #{account_id} </if>
+			<if test="account_id_vague != null"> and instr(t.account_id,#{account_id_vague})>0 </if>
+			<if test="sysmsg_title != null"> and t.sysmsg_title = #{sysmsg_title} </if>
+			<if test="sysmsg_title_vague != null"> and instr(t.sysmsg_title,#{sysmsg_title_vague})>0 </if>
+			<if test="introduction != null"> and t.introduction = #{introduction} </if>
+			<if test="introduction_vague != null"> and instr(t.introduction,#{introduction_vague})>0 </if>
+			<if test="sysmsg_content != null"> and t.sysmsg_content = #{sysmsg_content} </if>
+			<if test="sysmsg_content_vague != null"> and instr(t.sysmsg_content,#{sysmsg_content_vague})>0
+			</if>
+			<if test="in_date != null"> and t.in_date = #{in_date} </if>
+			<if test="in_date_vague != null"> and instr(t.in_date,#{in_date_vague})>0 </if>
+			<if test="is_read != null"> and t.is_read = #{is_read} </if>
+			<if test="is_read_vague != null"> and instr(t.is_read,#{is_read_vague})>0 </if>
+			<if test="skip_type != null"> and t.skip_type = #{skip_type} </if>
+			<if test="skip_type_vague != null"> and instr(t.skip_type,#{skip_type_vague})>0 </if>
+			<if test="relation_id != null"> and t.relation_id = #{relation_id} </if>
+			<if test="relation_id_vague != null"> and instr(t.relation_id#{relation_id_vague})>0 </if>
+
+		</where>
+	</sql>
+
+	<sql id="getCommon">
+		select
+		t.sysmsg_id,t.account_id,t.sysmsg_title,t.introduction,t.sysmsg_content,t.in_date,t.is_read,t.skip_type,t.relation_id
+		from t_sysmsg t
+		<include refid="where_clause" />
+		order by sysmsg_id desc
+	</sql>
+
+
+
+	<select id="getList" parameterType="map" resultMap="resultSysmsg">
+		<include refid="getCommon" />
+		<if test="start != null">
+			LIMIT ${start},${limit}
+		</if>
+	</select>
+
+	<select id="getCount" parameterType="map" resultType="int">
+		select count(*) ct from t_sysmsg t
+		<include refid="where_clause" />
+	</select>
+
+
+	<!-- 排序区域 -->
+	<update id="updateBatch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index"
+			separator=";">
+			update t_sysmsg
+			<set>
+				sort_no = #{item.sort_no}
+			</set>
+			WHERE sysmsg_id = #{item.id}
+		</foreach>
+	</update>
+
+</mapper>
+

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+       xsi:schemaLocation="http://www.springframework.org/schema/data/mongo
+          http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd
+          http://www.springframework.org/schema/beans   
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+
+    <mongo:mongo  id="mongo"  replica-set="${mongo.hostport}">
+    	<mongo:options connections-per-host="${mongo.connectionsPerHost}"
+            threads-allowed-to-block-for-connection-multiplier="${mongo.threadsAllowedToBlockForConnectionMultiplier}"
+            connect-timeout="${mongo.connectTimeout}" max-wait-time="${mongo.maxWaitTime}" auto-connect-retry="${mongo.autoConnectRetry}"
+            socket-keep-alive="${mongo.socketKeepAlive}" socket-timeout="${mongo.socketTimeout}" slave-ok="${mongo.slaveOk}"/>
+    </mongo:mongo>
+    <mongo:db-factory dbname="${mongo.dbname}" mongo-ref="mongo"/>
+
+	<mongo:mapping-converter base-package="com.admin.model"/>
+
+	<bean id="mappingContext" class="org.springframework.data.mongodb.core.mapping.MongoMappingContext" />
+    <!-- 配置mongodb映射类型 -->
+    <bean id="mappingMongoConverter" class="org.springframework.data.mongodb.core.convert.MappingMongoConverter">
+        <constructor-arg name="mongoDbFactory" ref="mongoDbFactory" />
+        <constructor-arg name="mappingContext" ref="mappingContext" />
+        <property name="typeMapper" ref="defaultMongoTypeMapper" />
+    </bean>
+
+    <!-- 默认Mongodb类型映射 -->
+    <bean id="defaultMongoTypeMapper" class="org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper">
+        <constructor-arg name="typeKey">
+            <null /><!-- 这里设置为空,可以把 spring data mongodb 多余保存的_class字段去掉 -->
+        </constructor-arg>
+    </bean>
+
+    <!-- 用户验证 -->
+	<bean id="userCredentials" class="org.springframework.data.authentication.UserCredentials">
+	  	<constructor-arg name="username" value="${mongo.uname}" />
+	  	<constructor-arg name="password" value="${mongo.upass}" />
+	</bean>
+
+	  <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+		   <constructor-arg ref="mongo" />
+	       <constructor-arg name="databaseName" value="${mongo.dbname}" />
+	        <constructor-arg ref="userCredentials" />
+<!-- 	    <constructor-arg name="mongoDbFactory" ref="mongoDbFactory"/> -->
+<!-- 	    <constructor-arg name="mongoConverter" ref="mappingMongoConverter"/> -->
+<!-- 	    <constructor-arg ref="userCredentials" /> -->
+	  </bean>
+</beans>

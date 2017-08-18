@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.RoleDao">
+
+	<cache type="org.mybatis.caches.ehcache.EhcacheCache" />
+
+	<!-- 数据库映射模型区域 -->
+	<resultMap id="resultRole" type="com.aten.model.orm.Role">
+		<result property="role_code" column="role_code" />
+		<result property="role_name" column="role_name" />
+		<result property="note" column="note" />
+		<result property="add_time" column="add_time" />
+		<result property="menu_right" column="menu_right" />
+		<result property="power_right" column="power_right" />
+		<result property="plat_role" column="plat_role" />
+		<result property="is_sys" column="is_sys" />
+		<result property="state" column="state" />
+	</resultMap>
+
+	<!-- 新增数据区域 -->
+	<sql id="insertCommon">
+		insert into t_role(
+		<if test="role_code != null"> role_code,</if>
+		<if test="role_name != null"> role_name,</if>
+		<if test="note != null"> note,</if>
+		<if test="menu_right != null"> menu_right,</if>
+		<if test="power_right != null"> power_right,</if>
+		<if test="plat_role != null"> plat_role,</if>
+		<if test="is_sys != null"> is_sys,</if>
+		<if test="state != null"> state,</if>
+		add_time
+		)
+		values(
+		<if test="role_code != null">#{role_code},</if>
+		<if test="role_name != null">#{role_name},</if>
+		<if test="note != null">#{note},</if>
+		<if test="menu_right != null">#{menu_right},</if>
+		<if test="power_right != null">#{power_right},</if>
+		<if test="plat_role != null">#{plat_role},</if>
+		<if test="is_sys != null">#{is_sys},</if>
+		<if test="state != null"> #{state},</if>
+		now()
+		)
+	</sql>
+
+	<insert id="insert" parameterType="com.aten.model.orm.Role">
+		<include refid="insertCommon" />
+	</insert>
+
+	<insert id="insertGetPk" parameterType="com.aten.model.orm.Role">
+		<include refid="insertCommon" />
+		<selectKey resultType="java.lang.String" order="AFTER"
+			keyProperty="role_code">
+			select @@IDENTITY AS ID
+		</selectKey>
+	</insert>
+
+
+	<!-- 更新数据区域 -->
+	<sql id="update_clause">
+		<set>
+			<if test="role_name != null"> role_name = #{role_name}, </if>
+			<if test="note != null"> note = #{note}, </if>
+			<if test="power_right != null">menu_right = #{menu_right},</if>
+			<if test="power_right != null">power_right = #{power_right},</if>
+			<if test="plat_role != null">plat_role = #{plat_role},</if>
+			<if test="is_sys != null">is_sys = #{is_sys},</if>
+			<if test="state != null"> state = #{state},</if>
+			<if test="role_code != null"> role_code = #{role_code} </if>
+		</set>
+	</sql>
+
+
+	<update id="update" parameterType="com.aten.model.orm.Role">
+		update t_role
+		<include refid="update_clause" />
+		where role_code = #{role_code}
+	</update>
+
+	<!-- 删除数据区域 -->
+	<delete id="deleteByCode" parameterType="String">
+		delete from t_role where
+		is_sys=0 and role_code = #{id}
+	</delete>
+
+	<!-- 获取对象数据区域 -->
+	<select id="get" parameterType="String" resultMap="resultRole">
+		select
+		role_code,role_name,note,add_time,menu_right,power_right,plat_role,is_sys,state
+		from t_role where role_code = #{role_code}
+	</select>
+
+	<!-- 搜索数据区域 -->
+	<sql id="where_clause">
+		<if test="role_code_vague != null"> and instr(role_code,#{role_code_vague}) > 0 </if>
+		<if test="role_code != null"> and role_code=#{role_code} </if>
+		<if test="role_name != null"> and role_name = #{role_name} </if>
+		<if test="note != null"> and note = #{note} </if>
+		<if test="add_time != null"> and add_time = #{add_time} </if>
+		<if test="menu_right != null"> and menu_right = #{menu_right} </if>
+		<if test="power_right != null"> and power_right = #{power_right} </if>
+		<if test="plat_role != null"> and plat_role = #{plat_role} </if>
+		<if test="is_sys != null"> and is_sys = #{is_sys} </if>
+		<if test="state != null"> and state = #{state} </if>
+	</sql>
+
+	<sql id="getCommon">
+		select * from t_role
+		where 1 = 1
+		<include refid="where_clause" />
+		order by add_time desc
+	</sql>
+
+
+
+	<select id="getList" parameterType="map" resultMap="resultRole">
+		select * from t_role
+		where 1 = 1
+		<include refid="where_clause" />
+		order by add_time desc
+		<if test="start != null">
+			LIMIT ${start},${limit}
+		</if>
+	</select>
+
+	<select id="getCount" parameterType="map" resultType="int">
+		select count(*) ct from t_role
+		where 1 = 1
+		<include refid="where_clause" />
+	</select>
+
+
+	<!-- 排序区域 -->
+	<update id="updateBatch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" open="begin"
+			close=";end;" separator=";">
+			update t_role
+			<set>
+				sort_no = #{item.sort_no}
+			</set>
+			where role_code = #{item.id}
+		</foreach>
+	</update>
+
+</mapper>
+

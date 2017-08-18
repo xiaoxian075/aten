@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.IncIndexDao">
+
+	<!-- 数据库映射模型区域 -->
+	<resultMap id="resultIncIndex" type="com.aten.model.orm.IncIndex">
+		<result property="index_id" column="index_id" />
+		<result property="module" column="module" />
+		<result property="module_id" column="module_id" />
+		<result property="oper_method" column="oper_method" />
+		<result property="oper_time" column="oper_time" />
+
+	</resultMap>
+
+	<!-- 新增数据区域 -->
+	<sql id="insertCommon">
+		INSERT INTO t_inc_index
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<!--<if test="index_id != null"> index_id,</if> -->
+			<if test="module != null"> module,</if>
+			<if test="module_id != null"> module_id,</if>
+			<if test="oper_method != null"> oper_method,</if>
+			<if test="oper_time != null"> oper_time</if>
+
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<!--<if test="index_id != null">#{index_id},</if> -->
+			<if test="module != null">#{module},</if>
+			<if test="module_id != null">#{module_id},</if>
+			<if test="oper_method != null">#{oper_method},</if>
+			<if test="oper_time != null">#{oper_time}</if>
+
+		</trim>
+	</sql>
+
+	<insert id="insert" parameterType="com.aten.model.orm.IncIndex">
+		<include refid="insertCommon" />
+	</insert>
+
+	<insert id="insertGetPk" parameterType="com.aten.model.orm.IncIndex">
+		<include refid="insertCommon" />
+		<selectKey resultType="String" order="AFTER" keyProperty="index_id">
+			SELECT @@IDENTITY AS ID
+		</selectKey>
+	</insert>
+
+	<!-- 更新数据区域 -->
+	<sql id="update_clause">
+		<set>
+			<trim suffixOverrides=",">
+				<if test="index_id != null"> index_id = #{index_id}, </if>
+				<if test="module != null"> module = #{module}, </if>
+				<if test="module_id != null"> module_id = #{module_id}, </if>
+				<if test="oper_method != null"> oper_method = #{oper_method}, </if>
+				<if test="oper_time != null"> oper_time = #{oper_time} </if>
+
+			</trim>
+		</set>
+	</sql>
+
+
+
+
+
+	<update id="update" parameterType="com.aten.model.orm.IncIndex">
+		UPDATE t_inc_index
+		<include refid="update_clause" />
+		WHERE index_id = #{index_id}
+	</update>
+
+	<!-- 删除数据区域 -->
+	<delete id="delete" parameterType="String">
+		delete from t_inc_index where index_id in
+		<foreach item="idItem" collection="array" index="index" open="("
+			separator="," close=")">
+			#{idItem}
+		</foreach>
+	</delete>
+
+	<!-- 获取对象数据区域 -->
+	<select id="get" parameterType="String" resultMap="resultIncIndex">
+		SELECT
+		t.index_id,t.module,t.module_id,t.oper_method,t.oper_time
+		FROM t_inc_index t WHERE index_id = #{index_id}
+	</select>
+
+	<!-- 搜索数据区域 -->
+	<sql id="where_clause">
+		<where>
+			1=1
+			<if test="index_id != null"> and t.index_id = #{index_id} </if>
+			<if test="index_id_vague != null"> and instr(t.index_id,#{index_id_vague})>0 </if>
+			<if test="module != null"> and t.module = #{module} </if>
+			<if test="module_vague != null"> and instr(t.module,#{module_vague})>0 </if>
+			<if test="module_id != null"> and t.module_id = #{module_id} </if>
+			<if test="module_id_vague != null"> and instr(t.module_id,#{module_id_vague})>0 </if>
+			<if test="oper_method != null"> and t.oper_method = #{oper_method} </if>
+			<if test="oper_method_vague != null"> and instr(t.oper_method,#{oper_method_vague})>0 </if>
+			<if test="oper_time != null"> and t.oper_time = #{oper_time} </if>
+			<if test="oper_time_vague != null"> and instr(t.oper_time#{oper_time_vague})>0 </if>
+
+		</where>
+	</sql>
+
+	<sql id="getCommon">
+		select t.index_id,t.module,t.module_id,t.oper_method,t.oper_time
+		from
+		t_inc_index t
+		<include refid="where_clause" />
+		order by index_id desc
+	</sql>
+
+
+
+	<select id="getList" parameterType="map" resultMap="resultIncIndex">
+		<include refid="getCommon" />
+		<if test="start != null">
+			LIMIT ${start},${limit}
+		</if>
+	</select>
+
+	<select id="getCount" parameterType="map" resultType="int">
+		select count(*) ct from t_inc_index t
+		<include refid="where_clause" />
+	</select>
+
+
+	<!-- 排序区域 -->
+	<update id="updateBatch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index"
+			separator=";">
+			update t_inc_index
+			<set>
+				sort_no = #{item.sort_no}
+			</set>
+			WHERE index_id = #{item.id}
+		</foreach>
+	</update>
+
+</mapper>
+

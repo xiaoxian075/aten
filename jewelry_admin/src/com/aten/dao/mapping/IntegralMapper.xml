@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.IntegralDao">
+
+	<cache type="org.mybatis.caches.ehcache.EhcacheCache"/> 
+
+	<!-- 数据库映射模型区域 -->
+	<resultMap id="resultIntegral" type="com.aten.model.orm.Integral">
+		<result property="integral_id" column="integral_id" />
+		<result property="integral_goods_name" column="integral_goods_name" />
+		<result property="integral_value" column="integral_value" />
+		<result property="integral_goods_img" column="integral_goods_img" />
+		<result property="stock" column="stock" />
+		<result property="sort_no" column="sort_no" />
+		<result property="integral_detail" column="integral_detail" />
+		<result property="in_date" column="in_date" />
+		<result property="is_del" column="is_del" />
+		<result property="is_up" column="is_up" />
+		<result property="integral_number" column="integral_number" />
+	</resultMap>
+
+	<!-- 新增数据区域 -->
+	<sql id="insertCommon">
+		INSERT INTO t_integral_goods
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="integral_id != null"> integral_id,</if>
+			<if test="integral_goods_name != null"> integral_goods_name,</if>
+			<if test="integral_value != null"> integral_value,</if>
+			<if test="integral_goods_img != null"> integral_goods_img,</if>
+			<if test="stock != null"> stock,</if>
+			<if test="sort_no != null"> sort_no,</if>
+			<if test="integral_detail != null"> integral_detail,</if>
+			in_date,
+			<if test="is_del != null"> is_del,</if>
+			<if test="is_up != null"> is_up,</if>
+			<if test="integral_number != null"> integral_number,</if>
+		</trim>
+		<trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+			<if test="integral_id != null">#{integral_id},</if>
+			<if test="integral_goods_name != null">#{integral_goods_name},</if>
+			<if test="integral_value != null">#{integral_value},</if>
+			<if test="integral_goods_img != null">#{integral_goods_img},</if>
+			<if test="stock != null">#{stock},</if>
+			<if test="sort_no != null">#{sort_no},</if>
+			<if test="integral_detail != null">#{integral_detail},</if>
+			now(),
+			<if test="is_del != null">#{is_del},</if>
+			<if test="is_up != null">#{is_up},</if>
+			<if test="integral_number != null">#{integral_number},</if>
+		</trim>
+	</sql>
+
+	<insert id="insert" parameterType="com.aten.model.orm.Integral">
+		<include refid="insertCommon" />
+	</insert>
+
+	<insert id="insertGetPk" parameterType="com.aten.model.orm.Integral">
+		<include refid="insertCommon" />
+		<selectKey resultType="String" order="AFTER" keyProperty="integral_id">
+			SELECT @@IDENTITY AS ID
+		</selectKey>
+	</insert>
+
+	<!-- 更新数据区域 -->
+	<sql id="update_clause">
+		<set>
+			<trim suffixOverrides=",">
+				<if test="integral_id != null"> integral_id = #{integral_id}, </if>
+				<if test="integral_goods_name != null"> integral_goods_name = #{integral_goods_name}, </if>
+				<if test="integral_value != null"> integral_value = #{integral_value}, </if>
+				<if test="integral_goods_img != null"> integral_goods_img = #{integral_goods_img}, </if>
+				<if test="stock != null"> stock = #{stock}, </if>
+				<if test="sort_no != null"> sort_no = #{sort_no}, </if>
+				<if test="integral_detail != null"> integral_detail = #{integral_detail}, </if>
+				<if test="in_date != null"> in_date = #{in_date}, </if>
+				<if test="is_del != null"> is_del = #{is_del}, </if>
+				<if test="is_up != null"> is_up = #{is_up}, </if>
+				<if test="integral_number != null">integral_number = #{integral_number},</if>
+			</trim>
+		</set>
+	</sql>
+
+
+
+
+
+	<update id="update" parameterType="com.aten.model.orm.Integral">
+		UPDATE t_integral_goods
+		<include refid="update_clause" />
+		WHERE integral_id = #{integral_id}
+	</update>
+
+	<!-- 删除数据区域 -->
+	<delete id="delete" parameterType="String">
+		delete from t_integral_goods where integral_id in
+		<foreach item="idItem" collection="array" index="index" open="("
+			separator="," close=")">
+			#{idItem}
+		</foreach>
+	</delete>
+
+	<!-- 获取对象数据区域 -->
+	<select id="get" parameterType="String" resultMap="resultIntegral">
+		SELECT
+		t.integral_id,t.integral_number,t.integral_goods_name,t.integral_value,t.integral_goods_img,t.stock,t.sort_no,t.integral_detail,t.in_date,t.is_del,t.is_up
+		FROM t_integral_goods t WHERE integral_id = #{integral_id}
+	</select>
+
+	<!-- 搜索数据区域 -->
+	<sql id="where_clause">
+		<where>
+			1=1
+			<if test="integral_id != null"> and t.integral_id = #{integral_id} </if>
+			<if test="integral_id_vague != null"> and instr(t.integral_id,#{integral_id_vague})>0 </if>
+			<if test="integral_number != null"> and t.integral_number = #{integral_number} </if>
+			<if test="integral_number_vague != null"> and instr(t.integral_number,#{integral_number_vague})>0 </if>
+			<if test="integral_goods_name != null"> and t.integral_goods_name = #{integral_goods_name} </if>
+			<if test="integral_goods_name_vague != null"> and
+				instr(t.integral_goods_name,#{integral_goods_name_vague})>0 </if>
+			<if test="integral_value != null"> and t.integral_value = #{integral_value} </if>
+			<if test="integral_value_vague != null"> and instr(t.integral_value,#{integral_value_vague})>0
+			</if>
+			<if test="integral_goods_img != null"> and t.integral_goods_img = #{integral_goods_img} </if>
+			<if test="integral_goods_img_vague != null"> and
+				instr(t.integral_goods_img,#{integral_goods_img_vague})>0 </if>
+			<if test="stock != null"> and t.stock = #{stock} </if>
+			<if test="stock_vague != null"> and instr(t.stock,#{stock_vague})>0 </if>
+			<if test="sort_no != null"> and t.sort_no = #{sort_no} </if>
+			<if test="sort_no_vague != null"> and instr(t.sort_no,#{sort_no_vague})>0 </if>
+			<if test="integral_detail != null"> and t.integral_detail = #{integral_detail} </if>
+			<if test="integral_detail_vague != null"> and instr(t.integral_detail,#{integral_detail_vague})>0
+			</if>
+			<if test="in_date != null"> and t.in_date = #{in_date} </if>
+			<if test="in_date_vague != null"> and instr(t.in_date,#{in_date_vague})>0 </if>
+			<if test="is_del != null"> and t.is_del = #{is_del} </if>
+			<if test="is_del_vague != null"> and instr(t.is_del,#{is_del_vague})>0 </if>
+			<if test="is_up != null"> and t.is_up = #{is_up} </if>
+			<if test="is_up_vague != null"> and instr(t.is_up#{is_up_vague})>0 </if>
+
+		</where>
+	</sql>
+
+	<sql id="getCommon">
+		select
+		t.integral_id,t.integral_number,t.integral_goods_name,t.integral_value,t.integral_goods_img,t.stock,t.sort_no,t.integral_detail,t.in_date,t.is_del,t.is_up
+		from t_integral_goods t
+		<include refid="where_clause" />
+		order by sort_no desc
+	</sql>
+
+
+
+	<select id="getList" parameterType="map" resultMap="resultIntegral">
+		<include refid="getCommon" />
+		<if test="start != null">
+			LIMIT ${start},${limit}
+		</if>
+	</select>
+
+	<select id="getCount" parameterType="map" resultType="int">
+		select count(*) ct from t_integral_goods t
+		<include refid="where_clause" />
+	</select>
+
+
+	<!-- 排序区域 -->
+	<update id="updateBatch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index"
+			separator=";">
+			update t_integral_goods
+			<set>
+				sort_no = #{item.sort_no}
+			</set>
+			WHERE integral_id = #{item.id}
+		</foreach>
+	</update>
+
+</mapper>
+

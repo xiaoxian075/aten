@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- 设置订单类定时器开始 -->
+	<!-- 订单的任务类。 -->
+	<bean id="orderJob" class="com.aten.job.OrderJob">
+	</bean>
+
+	<!-- 资讯点赞量定时任务注入JOB中。 -->
+	<bean id="orderQtzJob"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="orderJob"></property>
+		<!-- 任务类中需要执行的方法 -->
+		<property name="targetMethod" value="sysCancelOrderJob"></property>
+		<!-- 上一次未执行完成的，要等待有再执行。 -->
+		<property name="concurrent" value="false"></property>
+	</bean>
+
+	<!--调度触发器绑定资讯点赞量的任务 -->
+	<bean id="orderTrigger"
+		class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+		<property name="jobDetail" ref="orderQtzJob"></property>
+		<property name="repeatInterval" value="10000"></property>  <!--时间间隔 10 秒 -->
+	</bean>
+	<!-- 设置订单类定时器结束 -->
+
+
+	<!-- ======================== 调度工厂 21323213213======================== -->
+	<bean id="schedulerFactoryBean"
+		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="orderTrigger"></ref>
+			</list>
+		</property>
+	</bean>
+
+</beans>

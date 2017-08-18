@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.admin.dao.HistoryAmountDaoMapper">
+    <resultMap id="BaseResultMap" type="com.admin.model.Amount">
+        <result column="ID" property="id" jdbcType="DECIMAL" />
+        <result column="DEVICE_CODE" property="deviceCode" jdbcType="VARCHAR" />
+        <result column="AMOUNT" property="amount" jdbcType="DECIMAL" />
+        <result column="SCXK_AMOUNT" property="scxkAmount" jdbcType="DECIMAL" />
+        <result column="SM_AMOUNT" property="smAmount" jdbcType="DECIMAL" />
+        <result column="SXYK_AMOUNT" property="sxykAmount" jdbcType="DECIMAL" />
+        <result column="DAY_COUNT_AMOUNT" property="dayCountAmount" jdbcType="VARCHAR" />
+        <result column="COUNT" property="count" jdbcType="DECIMAL" />
+        <result column="SM_COUNT" property="smCount" jdbcType="DECIMAL" />
+        <result column="SXYK_COUNT" property="sxykCount" jdbcType="DECIMAL" />
+        <result column="SCXK_COUNT" property="scxkCount" jdbcType="DECIMAL" />
+        <result column="PAY_TYPE" property="payType" jdbcType="DECIMAL" />
+    </resultMap>
+
+    <select id="getAmountByDay"  parameterType="java.util.HashMap" resultMap="BaseResultMap">
+        select NVL(sum(t.total_fee),0) as AMOUNT,count(t.sys_id) as COUNT,t.MACHINECODE as DEVICE_CODE,
+        <if test="day != null">
+            to_char(sysdate -${day},'yyyy-mm-dd') as DAY_COUNT_AMOUNT
+        </if>
+        from t_order t where 1=1 and pay_state =1
+        <if test="payType != null">
+            and PAY_TYPE = #{payType}
+        </if>
+        <if test="day != null">
+            and to_char(t.pay_time,'yyyy-mm-dd') = to_char(sysdate -${day},'yyyy-mm-dd')
+        </if>
+        group by t.MACHINECODE
+    </select>
+
+    <select id="getAmountByHistory"  parameterType="java.util.HashMap" resultMap="BaseResultMap">
+        select NVL(sum(t.AMOUNT),0) as AMOUNT,NVL(sum(t.COUNT),0) as COUNT,t.DEVICE_CODE from T_AMOUNT t GROUP BY t.DEVICE_CODE
+    </select>
+
+    <insert id="inserBatchAmount" parameterType="java.util.List">
+        insert into T_AMOUNT
+        select T_AMOUNT_SEQUENCE.NEXTVAL,A.* from(
+        <foreach collection="list" item="item" index="index" separator="UNION">
+        select
+            #{item.deviceCode},#{item.amount},#{item.scxkAmount},#{item.smAmount},#{item.dayCountAmount},#{item.smCount},#{item.sxykAmount},#{item.sxykCount},#{item.scxkCount},#{item.count}
+            from dual
+        </foreach>
+        ) A
+    </insert>
+</mapper>

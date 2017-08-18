@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.admin.dao.DeviceListDaoMapper">
+    <resultMap id="BaseResultMap" type="com.admin.model.DeviceList">
+        <result column="id" property="id" jdbcType="DECIMAL" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="agent_unique" property="agentUnique" jdbcType="VARCHAR" />
+        <result column="device_code" property="deviceCode" jdbcType="VARCHAR" />
+        <result column="activation_code" property="activationCode" jdbcType="VARCHAR" />
+        <result column="device_name" property="deviceName" jdbcType="VARCHAR" />
+        <result column="device_type" property="deviceType" jdbcType="DECIMAL" />
+        <result column="merchant_name" property="merchantName" jdbcType="VARCHAR" />
+        <result column="merchant_yun_pay_account" property="merchantYunPayAccount" jdbcType="VARCHAR" />
+        <result column="merchant_phone" property="merchantPhone" jdbcType="VARCHAR" />
+        <result column="state" property="state" jdbcType="VARCHAR" />
+        <result column="device_unique" property="deviceUnique" jdbcType="VARCHAR" />
+        <result column="LKL_MERCHANT_CODE" property="lklMerchantCode" jdbcType="VARCHAR" />
+        <result column="device_unique" property="deviceUnique" jdbcType="VARCHAR" />
+        <result column="LKL_TERMINAL_CODE" property="lklMerminalCode" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <resultMap id="BusinessResultMap" type="com.admin.model.Business">
+        <result column="ID" property="id" jdbcType="DECIMAL" />
+        <result column="MERCHANT_NAME" property="merchantName" jdbcType="VARCHAR" />
+        <result column="MERCHANT_ADDRESS" property="merchantAddress" jdbcType="VARCHAR" />
+        <result column="MERCHANT_LEGAL_PERSON" property="merchantLegalPerson" jdbcType="VARCHAR" />
+        <result column="MERCHANT_IDENTITY_CARD" property="merchantIdentityCard" jdbcType="VARCHAR" />
+        <result column="BUSINESS_LICENSE" property="businessLicense" jdbcType="VARCHAR" />
+        <result column="MERCHANT_PERSON_NAME" property="merchantPersonName" jdbcType="VARCHAR" />
+        <result column="MERCHANT_PERSON_PHONE" property="merchantPersonPhone" jdbcType="VARCHAR" />
+        <result column="EMAIL" property="email" jdbcType="VARCHAR" />
+        <result column="ACCOUNT_NUMBER" property="accountNumber" jdbcType="VARCHAR" />
+        <result column="ACCOUNT_NAME" property="accountName" jdbcType="VARCHAR" />
+        <result column="OPEN_BANK" property="openBank" jdbcType="VARCHAR" />
+        <result column="YUN_PAY_ACCOUNT" property="yunPayAccount" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="DECIMAL" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="FOLLOW_UP_NAME" property="followUpName" jdbcType="VARCHAR" />
+        <result column="AGENT_UNIQUE" property="agentUnique" jdbcType="VARCHAR" />
+        <result column="MERCHANT_NO" property="merchantNo" jdbcType="VARCHAR" />
+        <result column="AGENCY_NAME" property="agencyName" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <sql id="Example_Where_Clause" >
+        <where >
+            <foreach collection="oredCriteria" item="criteria" separator="or" >
+                <if test="criteria.valid" >
+                    <trim prefix="(" suffix=")" prefixOverrides="and" >
+                        <foreach collection="criteria.criteria" item="criterion" >
+                            <choose >
+                                <when test="criterion.noValue" >
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue" >
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue" >
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue" >
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+
+    <select id="getDeviceListByAgent" resultMap="BaseResultMap" parameterType="Map" >
+        SELECT *  FROM (SELECT ROWNUM R, A.* FROM (SELECT * FROM T_DEVICE_LIST  WHERE 1=1
+        <if test="yunPayAccount != null">
+            AND MERCHANT_YUN_PAY_ACCOUNT =#{yunPayAccount,jdbcType=VARCHAR}
+        </if>
+        <if test="agentUnique != null">
+            AND AGENT_UNIQUE= #{agentUnique,jdbcType=VARCHAR}  AND STATE = 1
+        </if>
+        ORDER BY CREATE_TIME DESC) A
+        <if test="pageEnd != null">
+            WHERE ROWNUM &lt;= #{pageEnd})
+        </if>
+        <if test="pageStart != null">
+            WHERE R &gt;= #{pageStart}
+        </if>
+    </select>
+
+    <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.admin.model.BaseExample">
+        select * from T_DEVICE_LIST
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+
+    <select id="getMoneyByAgentUnique" resultMap="BaseResultMap">
+        select NVL(sum(t.total_fee),0) as MONEYCOUNT,t.MACHINECODE from T_ORDER t where t.AGENT_UNIQUE = #{agentUnique,jdbcType=VARCHAR} AND PAY_STATE = 1 GROUP BY t.MACHINECODE
+    </select>
+
+    <select id="getCountMoneyByAgentUnique" resultType="java.lang.Integer">
+        select NVL(sum(t.total_fee),0) as MONEYCOUNT from T_ORDER t where t.AGENT_UNIQUE = #{agentUnique,jdbcType=VARCHAR} AND PAY_STATE = 1
+    </select>
+
+    <select id="getMoneyByAgentUniqueAndDay" resultMap="BaseResultMap">
+        select NVL(sum(t.total_fee),0) as MONEYCOUNT,t.MACHINECODE from T_ORDER t where t.AGENT_UNIQUE = #{agentUnique,jdbcType=VARCHAR} and pay_state = 1 and to_char(t.pay_time,'yyyy-mm-dd') = to_char(sysdate,'yyyy-mm-dd') GROUP BY t.MACHINECODE
+    </select>
+
+    <select id="getRepeatMerchant" parameterType="map" resultMap="BaseResultMap">
+        SELECT *  FROM (SELECT ROWNUM R, A.* FROM (
+        select
+        DISTINCT q.MERCHANT_YUN_PAY_ACCOUNT,w.CREATE_TIME ,
+        q.LKL_MERCHANT_CODE,q.MERCHANT_NAME,q.MERCHANT_PHONE
+        from T_DEVICE_LIST q,T_BUSINESS_INFO w where q.MERCHANT_ID = w.ID
+        <if test="account != null">
+            AND (q.MERCHANT_YUN_PAY_ACCOUNT = #{account,jdbcType=VARCHAR} or instr(q.MERCHANT_NAME,#{account}) > 0)
+        </if>
+        <if test="agentUnique != null">
+            AND q.AGENT_UNIQUE= #{agentUnique,jdbcType=VARCHAR}  AND q.STATE = 1
+        </if>
+        ORDER BY w.CREATE_TIME DESC) A
+        <if test="pageEnd != null">
+            WHERE ROWNUM &lt;= #{pageEnd})
+        </if>
+        <if test="pageStart != null">
+            WHERE R &gt;= #{pageStart}
+        </if>
+    </select>
+
+    <select id="getBusinessInfo" parameterType="java.lang.String" resultMap="BusinessResultMap">
+        select * from T_BUSINESS_INFO t where t.AGENT_UNIQUE = #{agentUnique,jdbcType=VARCHAR}
+    </select>
+</mapper>

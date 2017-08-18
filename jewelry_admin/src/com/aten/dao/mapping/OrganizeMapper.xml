@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aten.dao.OrganizeDao">
+
+	<cache type="org.mybatis.caches.ehcache.EhcacheCache" />
+
+	<!-- 数据库映射模型区域 -->
+	<resultMap id="resultOrganize" type="com.aten.model.orm.Organize">
+		<result property="org_id" column="org_id" />
+		<result property="org_name" column="org_name" />
+		<result property="parent_org_id" column="parent_org_id" />
+		<result property="sort_no" column="sort_no" />
+		<result property="is_show" column="is_show" />
+		<result property="level_org" column="level_org" />
+		<result property="note" column="note" />
+		<result property="parent_org_name" column="parent_org_name" />
+		<result property="parent_org_code" column="parent_org_code" />
+		<result property="org_code" column="org_code" />
+	</resultMap>
+
+	<!-- 新增数据区域 -->
+	<sql id="insertCommon">
+		insert into t_organize(
+		<if test="org_id != null"> org_id,</if>
+		<if test="parent_org_id != null"> parent_org_id,</if>
+		<if test="sort_no != null"> sort_no,</if>
+		<if test="is_show != null"> is_show,</if>
+		<if test="level_org != null"> level_org,</if>
+		<if test="note != null"> note,</if>
+		<if test="org_code != null"> org_code,</if>
+		<if test="parent_org_name != null"> parent_org_name,</if>
+		<if test="parent_org_code != null"> parent_org_code,</if>
+		<if test="org_name != null"> org_name</if>
+		)
+		values(
+		<if test="org_id != null">#{org_id},</if>
+		<if test="parent_org_id != null">#{parent_org_id},</if>
+		<if test="sort_no != null">#{sort_no},</if>
+		<if test="is_show != null">#{is_show},</if>
+		<if test="level_org != null">#{level_org},</if>
+		<if test="note != null">#{note},</if>
+		<if test="org_code != null">#{org_code},</if>
+		<if test="parent_org_name != null">#{parent_org_name},</if>
+		<if test="parent_org_code != null">#{parent_org_code},</if>
+		<if test="org_name != null">#{org_name}</if>
+		)
+	</sql>
+
+	<insert id="insert" parameterType="com.aten.model.orm.Organize">
+		<include refid="insertCommon" />
+	</insert>
+
+	<!-- 更新数据区域 -->
+	<sql id="update_clause">
+		<set>
+			<if test="org_id != null"> org_id = #{org_id}, </if>
+			<if test="org_name != null"> org_name = #{org_name}, </if>
+			<if test="parent_org_id != null"> parent_org_id = #{parent_org_id}, </if>
+			<if test="sort_no != null"> sort_no = #{sort_no}, </if>
+			<if test="is_show != null"> is_show = #{is_show}, </if>
+			<if test="level_org != null"> level_org = #{level_org}, </if>
+			<if test="org_code != null"> org_code = #{org_code}, </if>
+			<if test="parent_org_name != null"> parent_org_name = #{parent_org_name}, </if>
+			<if test="parent_org_code != null"> parent_org_code = #{parent_org_code}, </if>
+			<if test="note != null"> note = #{note} </if>
+
+		</set>
+	</sql>
+
+
+	<update id="update" parameterType="com.aten.model.orm.Organize">
+		update t_organize
+		<include refid="update_clause" />
+		where org_id = #{org_id}
+	</update>
+
+	<!-- 删除数据区域 -->
+	<delete id="delete" parameterType="String">
+		delete from t_organize where org_id in
+		<foreach item="idItem" collection="array" index="index" open="("
+			separator="," close=")">
+			#{idItem}
+		</foreach>
+	</delete>
+
+	<!-- 获取对象数据区域 -->
+	<select id="get" parameterType="String" resultMap="resultOrganize">
+		SELECT
+		t.org_id, t.org_name,t.org_code, t.parent_org_id, t.sort_no, t.is_show,
+		t.level_org, t.note,t.parent_org_name,t.parent_org_code
+		FROM t_organize t WHERE org_id = #{org_id}
+	</select>
+	<!-- 通过部门编号查找 -->
+	<select id="getByOrgCode" parameterType="String" resultMap="resultOrganize">
+		SELECT * FROM t_organize t WHERE org_code = #{org_code}
+	</select>
+	<!-- 获取下级部门 -->
+	<select id="getSon" parameterType="String" resultMap="resultOrganize">
+		SELECT *
+		FROM t_organize where parent_org_id = #{id}
+	</select>
+	<select id="getObjByMap" parameterType="map" resultMap="resultOrganize">
+		SELECT
+		t.org_id, t.org_name, t.parent_org_id, t.sort_no, t.is_show, t.level_org,
+		t.note,t.org_code
+		FROM t_organize t
+		<include refid="where_clause" />
+	</select>
+
+	<!-- 搜索数据区域 -->
+	<sql id="where_clause">
+		<where>
+			1=1
+			<if test="org_id != null"> and t.org_id = #{org_id} </if>
+			<if test="org_name != null"> and t.org_name LIKE concat(concat('%',#{org_name}),'%')
+			</if>
+			<if test="parent_org_id != null"> and t.parent_org_id = #{parent_org_id} </if>
+			<if test="sort_no != null"> and t.sort_no = #{sort_no} </if>
+			<if test="is_show != null"> and t.is_show = #{is_show} </if>
+			<if test="level_org != null"> and t.level_org = #{level_org} </if>
+			<if test="parent_org_name != null"> and t.parent_org_name = #{parent_org_name} </if>
+			<if test="parent_org_code != null"> and t.parent_org_code = #{parent_org_code} </if>
+			<if test="note != null"> and t.note = #{note} </if>
+			<if test="org_code != null"> and t.org_code LIKE concat(concat('%',#{org_code}),'%')
+			</if>
+			<if test="org_code_check != null"> and t.org_code = #{org_code_check} </if>
+		</where>
+	</sql>
+
+
+
+	<select id="getList" parameterType="map" resultMap="resultOrganize">
+		select t.org_id, t.org_name, t.parent_org_id, t.sort_no, t.is_show,
+		t.level_org,t.org_code ,t.note,t.parent_org_name,t.parent_org_code
+		from t_organize t
+		<include refid="where_clause" />
+		order by t.org_id desc
+		<if test="start != null">
+			LIMIT ${start},${limit}
+		</if>
+	</select>
+
+	<select id="getCount" parameterType="map" resultType="int">
+		select count(*) ct from t_organize t
+		<include refid="where_clause" />
+	</select>
+
+
+	<!-- 排序区域 -->
+	<update id="updateBatch" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" open="begin"
+			close=";end;" separator=";">
+			update t_organize
+			<set>
+				sort_no = #{item.sort_no}
+			</set>
+			WHERE org_id = #{item.id}
+		</foreach>
+	</update>
+
+</mapper>
+
