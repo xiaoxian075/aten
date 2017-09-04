@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.admin.dao.SmsRecordMapper">
+
+    <resultMap id="BaseResultMap" type="com.admin.model.SmsRecord">
+        <id column="ID" jdbcType="BIGINT" property="id"/>
+        <result column="PARENT_ID" jdbcType="BIGINT" property="parentId"/>
+        <result column="SID" jdbcType="VARCHAR" property="sid"/>
+        <result column="MOBILE" jdbcType="VARCHAR" property="mobile"/>
+        <result column="COUNT" jdbcType="INTEGER" property="count"/>
+        <result column="FEE" jdbcType="VARCHAR" property="fee"/>
+        <result column="STATE" jdbcType="INTEGER" property="state"/>
+        <result column="MSG" jdbcType="VARCHAR" property="msg"/>
+        <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime"/>
+    </resultMap>
+
+    <insert id="insertOne" parameterType="com.admin.model.SmsRecord" >
+        <selectKey resultType="java.lang.Long" order="BEFORE" keyProperty="id">
+            SELECT T_SMS_RECORD_SEQUENCE.nextval as ID from DUAL
+        </selectKey>
+        INSERT INTO
+        T_SMS_RECORD
+            (
+                ID,
+                PARENT_ID,
+                SID,
+                MOBILE,
+                COUNT,
+                FEE,
+                STATE,
+                MSG,
+                CREATE_TIME
+            )
+        VALUES
+            (
+                #{id},
+                #{parentId},
+                #{sid},
+                #{mobile},
+                #{count},
+                #{fee},
+                #{state},
+                #{msg},
+                #{createTime}
+            )
+    </insert>
+
+    <!--
+            <select id="signList" resultMap="BaseResultMap" >
+                SELECT
+                ID,
+                TYPE,
+                SIGN,
+                CONTENT,
+                STATUS,
+                REASON,
+                CREATE_TIME,
+                UPDATE_TIME
+                FROM
+                T_SMS_MODEL
+                WHERE
+                STATUS=1
+            </select>
+
+
+
+            <select id="selectOne" parameterType="java.lang.Long" resultType="com.admin.model.SmsModel" >
+                SELECT
+                ID,
+                TYPE,
+                SIGN,
+                CONTENT,
+                STATUS,
+                REASON,
+                CREATE_TIME,
+                UPDATE_TIME
+                FROM
+                T_SMS_MODEL
+                WHERE
+                ID=#{id}
+                AND rownum = 1
+            </select>
+
+
+            <delete id="deleteOne" parameterType="java.lang.Long" >
+                DELETE FROM
+                T_SMS_MODEL
+                WHERE
+                ID = #{id}
+                AND rownum = 1
+            </delete>
+
+            <update id="updateOne" parameterType="com.admin.model.SmsModel">
+                UPDATE
+                T_SMS_MODEL
+                SET
+                TYPE = #{type},
+                SIGN = #{sign},
+                CONTENT = #{content},
+                STATUS = #{status},
+                REASON = #{reason},
+                UPDATE_TIME = #{updateTime}
+                WHERE
+                id = #{id}
+                AND rownum = 1
+            </update>-->
+</mapper>

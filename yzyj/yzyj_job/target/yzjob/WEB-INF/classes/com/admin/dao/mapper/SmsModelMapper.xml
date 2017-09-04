@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.admin.dao.SmsModelMapper">
+
+    <resultMap id="BaseResultMap" type="com.admin.model.SmsModel">
+        <id column="ID" jdbcType="BIGINT" property="id"/>
+        <result column="TITLE" jdbcType="INTEGER" property="title"/>
+        <result column="SIGN" jdbcType="VARCHAR" property="sign"/>
+        <result column="CONTENT" jdbcType="VARCHAR" property="content"/>
+        <result column="STATE" jdbcType="INTEGER" property="state"/>
+        <result column="REASON" jdbcType="VARCHAR" property="reason"/>
+        <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <select id="selectListForSyn" resultMap="BaseResultMap" >
+        SELECT
+        ID,
+        TITLE,
+        SIGN,
+        CONTENT,
+        STATE,
+        REASON,
+        CREATE_TIME,
+        UPDATE_TIME
+        FROM
+        T_SMS_MODEL
+        WHERE
+        STATE=2
+    </select>
+
+    <update id="updateOne" parameterType="com.admin.model.SmsModel">
+        UPDATE
+        T_SMS_MODEL
+        SET
+        SIGN = #{sign},
+        CONTENT = #{content},
+        STATE = #{state},
+        REASON = #{reason},
+        UPDATE_TIME = #{updateTime}
+        WHERE
+        id = #{id}
+        AND rownum = 1
+    </update>
+
+<!--    <sql id="Example_Where_Clause" >
+        <where >
+            <foreach collection="oredCriteria" item="criteria" separator="or" >
+                <if test="criteria.valid" >
+                    <trim prefix="(" suffix=")" prefixOverrides="and" >
+                        <foreach collection="criteria.criteria" item="criterion" >
+                            <choose >
+                                <when test="criterion.noValue" >
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue" >
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue" >
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue" >
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+
+    <select id="selectList" resultMap="BaseResultMap" parameterType="com.admin.model.BaseExample" >
+        select
+        ID,
+        TITLE,
+        SIGN,
+        CONTENT,
+        STATE,
+        REASON,
+        CREATE_TIME,
+        UPDATE_TIME
+        from T_SMS_MODEL
+        <if test="_parameter != null" >
+            <include refid="Example_Where_Clause" />
+        </if>
+        <if test="orderByClause != null" >
+            order by ${orderByClause}
+        </if>
+    </select>
+
+    <select id="signList" resultMap="BaseResultMap" >
+        SELECT
+        ID,
+        TITLE,
+        SIGN,
+        CONTENT,
+        STATE,
+        REASON,
+        CREATE_TIME,
+        UPDATE_TIME
+        FROM
+        T_SMS_MODEL
+        WHERE
+        STATE=1
+    </select>
+
+
+
+    <select id="selectOne" parameterType="java.lang.Long" resultType="com.admin.model.SmsModel" >
+        SELECT
+        ID,
+        TITLE,
+        SIGN,
+        CONTENT,
+        STATE,
+        REASON,
+        CREATE_TIME,
+        UPDATE_TIME
+        FROM
+        T_SMS_MODEL
+        WHERE
+        ID=#{id}
+        AND rownum = 1
+    </select>
+
+    <insert id="insertOne" parameterType="com.admin.model.SmsModel" >
+        INSERT INTO
+        T_SMS_MODEL
+        (
+        ID,
+        TITLE,
+        SIGN,
+        CONTENT,
+        STATE,
+        REASON,
+        CREATE_TIME,
+        UPDATE_TIME
+        )
+        VALUES
+        (
+        #{id},
+        #{title},
+        #{sign},
+        #{content},
+        #{state},
+        #{reason},
+        #{createTime},
+        #{updateTime}
+        )
+    </insert>
+
+    <delete id="deleteOne" parameterType="java.lang.Long" >
+        DELETE FROM
+        T_SMS_MODEL
+        WHERE
+        ID = #{id}
+        AND rownum = 1
+    </delete>
+
+    <update id="updateOne" parameterType="com.admin.model.SmsModel">
+        UPDATE
+        T_SMS_MODEL
+        SET
+        SIGN = #{sign},
+        CONTENT = #{content},
+        STATE = #{state},
+        REASON = #{reason},
+        UPDATE_TIME = #{updateTime}
+        WHERE
+        id = #{id}
+        AND rownum = 1
+    </update>
+
+
+    <select id="selectCountByName" parameterType="java.lang.String" resultType="java.lang.Long">
+        SELECT
+        COUNT(ID) as ID
+        FROM
+        T_SMS_MODEL
+        WHERE
+        TITLE=#{title}
+    </select>-->
+</mapper>

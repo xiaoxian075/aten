@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:tx="http://www.springframework.org/schema/tx" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd">
+    <!-- 定时任务Quartz配置 -->
+     <!---->
+    <bean id="orderJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref bean="orderJobService"/>
+        </property>
+        <property name="targetMethod">
+            <value>work</value>
+        </property>
+        <property name="concurrent">
+            <value>false</value>
+        </property>
+    </bean>
+    <!-- JobDetail的配置(业务单对账) -->
+    <bean id="checkOrderJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref bean="checkOrderService"/>
+        </property>
+        <!--定时方法名称-->
+        <property name="targetMethod">
+            <value>work</value>
+        </property>
+        <!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程 -->
+        <property name="concurrent">
+            <value>false</value>
+        </property>
+    </bean>
+    <bean id="historyAmountJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref bean="qHistoryAmountService"/>
+        </property>
+        <!--定时方法名称-->
+        <property name="targetMethod">
+            <value>work</value>
+        </property>
+        <!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程 -->
+        <property name="concurrent">
+            <value>false</value>
+        </property>
+    </bean>
+    <bean id="posWithdrawTimeJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref bean="aposWithdrawService"/>
+        </property>
+        <!--定时方法名称-->
+        <property name="targetMethod">
+            <value>work</value>
+        </property>
+        <!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程 -->
+        <property name="concurrent">
+            <value>false</value>
+        </property>
+    </bean>
+
+    <bean id="statisticsJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref bean="astatisticsService"/>
+        </property>
+        <!--定时方法名称-->
+        <property name="targetMethod">
+            <value>work</value>
+        </property>
+        <!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程 -->
+        <property name="concurrent">
+            <value>false</value>
+        </property>
+    </bean>
+    <bean id="yzIssuedJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref bean="yzIssuedJobService"/>
+        </property>
+        <!--定时方法名称-->
+        <property name="targetMethod">
+            <value>work</value>
+        </property>
+        <!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程 -->
+        <property name="concurrent">
+            <value>false</value>
+        </property>
+    </bean>
+    <bean id="smsTimerJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref bean="smsTimerJobService"/>
+        </property>
+        <!--定时方法名称-->
+        <property name="targetMethod">
+            <value>work</value>
+        </property>
+        <!-- 是否允许任务并发执行。当值为false时，表示必须等到前一个线程处理完毕后才再启一个新的线程 -->
+        <property name="concurrent">
+            <value>false</value>
+        </property>
+    </bean>
+
+    <bean id="orderTime" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail">
+            <ref bean="orderJob"/>
+        </property>
+        <!--每隔10秒钟触发一次-->
+        <property name="cronExpression">
+            <value>0/10 * * * * ?</value>
+        </property>
+    </bean>
+    <bean id="orderTime1" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail">
+            <ref bean="checkOrderJob"/>
+        </property>
+        <property name="cronExpression">
+            <!-- <value>0 45 08 * * ? *</value>-->
+            <value>0 50 7 ? * *</value>
+        </property>
+    </bean>
+    <bean id="historyAmountTime" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail">
+            <ref bean="historyAmountJob"/>
+        </property>
+        <property name="cronExpression">
+            <value>0/60 * * * * ?</value>
+        </property>
+    </bean>
+    <bean id="posWithdrawTime" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail">
+            <ref bean="posWithdrawTimeJob"/>
+        </property>
+        <property name="cronExpression">
+            <!--<value>0 45 7 ? * *</value>-->
+            <value>0 45 6 ? * *</value>
+        </property>
+    </bean>
+    <bean id="statistics" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail">
+            <ref bean="statisticsJob"/>
+        </property>
+        <property name="cronExpression">
+            <!--<value>0 45 7 ? * *</value>-->
+            <!--<value>0 45 6 ? * *</value>-->
+            <value>0/10 * * * * ?</value>
+        </property>
+    </bean>
+    <bean id="yzIssued" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail">
+            <ref bean="yzIssuedJob"/>
+        </property>
+        <property name="cronExpression">
+            <value>0 30 7 15 * ?</value>
+            <!--<value>0/10 * * * * ?</value>-->
+        </property>
+    </bean>
+    <bean id="smsTimer" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail">
+            <ref bean="smsTimerJob"/>
+        </property>
+        <property name="cronExpression">
+            <value>0 0/1 * * * ?</value>
+            <!--<value>0/10 * * * * ?</value>-->
+        </property>
+    </bean>
+    <!--<bean id=" jobCompareB2cAndLocal" class="com.vipshop.management.util.quartz.MethodInvokingJobDetailFactoryBean ">-->
+    <!--          <property name="targetObject " ref="delegateJob " />-->
+    <!--          <property name="targetMethod " value="方法名" />-->
+    <!--          <property name="concurrent " value="false "></property >-->
+        <!--    </bean >-->
+    <bean id="orderQuertz" lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <!--<ref bean="orderTime"/>&lt;!&ndash; 订单推送 &ndash;&gt;-->
+                <!--<ref bean="orderTime1"/>&lt;!&ndash; 对账 &ndash;&gt;-->
+                <!--<ref bean="historyAmountTime"/>-->
+                <!--<ref bean="posWithdrawTime"/>&lt;!&ndash; 云支付pos商户提现记录 &ndash;&gt;-->
+                <!--<ref bean="statistics"/>-->
+                <!--<ref bean="yzIssued"/>-->
+                <ref bean="smsTimer"/>
+            </list>
+        </property>
+    </bean>
+</beans>

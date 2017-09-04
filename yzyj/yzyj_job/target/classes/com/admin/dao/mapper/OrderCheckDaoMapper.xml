@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.admin.dao.OrderCheckDaoMapper">
+    <resultMap id="BaseResultMap" type="com.admin.model.CheckRecord">
+        <result column="ID" property="id" jdbcType="DECIMAL" />
+        <result column="ORDER_NUM" property="orderNum" jdbcType="VARCHAR" />
+        <result column="ACCOUNT_COUNT" property="accountCount" jdbcType="VARCHAR" />
+        <result column="CHECK_DATE" property="checkDate" jdbcType="TIMESTAMP" />
+        <result column="LKL_CHECK_STATUS" property="lklCheckStatus" jdbcType="DECIMAL" />
+        <result column="YP_CHECK_STATUS" property="ypCheckStatus" jdbcType="DECIMAL" />
+        <result column="CHECK_UNIQUE" property="checkUnique" jdbcType="VARCHAR" />
+        <result column="LKL_CHECK_RESULT" property="lklCheckResult" jdbcType="VARCHAR" />
+        <result column="YP_CHECK_RESULT" property="ypCheckResult" jdbcType="VARCHAR" />
+        <result column="CHECK_DAY" property="checkDay" jdbcType="VARCHAR" />
+        <result column="TYPE" property="type" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <select id="getTotalCountByDay"  parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        select NVL(sum(t.total_fee),0) as TOTALFEE,count(t.sys_id) as SYSID,t.AGENT_UNIQUE from t_order t where 1=1 and pay_state =1
+        <if test="checkDay != null">
+            and t.PAY_TIME &gt;=to_Date('${checkDay} 00:00:00','yyyy-mm-dd hh24:mi:ss') and t.PAY_TIME &lt;=to_Date('${checkDay} 23:59:59','yyyy-mm-dd hh24:mi:ss')
+        </if>
+        group by t.AGENT_UNIQUE
+    </select>
+
+    <select id="checkPosByDay"  parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        select NVL(sum(t.total_fee),0) as TOTALFEE,count(t.sys_id) as SYSID,t.AGENT_UNIQUE from t_order t where 1=1 and pay_state =1
+        <if test="orderType != null">
+            and order_type = #{orderType}
+        </if>
+        <if test="checkDay != null">
+            and t.PAY_TIME &gt;=to_Date('${checkDay} 00:00:00','yyyy-mm-dd hh24:mi:ss') and t.PAY_TIME &lt;=to_Date('${checkDay} 23:59:59','yyyy-mm-dd hh24:mi:ss')
+        </if>
+        group by t.AGENT_UNIQUE
+    </select>
+
+    <insert id="insertCheckOrderRecord">
+        INSERT INTO T_CHECK_ORDER_RECORD
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            ID,
+            <if test="count != null">ORDER_NUM,</if>
+            <if test="toalFee != null">ACCOUNT_COUNT,</if>
+            CHECK_DATE,
+            <if test="lkl_check_status != null">LKL_CHECK_STATUS,</if>
+            <if test="check_result != null">LKL_CHECK_RESULT,</if>
+            <if test="check_unique != null">CHECK_UNIQUE,</if>
+            <if test="check_day != null">CHECK_DAY</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            T_CHECK_ORDER_RECORD_SEQUENCE.Nextval,
+            <if test="count != null">#{count},</if>
+            <if test="toalFee != null">#{toalFee},</if>
+            SYSDATE,
+            <if test="lkl_check_status != null">#{lkl_check_status},</if>
+            <if test="check_result != null">#{check_result},</if>
+            <if test="check_unique != null">#{check_unique},</if>
+            <if test="check_day != null">#{check_day}</if>
+        </trim>
+    </insert>
+
+    <insert id="insertAgentIncomeRecord">
+        INSERT INTO T_AGENT_INCOME_RECORD
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            ID,
+            <if test="incomeMoney != null">MONEY,</if>
+            <if test="agent_unique != null">AGENT_UNIQUE,</if>
+            <if test="checkDay != null">CHECKDAY,</if>
+            <if test="type != null">TYPE,</if>
+            TIME
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            T_AGENT_INCOME_RECORD_SEQUENCE.Nextval,
+            <if test="incomeMoney != null">#{incomeMoney},</if>
+            <if test="agent_unique != null">#{agent_unique},</if>
+            <if test="checkDay != null">#{checkDay},</if>
+            <if test="type != null">#{type},</if>
+            SYSDATE
+        </trim>
+    </insert>
+
+    <update id="updateCheckOrderRecord">
+        UPDATE  T_CHECK_ORDER_RECORD
+        <set>
+            <if test="YPtoalFee != null">
+                YP_ACCOUNT_COUNT = #{YPtoalFee},
+            </if>
+            <if test="YPcount != null">
+                YP_ORDER_NUM = #{YPcount},
+            </if>
+            <if test="yp_check_status != null">
+                YP_CHECK_STATUS = #{yp_check_status},
+            </if>
+            <if test="check_result != null">
+                YP_CHECK_RESULT = #{check_result},
+            </if>
+        </set>
+        WHERE CHECK_UNIQUE = #{check_unique}
+    </update>
+
+    <update id="updateYZRestartCheck">
+        UPDATE  T_CHECK_ORDER_RECORD
+        <set>
+            <if test="toalFee != null">
+                ACCOUNT_COUNT = #{toalFee},
+            </if>
+            <if test="count != null">
+                ORDER_NUM = #{count},
+            </if>
+            <if test="lkl_check_status != null">
+                LKL_CHECK_STATUS = #{lkl_check_status},
+            </if>
+            <if test="check_result != null">
+                LKL_CHECK_RESULT = #{check_result},
+            </if>
+            <if test="check_day != null">
+                CHECK_DAY = #{check_day},
+            </if>
+            CHECK_DATE = SYSDATE,
+            YP_CHECK_STATUS = null,
+            YP_CHECK_RESULT = null
+        </set>
+        WHERE CHECK_UNIQUE = #{check_unique}
+    </update>
+
+    <select id="getorderCheckByDay" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select * from T_CHECK_ORDER_RECORD t where 1=1 and t.LKL_CHECK_STATUS = 10000 and t.YP_CHECK_STATUS = 10010 and t.CHECK_DAY = #{day,jdbcType=VARCHAR}
+    </select>
+</mapper>

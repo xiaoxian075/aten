@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd 
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <!-- 扫描controller（controller层注入） -->
+    <context:component-scan base-package="com">
+        <context:include-filter type="annotation"
+                                expression="org.springframework.stereotype.Controller"/>
+        <context:include-filter type="annotation"
+                                expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
+    </context:component-scan>
+    <aop:aspectj-autoproxy proxy-target-class="true" expose-proxy="true"/>
+    <!-- 会自动注册DefaultAnnotationHandlerMapping与AnnotationMethodHandlerAdapter 两个bean,是spring MVC为@Controllers分发请求所必须的 -->
+
+    <mvc:annotation-driven>
+        <mvc:message-converters>
+            <bean class="com.core.filter.UTF8StringHttpMessageConverter" />
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+
+    <!-- 对模型视图添加前后缀 -->
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+          p:prefix="/WEB-INF/views/" p:suffix=".jsp"/>
+
+    <!-- 配置springMVC处理上传文件的信息 -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="defaultEncoding" value="utf-8"/>
+        <property name="maxUploadSize" value="10485760000"/>
+        <property name="maxInMemorySize" value="4096000"/>
+    </bean>
+    <!-- 定义quartz专属的工作类 -->
+    <import resource="quartzConfig.xml" />
+    <bean id="orderJobService" class="com.core.job.OrderJob"></bean>
+    <bean id="checkOrderService" class="com.core.job.CheckOrderJob"></bean>
+    <bean id="qHistoryAmountService" class="com.core.job.HistoryAmountJob"></bean>
+    <bean id="aposWithdrawService" class="com.core.job.PosWithdrawJob"></bean>
+    <bean id="astatisticsService" class="com.core.job.StatisticsJob"></bean>
+    <bean id="yzIssuedJobService" class="com.core.job.YzIssuedJobService"></bean>
+    <bean id="smsTimerJobService" class="com.core.job.SmsTimerJobService"></bean>
+    <!-- 导入quartz的定时任务 -->
+
+    <!--&lt;!&ndash; 总管理类 如果将lazy-init='false'那么容器启动就会执行调度程序  &ndash;&gt;-->
+    <!--<bean id="startQuertz" lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">-->
+        <!--<property name="triggers">-->
+            <!--<list>-->
+                <!--<ref bean="OrderJobTime"/>-->
+            <!--</list>-->
+        <!--</property>-->
+    <!--</bean>-->
+    <!--&lt;!&ndash; 定义调用对象和调用对象的方法 &ndash;&gt;-->
+    <!--<bean id="OrderJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">-->
+        <!--&lt;!&ndash; 调用的类 &ndash;&gt;-->
+        <!--<property name="targetObject" ref="OrderJob"></property>-->
+        <!--&lt;!&ndash; 调用类中的方法 &ndash;&gt;-->
+        <!--<property name="targetMethod" value="work"></property>-->
+    <!--</bean>-->
+    <!--&lt;!&ndash; 定义触发时间 &ndash;&gt;-->
+    <!--<bean id="OrderJobTime" class="org.springframework.scheduling.quartz.CronTriggerBean">-->
+        <!--<property name="jobDetail" ref="OrderJob"></property>-->
+        <!--&lt;!&ndash; cron表达式 每天00:00开始，2小时执行一次&ndash;&gt;-->
+        <!--<property name="cronExpression">-->
+            <!--<value>0 0 0/2 * * ?</value>-->
+        <!--</property>-->
+    <!--</bean>-->
+</beans>

@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.admin.dao.PayInfoDaoMapper">
+    <resultMap id="BaseResultMap" type="com.admin.model.PayInfo">
+        <result column="mch_id" jdbcType="VARCHAR" property="mchId"/>
+        <result column="device_info" jdbcType="VARCHAR" property="deviceInfo"/>
+        <result column="nonce_str" jdbcType="VARCHAR" property="nonceStr"/>
+        <result column="sign" jdbcType="VARCHAR" property="sign"/>
+        <result column="result_code" jdbcType="VARCHAR" property="resultCode"/>
+        <result column="err_code" jdbcType="VARCHAR" property="errCode"/>
+        <result column="err_code_des" jdbcType="VARCHAR" property="errCodeDes"/>
+        <result column="openid" jdbcType="VARCHAR" property="openid"/>
+        <result column="trade_type" jdbcType="VARCHAR" property="tradeType"/>
+        <result column="total_fee" jdbcType="VARCHAR" property="totalFee"/>
+        <result column="transaction_id" jdbcType="VARCHAR" property="transactionId"/>
+        <result column="out_trade_no" jdbcType="VARCHAR" property="outTradeNo"/>
+        <result column="attach" jdbcType="VARCHAR" property="attach"/>
+        <result column="time_end" jdbcType="TIMESTAMP" property="timeEnd"/>
+        <result column="pay_type" jdbcType="VARCHAR" property="payType"/>
+        <result column="card_no" jdbcType="VARCHAR" property="cardNo"/>
+        <result column="pay_amt" jdbcType="VARCHAR" property="payAmt"/>
+        <result column="batchbillno" jdbcType="VARCHAR" property="batchbillno"/>
+        <result column="systraceno" jdbcType="VARCHAR" property="systraceno"/>
+        <result column="orderid_scan" jdbcType="VARCHAR" property="orderidScan"/>
+        <result column="refernumber" jdbcType="VARCHAR" property="refernumber"/>
+        <result column="bank_type" jdbcType="VARCHAR" property="bankType"/>
+        <result column="fee_type" jdbcType="VARCHAR" property="feeType"/>
+        <result column="cash_fee" jdbcType="VARCHAR" property="cashFee"/>
+        <result column="cash_fee_type" jdbcType="VARCHAR" property="cashFeeType"/>
+        <result column="coupon_fee" jdbcType="VARCHAR" property="couponFee"/>
+        <result column="coupon_count" jdbcType="VARCHAR" property="couponCount"/>
+        <result column="coupon_id" jdbcType="VARCHAR" property="couponId"/>
+        <result column="coupon_fee_n" jdbcType="VARCHAR" property="couponFeeN"/>
+        <result column="is_subscribe" jdbcType="VARCHAR" property="isSubscribe"/>
+        <result column="state" jdbcType="VARCHAR" property="state"/>
+        <result column="yun_id" jdbcType="VARCHAR" property="yunId"/>
+    </resultMap>
+
+    <sql id="Example_Where_Clause">
+        <where>
+            <foreach collection="oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" suffix=")" prefixOverrides="and">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")"
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.admin.model.BaseExample">
+        select
+        *
+        from t_pay_info_list
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+    <select id="selectByExampleAndPage" parameterType="com.admin.model.BaseExample" resultMap="BaseResultMap">
+        select
+        *
+        from t_pay_info_list
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause"/>
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
+
+    <insert id="insertSelective" parameterType="com.admin.model.PayInfo">
+        insert into t_pay_info_list
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="mchId != null">mch_id,</if>
+            <if test="deviceInfo != null">device_info,</if>
+            <if test="nonceStr != null">nonce_str,</if>
+            <if test="sign != null">sign,</if>
+            <if test="resultCode != null">result_code,</if>
+            <if test="errCode != null">err_code,</if>
+            <if test="errCodeDes != null">err_code_des,</if>
+            <if test="openid != null">openid,</if>
+            <if test="tradeType != null">trade_type,</if>
+            <if test="totalFee != null">total_fee,</if>
+            <if test="transactionId != null">transaction_id,</if>
+            <if test="outTradeNo != null">out_trade_no,</if>
+            <if test="attach != null">attach,</if>
+            <if test="timeEnd != null">time_end,</if>
+            <if test="payType != null">pay_type,</if>
+            <if test="cardNo != null">card_no,</if>
+            <if test="payAmt != null">pay_amt,</if>
+            <if test="batchbillno != null">batchbillno,</if>
+            <if test="systraceno != null">systraceno,</if>
+            <if test="orderidScan != null">orderid_scan,</if>
+            <if test="refernumber != null">refernumber,</if>
+            <if test="bankType != null">bank_type,</if>
+            <if test="feeType != null">fee_type,</if>
+            <if test="cashFee != null">cash_fee,</if>
+            <if test="cashFeeType != null">cash_fee_type,</if>
+            <if test="couponFee != null">coupon_fee,</if>
+            <if test="couponCount != null">coupon_count,</if>
+            <if test="couponId != null">coupon_id,</if>
+            <if test="couponFeeN != null">coupon_fee_n,</if>
+            <if test="isSubscribe != null">is_subscribe,</if>
+            <if test="state != null">state,</if>
+            <if test="yunId != null">yun_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="mchId != null">#{mchId,jdbcType=VARCHAR},</if>
+            <if test="deviceInfo != null">#{deviceInfo,jdbcType=VARCHAR},</if>
+            <if test="nonceStr != null">#{nonceStr,jdbcType=VARCHAR},</if>
+            <if test="sign != null">#{sign,jdbcType=VARCHAR},</if>
+            <if test="resultCode != null">#{resultCode,jdbcType=VARCHAR},</if>
+            <if test="errCode != null">#{errCode,jdbcType=VARCHAR},</if>
+            <if test="errCodeDes != null">#{errCodeDes,jdbcType=VARCHAR},</if>
+            <if test="openid != null">#{openid,jdbcType=VARCHAR},</if>
+            <if test="tradeType != null">#{tradeType,jdbcType=VARCHAR},</if>
+            <if test="totalFee != null">#{totalFee,jdbcType=VARCHAR},</if>
+            <if test="transactionId != null">#{transactionId,jdbcType=VARCHAR},</if>
+            <if test="outTradeNo != null">#{outTradeNo,jdbcType=VARCHAR},</if>
+            <if test="attach != null">#{attach,jdbcType=VARCHAR},</if>
+            <if test="timeEnd != null">#{timeEnd,jdbcType=VARCHAR},</if>
+            <if test="payType != null">#{payType,jdbcType=VARCHAR},</if>
+            <if test="cardNo != null">#{cardNo,jdbcType=VARCHAR},</if>
+            <if test="payAmt != null">#{payAmt,jdbcType=VARCHAR},</if>
+            <if test="batchbillno != null">#{batchbillno,jdbcType=VARCHAR},</if>
+            <if test="systraceno != null">#{systraceno,jdbcType=VARCHAR},</if>
+            <if test="orderidScan != null">#{orderidScan,jdbcType=VARCHAR},</if>
+            <if test="refernumber != null">#{refernumber,jdbcType=VARCHAR},</if>
+            <if test="bankType != null">#{bankType,jdbcType=VARCHAR},</if>
+            <if test="feeType != null">#{feeType,jdbcType=VARCHAR},</if>
+            <if test="cashFee != null">#{cashFee,jdbcType=VARCHAR},</if>
+            <if test="cashFeeType != null">#{cashFeeType,jdbcType=VARCHAR},</if>
+            <if test="couponFee != null">#{couponFee,jdbcType=VARCHAR},</if>
+            <if test="couponCount != null">#{couponCount,jdbcType=VARCHAR},</if>
+            <if test="couponId != null">#{couponId,jdbcType=VARCHAR},</if>
+            <if test="couponFeeN != null">#{couponFeeN,jdbcType=VARCHAR},</if>
+            <if test="isSubscribe != null">#{isSubscribe,jdbcType=VARCHAR},</if>
+            <if test="state != null">#{state,jdbcType=VARCHAR},</if>
+            <if test="yunId != null">#{yunId,jdbcType=VARCHAR},</if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.admin.model.BaseExample">
+        update t_pay_info_list
+        <set>
+            <if test="state != null">
+                state = #{state,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where out_trade_no = #{outTradeNo,jdbcType=VARCHAR}
+    </update>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        delete from t_pay_info_list
+        where sys_id = #{sysIid,jdbcType=VARCHAR}
+    </delete>
+</mapper>
